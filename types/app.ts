@@ -1,5 +1,12 @@
 export type AppRole = "admin" | "manager" | "rp";
 export type WorkspaceMode = "authenticated" | "preview";
+export type WorkspaceSection =
+  | "dashboard"
+  | "reservations"
+  | "rpPerformance"
+  | "crm"
+  | "analytics"
+  | "settings";
 export type SyncState =
   | "not_configured"
   | "pending_data"
@@ -15,6 +22,8 @@ export interface AppAccess {
   email?: string | null;
   userId?: string;
   rpProfileId?: string | null;
+  rpDisplayName?: string | null;
+  rpSourceLabels?: string[];
   previewRole?: AppRole;
 }
 

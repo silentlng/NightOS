@@ -3,11 +3,30 @@ import { PageIntro } from "@/components/page-intro";
 import { SectionCard } from "@/components/section-card";
 import { StatusPill } from "@/components/status-pill";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/empty-state";
+import { canAccessSection } from "@/lib/auth/permissions";
 import { formatDateTime } from "@/lib/utils";
 import { getWorkspaceInsights } from "@/lib/workspace-data";
 import type { AppAccess } from "@/types/app";
 
 export async function SettingsPage({ access }: { access: AppAccess }) {
+  if (!canAccessSection(access.role, "settings")) {
+    return (
+      <div className="space-y-6">
+        <PageIntro
+          eyebrow="Settings"
+          title="Management-only control surface"
+          description="NightOS keeps operational settings, sync secrets, and deployment readiness scoped to management roles."
+        />
+
+        <EmptyState
+          title="This area is restricted for RP accounts"
+          description="RP users keep access to their own reservations, CRM scope, analytics, and performance data, but settings and sync controls remain limited to manager and admin roles."
+        />
+      </div>
+    );
+  }
+
   const data = await getWorkspaceInsights(access);
   const readiness = data.environmentReadiness;
 
@@ -83,7 +102,7 @@ export async function SettingsPage({ access }: { access: AppAccess }) {
                 Production sync route
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                `POST /api/sync/reservation-source/pull` with `x-sync-secret`
+                POST /api/sync/reservation-source/pull with x-sync-secret
               </p>
             </div>
           </div>
@@ -132,9 +151,11 @@ export async function SettingsPage({ access }: { access: AppAccess }) {
           <div className="grid gap-3">
             {[
               "Server-side auth validation for protected routes",
+              "Supabase middleware session refresh for protected app routes",
               "Zod validation on auth and sync entry points",
               "Service role key isolated to server-only helpers",
               "Supabase schema prepared with RLS + auth.uid() policies",
+              "RP visibility can be matched from dedicated source-label aliases",
               "No fake backend security claims where implementation is pending",
             ].map((item) => (
               <div className="surface-muted p-4 text-sm text-muted-foreground" key={item}>

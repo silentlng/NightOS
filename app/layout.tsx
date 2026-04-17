@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.metadataBase),
+  applicationName: siteConfig.name,
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({

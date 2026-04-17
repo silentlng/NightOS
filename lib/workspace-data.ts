@@ -145,19 +145,46 @@ function pickTonight(snapshot: Awaited<ReturnType<typeof getReservationSourceSna
   return futureNight;
 }
 
+function normalizeSourceLabel(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function getRpSourceLabels(access: AppAccess) {
+  const labels = new Set<string>();
+
+  access.rpSourceLabels?.forEach((label) => {
+    if (label.trim()) {
+      labels.add(normalizeSourceLabel(label));
+    }
+  });
+
+  if (access.rpDisplayName?.trim()) {
+    labels.add(normalizeSourceLabel(access.rpDisplayName));
+  }
+
+  if (access.viewerName.trim()) {
+    labels.add(normalizeSourceLabel(access.viewerName));
+  }
+
+  return labels;
+}
+
 export async function getWorkspaceInsights(access: AppAccess) {
   const snapshot = await getReservationSourceSnapshot();
-  const mappedName = access.viewerName.trim().toLowerCase();
+  const rpSourceLabels = getRpSourceLabels(access);
   const reservationsInScope =
     access.role === "rp"
       ? snapshot.reservations.filter(
-          (reservation) => reservation.sourceLabel?.trim().toLowerCase() === mappedName,
+          (reservation) =>
+            reservation.sourceLabel
+              ? rpSourceLabels.has(normalizeSourceLabel(reservation.sourceLabel))
+              : false,
         )
       : snapshot.reservations;
   const promoterStatsInScope =
     access.role === "rp"
       ? snapshot.promoterStats.filter(
-          (stat) => stat.sourceLabel.trim().toLowerCase() === mappedName,
+          (stat) => rpSourceLabels.has(normalizeSourceLabel(stat.sourceLabel)),
         )
       : snapshot.promoterStats;
   const tonight = pickTonight(snapshot);

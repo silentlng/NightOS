@@ -47,6 +47,7 @@ What it does **not** expose cleanly yet:
 - maps slots to `external_booking_id`
 - stores source fields for sync-aware visibility
 - keeps CRM empty instead of inventing clients
+- can scope RP views through dedicated `rp_profiles.source_labels` aliases instead of relying only on viewer names
 
 ## Production sync path
 
@@ -60,5 +61,6 @@ Recommended production flow:
 ## Honest limitations
 
 - RP performance is currently derived from the same label the reservation site groups by.
+- RP label scoping is more robust with aliases, but it still depends on consistent source-side naming.
 - CRM cannot be trusted until a richer client payload exists.
 - Historical trend quality depends on recurring sync execution after Supabase setup.

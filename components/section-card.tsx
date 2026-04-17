@@ -17,10 +17,16 @@ export function SectionCard({
   footer?: ReactNode;
 }) {
   return (
-    <section className={cn("surface space-y-6 p-6 md:p-7", className)}>
-      <div className="space-y-2">
+    <section
+      className={cn(
+        "surface relative space-y-6 overflow-hidden p-6 md:p-7",
+        className,
+      )}
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+      <div className="space-y-3">
         {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <h2 className="display-subheading">{title}</h2>
           <p className="text-sm leading-6 text-muted-foreground">{description}</p>
         </div>

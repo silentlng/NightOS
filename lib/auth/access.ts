@@ -57,7 +57,7 @@ export const getAuthenticatedAccess = cache(async (): Promise<AppAccess> => {
 
   const { data: rpProfile } = await supabase
     .from("rp_profiles")
-    .select("id, profile_id, display_name, status")
+    .select("id, profile_id, display_name, status, source_labels")
     .eq("profile_id", user.id)
     .maybeSingle<RpProfileRow>();
 
@@ -68,5 +68,7 @@ export const getAuthenticatedAccess = cache(async (): Promise<AppAccess> => {
     email: user.email ?? null,
     userId: user.id,
     rpProfileId: rpProfile?.id ?? null,
+    rpDisplayName: rpProfile?.display_name ?? null,
+    rpSourceLabels: rpProfile?.source_labels ?? [],
   };
 });

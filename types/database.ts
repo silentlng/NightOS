@@ -28,6 +28,7 @@ export interface RpProfileRow {
   profile_id: string;
   display_name: string | null;
   status: "active" | "inactive";
+  source_labels: string[];
 }
 
 export interface EventRow {

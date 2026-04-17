@@ -23,7 +23,9 @@ export function SidebarNav({
   return (
     <div className="space-y-8">
       <nav className="space-y-3">
-        {workspaceNavigation.map((item) => {
+        {workspaceNavigation
+          .filter((item) => item.roles.some((role) => role === access.role))
+          .map((item) => {
           const href = `${basePath}${item.href}`;
           const isActive =
             pathname === href || pathname.startsWith(`${href}/`);

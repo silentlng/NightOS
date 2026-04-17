@@ -36,6 +36,7 @@ It **is**:
 
 - Premium internal dashboard shell
 - Protected `/app/*` routes with server-side auth checks
+- Middleware-based Supabase session refresh on protected app routes
 - Preview-safe `/preview/*` routes for demo access
 - Dashboard
 - Reservations
@@ -45,6 +46,7 @@ It **is**:
 - Settings
 - Live read-only connection path to the operational reservation source
 - Sync route ready for Supabase persistence
+- RP source-label alias mapping for cleaner scoped visibility
 
 ## Reservation source connection
 
@@ -86,6 +88,7 @@ npm run build
 Run:
 
 - [supabase/migrations/20260417_0001_nightos_schema.sql](/Users/lng/Documents/Playground/supabase/migrations/20260417_0001_nightos_schema.sql)
+- [supabase/migrations/20260417_0002_rp_source_labels.sql](/Users/lng/Documents/Playground/supabase/migrations/20260417_0002_rp_source_labels.sql)
 
 The schema includes:
 
@@ -111,6 +114,7 @@ The schema includes:
 - The current reservation source exposes occupancy labels and spend values, not full verified client identities.
 - VIP CRM therefore stays intentionally empty for now.
 - Deletion reconciliation in the sync pipeline is not complete yet.
+- RP scoping is now cleaner via source-label aliases, but still depends on the reservation site exposing consistent labels.
 
 ## Legacy files
 

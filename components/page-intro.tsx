@@ -12,15 +12,15 @@ export function PageIntro({
   aside?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-      <div className="space-y-4">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)] xl:items-end">
+      <div className="space-y-5">
         <p className="eyebrow">{eyebrow}</p>
-        <div className="space-y-3">
-          <h1 className="display-heading max-w-3xl">{title}</h1>
-          <p className="section-copy">{description}</p>
+        <div className="space-y-4">
+          <h1 className="display-heading max-w-4xl">{title}</h1>
+          <p className="section-copy max-w-3xl">{description}</p>
         </div>
       </div>
-      {aside ? <div className="lg:max-w-sm">{aside}</div> : null}
+      {aside ? <div className="xl:justify-self-end xl:max-w-md">{aside}</div> : null}
     </div>
   );
 }
