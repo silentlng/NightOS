@@ -1,899 +1,925 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>NightOS</title>
-  <meta
-    name="description"
-    content="NightOS, couche premium d'opérations, analytics et CRM connectée au site de réservation."
-  >
-  <meta name="theme-color" content="#060606">
-  <meta property="og:title" content="NightOS">
-  <meta
-    property="og:description"
-    content="Internal club operating system connected to the reservation source of truth."
-  >
-  <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <style>
-    :root {
-      --bg: #060606;
-      --bg-soft: #0d0d0d;
-      --panel: rgba(255, 255, 255, 0.035);
-      --panel-strong: rgba(255, 255, 255, 0.055);
-      --line: rgba(255, 255, 255, 0.08);
-      --line-soft: rgba(255, 255, 255, 0.04);
-      --text: #f3ede3;
-      --muted: #a79f93;
-      --gold: #d7bf95;
-      --gold-soft: #f3e4c8;
-      --green: #83c18d;
-      --orange: #d9a76a;
-      --radius-xl: 34px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --shadow: rgba(0, 0, 0, 0.38);
-      --max: 1440px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: "Helvetica Neue", "Arial Nova", Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(215, 191, 149, 0.08), transparent 24rem),
-        radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.03), transparent 28rem),
-        linear-gradient(180deg, #060606 0%, #090909 46%, #060606 100%);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-      background-size: 84px 84px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 92%);
-      opacity: 0.24;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .shell {
-      width: min(var(--max), calc(100% - 36px));
-      margin: 0 auto;
-    }
-
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(18px);
-      background: rgba(6, 6, 6, 0.76);
-      border-bottom: 1px solid var(--line-soft);
-    }
-
-    .nav-inner {
-      width: min(var(--max), calc(100% - 36px));
-      margin: 0 auto;
-      min-height: 82px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .brand-top,
-    .eyebrow {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .brand-name {
-      font-size: 1.08rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
-    .nav-links a {
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      color: var(--muted);
-      transition: 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .hero {
-      padding: 44px 0 20px;
-    }
-
-    .hero-frame {
-      position: relative;
-      overflow: hidden;
-      border-radius: 42px;
-      border: 1px solid rgba(215, 191, 149, 0.18);
-      box-shadow: 0 30px 100px -52px var(--shadow);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
-        radial-gradient(circle at top left, rgba(215, 191, 149, 0.09), transparent 24rem),
-        rgba(255, 255, 255, 0.018);
-    }
-
-    .hero-frame::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 96px 96px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 88%);
-      pointer-events: none;
-      opacity: 0.22;
-    }
-
-    .hero-grid {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
-      gap: 26px;
-      padding: 42px;
-    }
-
-    .hero-copy {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 720px;
-      gap: 32px;
-    }
-
-    .hero-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.025);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--gold);
-      width: fit-content;
-    }
-
-    .hero-kicker::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 20px rgba(215, 191, 149, 0.6);
-    }
-
-    .hero-title {
-      margin: 0;
-      font-family: "Times New Roman", "Iowan Old Style", Georgia, serif;
-      font-size: clamp(4.4rem, 9vw, 8.4rem);
-      line-height: 0.84;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .hero-subtitle {
-      max-width: 900px;
-      margin: 0;
-      font-size: 1.02rem;
-      line-height: 1.85;
-      color: var(--muted);
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 50px;
-      padding: 0 22px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      font-size: 0.84rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: 0.2s ease;
-    }
-
-    .btn-primary {
-      background: var(--gold);
-      color: #0c0c0c;
-      box-shadow: 0 16px 40px -24px rgba(215, 191, 149, 0.7);
-    }
-
-    .btn-primary:hover {
-      background: var(--gold-soft);
-    }
-
-    .btn-secondary {
-      border-color: rgba(255, 255, 255, 0.12);
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.025);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .hero-gridline {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: auto;
-    }
-
-    .stat {
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      background: rgba(255, 255, 255, 0.024);
-      padding: 18px;
-    }
-
-    .stat-value {
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 2.25rem;
-      line-height: 1;
-      letter-spacing: 0.04em;
-    }
-
-    .stat-label {
-      margin-top: 10px;
-      font-size: 0.83rem;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-
-    .hero-side {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .panel {
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: 0 22px 80px -48px var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel-strong {
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(215, 191, 149, 0.18);
-      background: var(--panel-strong);
-      box-shadow: 0 28px 90px -50px var(--shadow);
-      overflow: hidden;
-    }
-
-    .status-card {
-      padding: 24px;
-    }
-
-    .status-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 34px;
-      padding: 0 14px;
-      border-radius: 999px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      border: 1px solid transparent;
-    }
-
-    .chip.green {
-      color: var(--green);
-      border-color: rgba(131, 193, 141, 0.2);
-      background: rgba(131, 193, 141, 0.08);
-    }
-
-    .chip.orange {
-      color: var(--orange);
-      border-color: rgba(217, 167, 106, 0.2);
-      background: rgba(217, 167, 106, 0.08);
-    }
-
-    .status-card h2,
-    .section-title,
-    .cut-title {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 0.96;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .status-card p,
-    .section-copy {
-      margin: 16px 0 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 0.96rem;
-    }
-
-    .status-list {
-      margin-top: 20px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .status-item {
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.02);
-      padding: 16px;
-    }
-
-    .status-item strong {
-      display: block;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-    }
-
-    .status-item span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.9rem;
-    }
-
-    .section {
-      padding: 18px 0;
-    }
-
-    .cut {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-      align-items: stretch;
-    }
-
-    .cut-main,
-    .cut-side {
-      padding: 28px;
-    }
-
-    .modules {
-      margin-top: 30px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .module {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.018);
-      min-height: 178px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .module h3,
-    .stack h3,
-    .side-block h3 {
-      margin: 0;
-      font-size: 0.82rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .module p,
-    .stack p,
-    .side-block p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 0.92rem;
-    }
-
-    .side-stack {
-      display: grid;
-      gap: 14px;
-      margin-top: 28px;
-    }
-
-    .stack {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.018);
-    }
-
-    .feature-line {
-      margin-top: 30px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .feature {
-      display: grid;
-      grid-template-columns: 150px minmax(0, 1fr);
-      gap: 16px;
-      padding: 14px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .feature:first-child {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .feature-label {
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-    }
-
-    .feature-text {
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 0.94rem;
-    }
-
-    .split-grid {
-      margin-top: 30px;
-      display: grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .side-block {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.018);
-    }
-
-    .footer {
-      padding: 28px 0 44px;
-    }
-
-    .footer-card {
-      padding: 26px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .footer-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 0.94rem;
-    }
-
-    .footer-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 0.84rem;
-    }
-
-    code {
-      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
-      font-size: 0.84em;
-      color: var(--gold-soft);
-    }
-
-    @media (max-width: 1160px) {
-      .hero-grid,
-      .cut {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-copy {
-        min-height: auto;
-      }
-
-      .modules,
-      .split-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      .nav-inner,
-      .shell {
-        width: min(var(--max), calc(100% - 22px));
-      }
-
-      .hero-grid,
-      .cut-main,
-      .cut-side,
-      .status-card,
-      .footer-card {
-        padding: 20px;
-      }
-
-      .hero-gridline,
-      .modules,
-      .split-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .feature {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .hero-title {
-        font-size: clamp(3.4rem, 20vw, 5.2rem);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NightOS / Cova Club OS — v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════ TOKENS ═══════════════════ */
+:root{
+  --bg-base:#07070A;--bg-surf:#0D0D11;--bg-elev:#131317;--bg-hov:#18181D;
+  --bdr-sub:rgba(255,255,255,.06);--bdr-def:rgba(255,255,255,.09);--bdr-str:rgba(255,255,255,.14);
+  --tx-1:#EDEAE0;--tx-2:#8A8A97;--tx-m:#4E4E5A;
+  --gold:#C8A250;--gold-l:#D4B46A;--gold-dim:rgba(200,162,80,.10);--gold-bdr:rgba(200,162,80,.28);--gold-glow:rgba(200,162,80,.05);
+  --ok:#34D399;--ok-bg:rgba(52,211,153,.08);--ok-bdr:rgba(52,211,153,.20);
+  --warn:#FBBF24;--warn-bg:rgba(251,191,36,.08);--warn-bdr:rgba(251,191,36,.20);
+  --err:#F87171;--err-bg:rgba(248,113,113,.08);--err-bdr:rgba(248,113,113,.20);
+  --info:#60A5FA;--info-bg:rgba(96,165,250,.08);--info-bdr:rgba(96,165,250,.20);
+  --sw:252px;--th:64px;
+  --fd:'Cormorant',Georgia,serif;--fb:'Plus Jakarta Sans',system-ui,sans-serif;--fm:'JetBrains Mono',monospace;
+  --rsm:6px;--rmd:10px;--rlg:14px;--rxl:20px;--rfull:9999px;
+  --tf:120ms cubic-bezier(.4,0,.2,1);--tb:200ms cubic-bezier(.4,0,.2,1);
+  --sh-md:0 4px 16px rgba(0,0,0,.55);--sh-lg:0 8px 40px rgba(0,0,0,.65);--sh-gold:0 0 30px rgba(200,162,80,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg-base);color:var(--tx-1);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+ul{list-style:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--bdr-str);border-radius:var(--rfull)}
+::selection{background:var(--gold-dim);color:var(--tx-1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes shimmer{0%{opacity:.4}50%{opacity:.7}100%{opacity:.4}}
+.au{animation:fadeUp 280ms ease both}
+
+/* ═══════════════════ LAYOUT ═══════════════════ */
+#shell{display:flex;min-height:100vh}
+/* Sidebar */
+#sb{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--bg-surf);border-right:1px solid var(--bdr-sub);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sbl{display:flex;align-items:center;gap:12px;padding:24px;border-bottom:1px solid var(--bdr-sub);flex-shrink:0}
+.sbl-m{width:34px;height:34px;background:var(--gold);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;font-weight:600;color:var(--bg-base);box-shadow:var(--sh-gold);flex-shrink:0}
+.sbl-n{font-family:var(--fd);font-size:1.05rem;letter-spacing:.06em;line-height:1;color:var(--tx-1)}
+.sbl-s{font-size:.62rem;color:var(--tx-m);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.snav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+.snl{font-size:.62rem;color:var(--tx-m);text-transform:uppercase;letter-spacing:.12em;font-weight:600;padding:16px 10px 6px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rmd);cursor:pointer;transition:all var(--tf);color:var(--tx-2);font-size:.82rem;font-weight:500;border:1px solid transparent}
+.ni:hover{background:var(--bg-hov);color:var(--tx-1)}
+.ni.active{background:var(--gold-dim);color:var(--gold);border-color:var(--gold-bdr)}
+.ni svg{width:15px;height:15px;stroke-width:1.6;fill:none;flex-shrink:0}
+.ni:not(.active) svg{stroke:var(--tx-m)}.ni.active svg{stroke:var(--gold)}
+/* Sync indicator in sidebar */
+.sync-pill{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--bg-elev);border:1px solid var(--bdr-sub);border-radius:var(--rfull);margin:8px 10px 0;font-size:.68rem;color:var(--tx-m)}
+.sync-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sync-dot.ok{background:var(--ok);animation:pulse 2.5s ease infinite}
+.sync-dot.off{background:var(--tx-m)}
+.sync-dot.err{background:var(--err)}
+.sfot{border-top:1px solid var(--bdr-sub);padding:14px;flex-shrink:0}
+.susr{display:flex;align-items:center;gap:10px;padding:7px;border-radius:var(--rmd);cursor:pointer;transition:background var(--tf)}
+.susr:hover{background:var(--bg-hov)}
+.sav{width:32px;height:32px;border-radius:var(--rfull);background:var(--gold-dim);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.9rem;color:var(--gold);flex-shrink:0}
+.sunm{font-size:.82rem;font-weight:600;color:var(--tx-1)}
+.surl{font-size:.65rem;color:var(--tx-m);text-transform:uppercase;letter-spacing:.08em}
+/* Main */
+#main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column}
+#topbar{position:sticky;top:0;height:var(--th);z-index:90;background:rgba(13,13,17,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr-sub);display:flex;align-items:center;justify-content:space-between;padding:0 32px;gap:16px}
+.tb-tt{font-family:var(--fd);font-size:1.3rem;font-weight:500;letter-spacing:.01em}
+.tb-sb{font-size:.7rem;color:var(--tx-m);letter-spacing:.06em;margin-top:2px}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-dt{font-size:.74rem;color:var(--tx-m);font-family:var(--fm)}
+.tb-btn{width:36px;height:36px;border-radius:var(--rmd);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tf);position:relative}
+.tb-btn:hover{background:var(--bg-hov);border-color:var(--bdr-str)}
+.tb-btn svg{width:15px;height:15px;stroke:var(--tx-2);stroke-width:1.6;fill:none}
+#ct{flex:1;padding:32px;animation:fadeUp 260ms ease both}
+.pg{display:none}.pg.on{display:block}
+
+/* ═══════════════════ GRIDS ═══════════════════ */
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.g53{display:grid;grid-template-columns:5fr 3fr;gap:24px}
+.g32{display:grid;grid-template-columns:3fr 2fr;gap:24px}
+.gcol{display:flex;flex-direction:column;gap:20px}
+.sec{margin-top:28px}
+
+/* ═══════════════════ COMPONENTS ═══════════════════ */
+.card{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:24px;transition:border-color var(--tf)}
+.card:hover{border-color:var(--bdr-def)}
+.csm{padding:16px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.ct-l{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m)}
+.ca{font-size:.74rem;color:var(--gold);cursor:pointer;transition:color var(--tf)}
+.ca:hover{color:var(--gold-l)}
+
+/* Page header */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
+.ph-t{font-family:var(--fd);font-size:1.9rem;font-weight:400;line-height:1.1}
+.ph-s{font-size:.78rem;color:var(--tx-m);margin-top:4px;letter-spacing:.03em}
+.ph-a{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* KPI card */
+.kpi{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:20px 22px;display:flex;flex-direction:column;gap:10px;transition:all var(--tb);position:relative;overflow:hidden;cursor:default}
+.kpi::before{content:'';position:absolute;inset:0;background:var(--gold-glow);opacity:0;transition:opacity var(--tb)}
+.kpi.ready:hover{border-color:var(--gold-bdr);box-shadow:var(--sh-gold)}.kpi.ready:hover::before{opacity:1}
+.kpi.empty{opacity:.55}
+.kpi-h{display:flex;align-items:center;justify-content:space-between}
+.kpi-lbl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m)}
+.kpi-ico{width:30px;height:30px;border-radius:var(--rsm);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center}
+.kpi-ico svg{width:14px;height:14px;stroke:var(--tx-m);stroke-width:1.6;fill:none}
+.kpi-v{font-family:var(--fd);font-size:2.1rem;font-weight:400;color:var(--tx-1);line-height:1}
+.kpi-v.placeholder{color:var(--tx-m);font-size:1.3rem;font-family:var(--fb);font-style:italic;font-weight:400}
+.kpi-sub{font-size:.72rem;color:var(--tx-m)}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--rfull);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.bdot{width:5px;height:5px;border-radius:var(--rfull);flex-shrink:0}
+.b-ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-bdr)}
+.b-pend{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bdr)}
+.b-no{background:var(--err-bg);color:var(--err);border:1px solid var(--err-bdr)}
+.b-vip{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-bdr)}
+.b-top{background:linear-gradient(135deg,rgba(200,162,80,.15),rgba(200,162,80,.06));color:var(--gold);border:1px solid var(--gold-bdr)}
+.b-rising{background:var(--info-bg);color:var(--info);border:1px solid var(--info-bdr)}
+.b-off{background:rgba(255,255,255,.03);color:var(--tx-m);border:1px solid var(--bdr-sub)}
+.b-adm{background:rgba(139,92,246,.1);color:#A78BFA;border:1px solid rgba(139,92,246,.25)}
+.b-mgr{background:var(--info-bg);color:var(--info);border:1px solid var(--info-bdr)}
+.b-rp{background:rgba(255,255,255,.04);color:var(--tx-2);border:1px solid var(--bdr-def)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--rmd);font-size:.8rem;font-weight:600;font-family:var(--fb);cursor:pointer;transition:all var(--tf);border:1px solid transparent;white-space:nowrap}
+.btn svg{width:14px;height:14px;stroke-width:1.8;fill:none;flex-shrink:0}
+.btn-p{background:var(--gold);color:var(--bg-base);border-color:var(--gold)}
+.btn-p:hover{background:var(--gold-l);transform:translateY(-1px);box-shadow:var(--sh-gold)}
+.btn-s{background:var(--bg-elev);color:var(--tx-1);border-color:var(--bdr-def)}
+.btn-s:hover{background:var(--bg-hov);border-color:var(--bdr-str)}
+.btn-g{background:transparent;color:var(--tx-2);border-color:transparent}
+.btn-g:hover{background:var(--bg-hov);color:var(--tx-1)}
+.btn-sm{padding:5px 12px;font-size:.75rem}
+.wf{width:100%}
+
+/* Table */
+.tw{overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--bdr-sub)}
+.dtbl{width:100%;border-collapse:collapse}
+.dtbl thead tr{border-bottom:1px solid var(--bdr-sub)}
+.dtbl th{padding:11px 16px;text-align:left;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m);background:var(--bg-surf);white-space:nowrap}
+.dtbl th:last-child{text-align:right}
+.dtbl td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem;color:var(--tx-2);vertical-align:middle}
+.dtbl td:last-child{text-align:right}
+.dtbl tbody tr{cursor:pointer;transition:background var(--tf)}
+.dtbl tbody tr:hover td{background:var(--bg-hov)}
+.dtbl tbody tr:last-child td{border-bottom:none}
+.cp{color:var(--tx-1)!important;font-weight:500}
+.cm{font-family:var(--fm)!important;font-size:.79rem!important}
+
+/* Form */
+.fi,.fs{background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rmd);padding:6px 12px;font-size:.82rem;font-family:var(--fb);color:var(--tx-1);transition:all var(--tf);appearance:none}
+.fi::placeholder{color:var(--tx-m)}
+.fi:focus,.fs:focus{outline:none;border-color:var(--gold-bdr)}
+.fs{cursor:pointer;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%234E4E5A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.fs option{background:var(--bg-elev);color:var(--tx-1)}
+.fg{display:flex;align-items:center;gap:8px}
+.fg label{font-size:.68rem;color:var(--tx-m);white-space:nowrap;font-weight:500;text-transform:uppercase;letter-spacing:.07em}
+.fbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:14px 18px;background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg)}
+
+/* Stat row */
+.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.sr:last-child{border-bottom:none}
+.sr-l{font-size:.8rem;color:var(--tx-m)}
+.sr-v{font-size:.83rem;font-weight:500;color:var(--tx-1);font-family:var(--fm)}
+
+/* Toggle */
+.tgl-w{display:flex;align-items:center;justify-content:space-between;padding:11px 0}
+.tgl-l{font-size:.83rem;color:var(--tx-2)}
+.tgl-s{font-size:.72rem;color:var(--tx-m);margin-top:2px}
+.tgl{position:relative;width:40px;height:22px;flex-shrink:0}
+.tgl input{opacity:0;width:0;height:0;position:absolute}
+.tgls{position:absolute;inset:0;background:var(--bg-hov);border:1px solid var(--bdr-def);border-radius:var(--rfull);cursor:pointer;transition:all var(--tf)}
+.tgls::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:50%;transform:translateY(-50%);background:var(--tx-m);border-radius:var(--rfull);transition:all var(--tf)}
+.tgl input:checked+.tgls{background:var(--gold-dim);border-color:var(--gold-bdr)}
+.tgl input:checked+.tgls::before{background:var(--gold);transform:translateY(-50%) translateX(18px)}
+
+/* Log */
+.log{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.log:last-child{border-bottom:none}
+.ldot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.ldot.ok{background:var(--ok)}.ldot.warn{background:var(--warn)}.ldot.err{background:var(--err)}.ldot.info{background:var(--info)}
+.log-tx{font-size:.8rem;color:var(--tx-2);line-height:1.5;flex:1}
+.log-tx strong{color:var(--tx-1);font-weight:500}
+.log-ts{font-size:.67rem;color:var(--tx-m);font-family:var(--fm);flex-shrink:0}
+
+/* Side panel */
+.sp{position:fixed;top:0;right:-480px;width:460px;height:100vh;background:var(--bg-elev);border-left:1px solid var(--bdr-def);z-index:200;box-shadow:-8px 0 40px rgba(0,0,0,.5);transition:right 350ms cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.sp.on{right:0}
+.sp-h{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--bdr-sub);flex-shrink:0}
+.sp-tt{font-family:var(--fd);font-size:1.2rem;font-weight:500;color:var(--tx-1)}
+.sp-cl{width:28px;height:28px;border-radius:var(--rsm);background:var(--bg-hov);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tf)}
+.sp-cl:hover{background:var(--err-bg);border-color:var(--err-bdr)}
+.sp-cl svg{width:12px;height:12px;stroke:var(--tx-2);stroke-width:2;fill:none}
+.sp-b{flex:1;overflow-y:auto;padding:24px}
+.ov{position:fixed;inset:0;background:rgba(7,7,10,.55);backdrop-filter:blur(3px);z-index:150;display:none}
+.ov.on{display:block}
+
+/* Toast */
+#toasts{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{padding:11px 18px;border-radius:var(--rmd);background:var(--bg-elev);border:1px solid var(--bdr-def);font-size:.82rem;color:var(--tx-1);box-shadow:var(--sh-lg);animation:fadeUp 200ms ease both;max-width:300px;border-left:3px solid var(--gold)}
+
+/* ═══════════════════ EMPTY STATE — premium ═══════════════════ */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 32px;gap:16px}
+.empty-ico{width:56px;height:56px;border-radius:var(--rlg);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.empty-ico svg{width:22px;height:22px;stroke:var(--tx-m);stroke-width:1.4;fill:none}
+.empty-t{font-family:var(--fd);font-size:1.15rem;font-weight:500;color:var(--tx-2)}
+.empty-d{font-size:.82rem;color:var(--tx-m);line-height:1.7;max-width:320px}
+.empty-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rfull);font-size:.72rem;color:var(--tx-m);margin-top:4px}
+.empty-tag svg{width:11px;height:11px;stroke:var(--tx-m);stroke-width:1.8;fill:none}
+/* Compact empty for cards */
+.empty-sm{display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 20px;gap:10px}
+.empty-sm-t{font-size:.82rem;color:var(--tx-m);font-style:italic}
+
+/* ═══════════════════ SYNC STATUS BLOCK ═══════════════════ */
+.sync-block{display:flex;align-items:stretch;gap:0;background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);overflow:hidden;margin-bottom:20px}
+.sync-left{width:4px;flex-shrink:0}
+.sync-left.ok{background:var(--ok)}.sync-left.off{background:var(--tx-m)}.sync-left.err{background:var(--err)}.sync-left.sync{background:var(--info)}
+.sync-inner{flex:1;padding:14px 20px;display:flex;align-items:center;gap:20px}
+.sync-status{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
+.sync-st-l{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m)}
+.sync-st-v{font-size:.85rem;font-weight:600}
+.sync-st-v.ok{color:var(--ok)}.sync-st-v.off{color:var(--tx-m)}.sync-st-v.err{color:var(--err)}
+.sync-info{flex:1;min-width:0}
+.sync-msg{font-size:.82rem;color:var(--tx-2);line-height:1.5}
+.sync-hint{font-size:.72rem;color:var(--tx-m);margin-top:2px}
+.sync-action{flex-shrink:0}
+
+/* ═══════════════════ RP cards ═══════════════════ */
+.rpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.rpc{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:20px;cursor:pointer;transition:all var(--tb)}
+.rpc:hover{border-color:var(--bdr-def);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.rpc.top{border-color:var(--gold-bdr)}
+
+/* ═══════════════════ SETTINGS ═══════════════════ */
+.sl{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}
+.sn{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);overflow:hidden;position:sticky;top:80px}
+.sni{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;transition:background var(--tf);font-size:.82rem;font-weight:500;color:var(--tx-2);border-bottom:1px solid rgba(255,255,255,.04)}
+.sni:last-child{border-bottom:none}
+.sni:hover{background:var(--bg-hov);color:var(--tx-1)}
+.sni.active{background:var(--gold-dim);color:var(--gold);border-left:2px solid var(--gold)}
+.sni svg{width:14px;height:14px;stroke-width:1.6;fill:none;flex-shrink:0}
+.sni:not(.active) svg{stroke:var(--tx-m)}.sni.active svg{stroke:var(--gold)}
+.ssec{display:none}.ssec.on{display:block}
+.ss-tt{font-family:var(--fd);font-size:1.4rem;color:var(--tx-1);margin-bottom:4px}
+.ss-ds{font-size:.78rem;color:var(--tx-m);margin-bottom:24px}
+.secr{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);gap:16px}
+.secr:last-child{border-bottom:none}
+.sci{display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:500}
+.sci::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.sci.ok{color:var(--ok)}.sci.warn{color:var(--warn)}.sci.todo{color:var(--tx-m)}
+.er{display:flex;align-items:center;gap:12px;padding:9px 13px;background:var(--bg-base);border:1px solid var(--bdr-sub);border-radius:var(--rmd);margin-bottom:5px;font-family:var(--fm);font-size:.75rem}
+.ek{color:var(--gold);min-width:220px}.ev{color:var(--tx-m);flex:1;overflow:hidden;text-overflow:ellipsis}
+
+/* Info boxes */
+.ibox{border-radius:var(--rmd);padding:12px 16px;font-size:.8rem;color:var(--tx-2);line-height:1.7;margin-bottom:16px}
+.ibox.warn{background:var(--warn-bg);border:1px solid var(--warn-bdr)}
+.ibox.info{background:var(--info-bg);border:1px solid var(--info-bdr)}
+.ibox.danger{background:var(--err-bg);border:1px solid var(--err-bdr)}
+.ibox.gold{background:var(--gold-dim);border:1px solid var(--gold-bdr)}
+
+/* CRM */
+.crml{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
+.clp{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);overflow:hidden;position:sticky;top:80px}
+.clph{padding:14px 18px;border-bottom:1px solid var(--bdr-sub)}
+.cls{max-height:calc(100vh - 240px);overflow-y:auto}
+
+/* Future bridge */
+.bridge-card{background:linear-gradient(135deg,rgba(200,162,80,.06),rgba(200,162,80,.02));border:1px solid var(--gold-bdr);border-radius:var(--rlg);padding:24px;position:relative;overflow:hidden}
+.bridge-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(200,162,80,.08),transparent);pointer-events:none}
+
+.num{font-family:var(--fm);font-variant-numeric:tabular-nums}
+.stl{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--tx-m);margin-bottom:10px}
+</style>
 </head>
 <body>
-  <nav class="nav">
-    <div class="nav-inner">
-      <div class="brand">
-        <span class="brand-top">Internal Operating System</span>
-        <span class="brand-name">NightOS</span>
-      </div>
-      <div class="nav-links">
-        <a href="#vision">Vision</a>
-        <a href="#product">Product</a>
-        <a href="#reality">Reality</a>
-        <a href="#next">Next</a>
+
+<div class="ov" id="ov" onclick="closePanel()"></div>
+<div id="toasts"></div>
+
+<!-- Side panel placeholder -->
+<div class="sp" id="sp-main">
+  <div class="sp-h">
+    <span class="sp-tt" id="sp-title">Détail</span>
+    <div class="sp-cl" onclick="closePanel()"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor"/></svg></div>
+  </div>
+  <div class="sp-b" id="sp-body"></div>
+</div>
+
+<div id="shell">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside id="sb">
+    <div class="sbl">
+      <div class="sbl-m">N</div>
+      <div><div class="sbl-n">NIGHTOS</div><div class="sbl-s">Cova Club OS · Internal Layer</div></div>
+    </div>
+    <nav class="snav">
+      <span class="snl">Navigation</span>
+      <div class="ni active" data-p="db" onclick="nav('db',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>Dashboard</div>
+      <div class="ni" data-p="res" onclick="nav('res',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg>Réservations</div>
+      <div class="ni" data-p="rp" onclick="nav('rp',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>RP Performance</div>
+      <div class="ni" data-p="crm" onclick="nav('crm',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/></svg>CRM VIP</div>
+      <div class="ni" data-p="an" onclick="nav('an',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M2 14l4-4 4 2 4-6 4 2"/><path d="M2 17h16"/></svg>Analytics</div>
+      <div class="ni" data-p="set" onclick="nav('set',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><circle cx="10" cy="10" r="2.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.41 1.41M14.37 14.37l1.41 1.41M4.22 15.78l1.41-1.41M14.37 5.63l1.41-1.41"/></svg>Paramètres</div>
+    </nav>
+    <!-- Sync pill -->
+    <div class="sync-pill" id="sb-sync">
+      <div class="sync-dot ok" id="sb-sync-dot"></div>
+      <span id="sb-sync-lbl">Source live prête</span>
+    </div>
+    <div class="sfot">
+      <div class="susr">
+        <div class="sav">PA</div>
+        <div><div class="sunm">Preview Admin</div><div class="surl">Management Preview</div></div>
       </div>
     </div>
-  </nav>
+  </aside>
 
-  <main>
-    <section class="hero">
-      <div class="shell hero-frame">
-        <div class="hero-grid">
-          <article class="hero-copy">
+  <!-- ═══ MAIN ═══ -->
+  <div id="main">
+    <header id="topbar">
+      <div><div class="tb-tt" id="tb-tt">Dashboard</div><div id="tb-sb" class="tb-sb">Vue d'ensemble · NightOS operating layer</div></div>
+      <div class="tb-r">
+        <span class="tb-dt" id="tb-dt"></span>
+        <div class="tb-btn" onclick="toast('Paramètres de notification — à configurer','info')">
+          <svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2a6 6 0 00-6 6v3l-2 2v1h16v-1l-2-2V8a6 6 0 00-6-6z"/><path d="M8 17a2 2 0 004 0"/></svg>
+        </div>
+        <div class="tb-btn" onclick="toast('Déconnexion — back-end requis en production','info')">
+          <svg viewBox="0 0 20 20" stroke="currentColor"><path d="M9 3H5a2 2 0 00-2 2v10a2 2 0 002 2h4"/><path d="M14 7l4 3-4 3M7 10h11"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <div id="ct">
+
+<!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+<div id="pg-db" class="pg on">
+
+  <!-- Sync status block -->
+  <div class="sync-block" id="db-sync">
+    <div class="sync-left ok" id="db-sync-bar"></div>
+    <div class="sync-inner">
+      <div class="sync-status">
+        <span class="sync-st-l">Synchronisation</span>
+        <span class="sync-st-v ok" id="db-sync-st">Source live active</span>
+      </div>
+      <div class="sync-info">
+        <div class="sync-msg" id="db-sync-msg">La source de réservation réelle est joignable. NightOS lit les fenêtres live et garde des états vides honnêtes quand une semaine ne contient pas encore de réservations.</div>
+        <div class="sync-hint" id="db-sync-hint">Lecture live active. Persistance Supabase encore dépendante de l'environnement serveur complet.</div>
+      </div>
+      <div class="sync-action">
+        <button class="btn btn-s btn-sm" onclick="nav('set',null);setTimeout(()=>swSet('sync',document.querySelector('.sni[data-s=sync]')),100)">Settings →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI row -->
+  <div class="g5" id="kpi-row"></div>
+
+  <!-- Body -->
+  <div class="g53 sec">
+    <div class="gcol">
+
+      <!-- Remplissage -->
+      <div class="card">
+        <div class="ch">
+          <span class="ct-l">Santé du remplissage</span>
+          <span class="badge b-off">En attente de données</span>
+        </div>
+        <div id="db-fill"></div>
+      </div>
+
+      <!-- Alertes -->
+      <div class="card">
+        <div class="ch">
+          <span class="ct-l">Alertes opérationnelles</span>
+          <span class="badge b-off" id="al-cnt">—</span>
+        </div>
+        <div id="db-alerts"></div>
+      </div>
+
+    </div>
+    <div class="gcol">
+
+      <!-- Top RP -->
+      <div class="card">
+        <div class="ch">
+          <span class="ct-l">Top RP</span>
+          <a class="ca" onclick="nav('rp',null)">Classement →</a>
+        </div>
+        <div id="db-rp"></div>
+      </div>
+
+      <!-- VIP à relancer -->
+      <div class="card">
+        <div class="ch">
+          <span class="ct-l">VIP à relancer</span>
+          <a class="ca" onclick="nav('crm',null)">CRM →</a>
+        </div>
+        <div id="db-rel"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ RÉSERVATIONS ═══════════════════════════════ -->
+<div id="pg-res" class="pg">
+  <div class="ph">
+    <div>
+      <div class="ph-t">Réservations</div>
+      <div class="ph-s">Source : site réservation live · lecture active avec états vides honnêtes</div>
+    </div>
+    <div class="ph-a">
+      <button class="btn btn-s btn-sm" onclick="toast('Export disponible une fois les données synchronisées','info')">
+        <svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 3v10M6 9l4 4 4-4"/><path d="M3 15v2h14v-2"/></svg>Exporter
+      </button>
+    </div>
+  </div>
+
+  <!-- Sync banner for reservations -->
+  <div class="ibox info" style="margin-bottom:16px;">
+    <strong style="color:var(--info);">ℹ Source des données</strong>
+    &nbsp;— Cette page affichera automatiquement toutes les réservations importées depuis le site réservation.
+    Chaque réservation sera enrichie de son identifiant externe, de sa source et de son statut de synchronisation.
+    <span style="color:var(--tx-m);display:block;margin-top:4px;font-size:.76rem;">Champs prévus : <code>external_booking_id</code> · <code>external_source</code> · <code>sync_status</code> · <code>last_synced_at</code> · <code>source_event_id</code> · <code>source_client_id</code></span>
+  </div>
+
+  <div class="fbar">
+    <div style="position:relative;display:flex;align-items:center;">
+      <svg style="position:absolute;left:10px;width:13px;height:13px;stroke:var(--tx-m);fill:none;stroke-width:1.6;" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M15 15l3 3"/></svg>
+      <input class="fi" style="padding-left:30px;min-width:180px;" placeholder="Rechercher une réservation…" disabled>
+    </div>
+    <div class="fg"><label>Date</label><select class="fs" disabled><option>Toutes</option></select></div>
+    <div class="fg"><label>Statut</label><select class="fs" disabled><option>Tous</option></select></div>
+    <div class="fg"><label>Source</label><select class="fs" disabled><option>Toutes sources</option><option>Site réservation</option><option>NightOS</option></select></div>
+    <div class="fg"><label>Sync</label><select class="fs" disabled><option>Tous statuts</option><option>Synchro OK</option><option>En attente</option></select></div>
+  </div>
+
+  <div id="res-content">
+    <!-- Empty state -->
+    <div class="tw">
+      <table class="dtbl">
+        <thead><tr>
+          <th>Client</th><th>RP</th><th>Date & Heure</th><th>Pers.</th>
+          <th>Budget est.</th><th>Table</th><th>Source</th><th>Sync</th><th>Statut</th>
+        </tr></thead>
+        <tbody>
+          <tr><td colspan="9">
+            <div class="empty">
+              <div class="empty-ico"><svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg></div>
+              <div class="empty-t">Aucune réservation sur cette fenêtre</div>
+              <div class="empty-d">NightOS est déjà relié en lecture au site de réservation. Cette vue reste vide tant qu'aucune réservation réelle n'est retournée pour la période affichée.</div>
+              <span class="empty-tag"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Source live active · aucune donnée sur cette période</span>
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ RP PERFORMANCE ═══════════════════════════════ -->
+<div id="pg-rp" class="pg">
+  <div class="ph">
+    <div>
+      <div class="ph-t">RP Performance</div>
+      <div class="ph-s">Les performances se construisent depuis la source live et restent vides quand la semaine sélectionnée n'a pas d'activité</div>
+    </div>
+    <div class="ph-a">
+      <select class="fs" disabled><option>Trier par CA estimé</option></select>
+    </div>
+  </div>
+
+  <!-- What this page will show -->
+  <div class="g3 sec" style="margin-top:0;margin-bottom:28px;">
+    <div class="card csm" style="border-color:var(--gold-bdr);opacity:.7;">
+      <div class="stl">Ce qui sera calculé automatiquement</div>
+      <div class="sr"><span class="sr-l">CA estimé généré</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">par RP</span></div>
+      <div class="sr"><span class="sr-l">Clients amenés</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">par RP</span></div>
+      <div class="sr"><span class="sr-l">Taux de présence</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">des réservations</span></div>
+      <div class="sr"><span class="sr-l">Panier moyen</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">par client amené</span></div>
+      <div class="sr"><span class="sr-l">Tendance sur 7 jours</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">évolution semaine</span></div>
+    </div>
+    <div class="card csm" style="opacity:.7;">
+      <div class="stl">Classements disponibles</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>Top Performer — CA et volume</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>En hausse — progression récente</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>À surveiller — baisse de régime</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>Inactif — aucune réservation récente</div>
+      </div>
+    </div>
+    <div class="card csm" style="opacity:.7;">
+      <div class="stl">Fiches individuelles</div>
+      <div style="font-size:.8rem;color:var(--tx-m);line-height:1.8;">
+        Chaque RP disposera d'une fiche détaillée avec :<br>
+        historique de réservations,<br>
+        clients fréquents,<br>
+        évolution mensuelle,<br>
+        informations de contact.
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty" style="background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);">
+    <div class="empty-ico" style="width:64px;height:64px;border-radius:var(--rxl);">
+      <svg viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>
+    </div>
+    <div class="empty-t">Aucun RP à afficher</div>
+    <div class="empty-d">Les profils et performances des RP seront alimentés automatiquement à partir des réservations synchronisées depuis le site réservation.</div>
+    <div style="margin-top:4px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <span class="empty-tag"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Source live active · aucun RP détecté sur cette période</span>
+      <span style="font-size:.74rem;color:var(--tx-m);">Les performances s'afficheront automatiquement dès qu'une semaine remonte des réservations réelles.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CRM VIP ═══════════════════════════════ -->
+<div id="pg-crm" class="pg">
+  <div class="ph">
+    <div>
+      <div class="ph-t">CRM Clients VIP</div>
+      <div class="ph-s">Alimenté par les réservations synchronisées, sans inventer de profils clients</div>
+    </div>
+    <div class="ph-a">
+      <button class="btn btn-s btn-sm" onclick="toast('Disponible une fois les données synchronisées','info')">+ Ajouter</button>
+    </div>
+  </div>
+
+  <div class="ibox gold" style="margin-bottom:20px;">
+    <strong style="color:var(--gold);">◆ CRM Automatique</strong>
+    &nbsp;— Chaque client sera créé ou enrichi automatiquement à partir des réservations importées.
+    Son profil contiendra l'historique de visites, le RP référent, le budget moyen et les préférences.
+    Les relances seront suggérées selon la fréquence de visite.
+  </div>
+
+  <div class="crml">
+    <!-- Left list -->
+    <div class="clp">
+      <div class="clph">
+        <span class="stl">Clients <span style="color:var(--tx-2);">—</span></span>
+      </div>
+      <div class="cls">
+        <div class="empty-sm" style="padding:40px 20px;">
+          <div class="empty-sm-t">Aucun client VIP</div>
+          <span class="empty-tag" style="margin-top:0;"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>En attente de synchro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: what will appear -->
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="ch"><span class="ct-l">Ce qu'une fiche client contiendra</span></div>
+        <div class="g2">
+          <div class="card csm" style="opacity:.65;"><div class="stl">Identité & Contact</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Nom, email, téléphone — enrichi via le site réservation</div></div>
+          <div class="card csm" style="opacity:.65;"><div class="stl">RP Référent</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Le RP qui a géré le plus de réservations pour ce client</div></div>
+          <div class="card csm" style="opacity:.65;"><div class="stl">Historique de visites</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Toutes les soirées avec table, montant et nombre de personnes</div></div>
+          <div class="card csm" style="opacity:.65;"><div class="stl">Statut VIP</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Diamond / Gold / Silver / Regular — calculé automatiquement</div></div>
+          <div class="card csm" style="opacity:.65;"><div class="stl">Budget moyen</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Calculé sur l'ensemble des visites importées</div></div>
+          <div class="card csm" style="opacity:.65;"><div class="stl">Prochaine relance</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Suggérée selon la fréquence de visite du client</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ANALYTICS ═══════════════════════════════ -->
+<div id="pg-an" class="pg">
+  <div class="ph">
+    <div>
+      <div class="ph-t">Analytics Soirées</div>
+      <div class="ph-s">Métriques calculées automatiquement à partir des données synchronisées</div>
+    </div>
+  </div>
+
+  <div class="ibox info" style="margin-bottom:24px;">
+    <strong style="color:var(--info);">ℹ Analytics en attente</strong>
+    &nbsp;— Ces graphiques et métriques seront calculés automatiquement dès que les réservations seront synchronisées depuis le site réservation. Aucune donnée n'est inventée ici.
+  </div>
+
+  <!-- What will be measured -->
+  <div class="g4" style="margin-bottom:24px;" id="an-preview"></div>
+
+  <!-- Preview charts area (greyed out) -->
+  <div class="g53 sec">
+    <div class="card" style="opacity:.4;">
+      <div class="ch"><span class="ct-l">CA estimé par soirée</span></div>
+      <div class="empty-sm"><div class="empty-sm-t">Graphique disponible après synchronisation</div></div>
+    </div>
+    <div class="card" style="opacity:.4;">
+      <div class="ch"><span class="ct-l">Taux de remplissage</span></div>
+      <div class="empty-sm"><div class="empty-sm-t">Données requises</div></div>
+    </div>
+  </div>
+
+  <div class="g3 sec">
+    <div class="card" style="opacity:.4;">
+      <div class="ch"><span class="ct-l">Répartition CA par RP</span></div>
+      <div class="empty-sm"><div class="empty-sm-t">Calculé depuis les réservations</div></div>
+    </div>
+    <div class="card" style="opacity:.4;">
+      <div class="ch"><span class="ct-l">Segments clients</span></div>
+      <div class="empty-sm"><div class="empty-sm-t">Calculé depuis le CRM</div></div>
+    </div>
+    <div class="card" style="opacity:.4;">
+      <div class="ch"><span class="ct-l">Top Soirées</span></div>
+      <div class="empty-sm"><div class="empty-sm-t">Classement en attente</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SETTINGS ═══════════════════════════════ -->
+<div id="pg-set" class="pg">
+  <div class="ph">
+    <div><div class="ph-t">Paramètres</div><div class="ph-s">Configuration, intégrations & architecture de déploiement</div></div>
+  </div>
+  <div class="sl">
+    <div class="sn">
+      <div class="sni active" data-s="team" onclick="swSet('team',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>Équipe & Rôles</div>
+      <div class="sni" data-s="sync" onclick="swSet('sync',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Reservation Sync</div>
+      <div class="sni" data-s="int" onclick="swSet('int',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M3 10h14M10 3v14"/><circle cx="10" cy="10" r="3"/></svg>Intégrations</div>
+      <div class="sni" data-s="sec" onclick="swSet('sec',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l7 3v6c0 4-3.5 7-7 8C6.5 18 3 15 3 11V5l7-3z"/></svg>Sécurité</div>
+      <div class="sni" data-s="env" onclick="swSet('env',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg>Environnement</div>
+      <div class="sni" data-s="dep" onclick="swSet('dep',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l7 3v6c0 4-3.5 7-7 8"/><path d="M3 13l3 3 7-7"/></svg>Deployment</div>
+      <div class="sni" data-s="bridge" onclick="swSet('bridge',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/></svg>Creative Bridge</div>
+    </div>
+    <div>
+      <!-- Team -->
+      <div id="ss-team" class="ssec on"><div class="ss-tt">Équipe & Rôles</div><div class="ss-ds">Accès et permissions des membres de l'équipe.</div><div class="card" id="set-team"></div></div>
+      <!-- Reservation Sync — most important -->
+      <div id="ss-sync" class="ssec">
+        <div class="ss-tt">Reservation Sync</div>
+        <div class="ss-ds">Connexion entre le site réservation réel et NightOS.</div>
+        <div class="ibox info">ℹ <strong style="color:var(--info);">Lecture live active</strong> — La source de réservation est joignable. NightOS peut déjà lire les fenêtres live. La persistance Supabase reste dépendante des variables d'environnement serveur.</div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="ch"><span class="ct-l">Statut de la connexion</span><span class="badge b-rising">Lecture live active</span></div>
+          <div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">Site réservation</div><div style="font-size:.74rem;color:var(--tx-m);">Source de vérité opérationnelle — WRITER</div></div><span class="badge b-ok">Railway joignable</span></div>
+          <div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">NightOS</div><div style="font-size:.74rem;color:var(--tx-m);">Lecture, analyse et pilotage — READER</div></div><span class="badge b-rising">Ce système</span></div>
+          <div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">Base commune</div><div style="font-size:.74rem;color:var(--tx-m);">Supabase PostgreSQL partagée avec RLS</div></div><span class="badge b-pend">Warehouse pending</span></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="ch"><span class="ct-l">Méthode de synchronisation choisie</span></div>
+          <div id="sync-methods"></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="ch"><span class="ct-l">Champs de liaison prévus</span></div>
+          <div id="sync-fields"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct-l">Configuration requise</span></div>
+          <div style="font-size:.82rem;color:var(--tx-2);line-height:1.8;">Pour activer la persistance serveur complète, ajoutez dans votre <code>.env.local</code> :</div>
+          <div style="margin-top:10px;">
+            <div class="er"><span class="ek">COVA_RESERVATION_SOURCE_URL</span><span class="ev">https://cova-club-resa-production.up.railway.app/</span></div>
+            <div class="er"><span class="ek">COVA_RESERVATION_SOURCE_PIN</span><span class="ev">2626</span></div>
+            <div class="er"><span class="ek">RESERVATION_SYNC_SHARED_SECRET</span><span class="ev">votre-secret-sync</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Integrations -->
+      <div id="ss-int" class="ssec"><div class="ss-tt">Intégrations</div><div class="ss-ds">Connexions prévues avec les outils externes.</div><div id="set-int"></div></div>
+      <!-- Security -->
+      <div id="ss-sec" class="ssec">
+        <div class="ss-tt">Sécurité</div>
+        <div class="ss-ds">Sécurité réelle du projet et points encore à terminer pour la production complète.</div>
+        <div class="ibox info">ℹ️ <strong style="color:var(--info);">Base déjà sécurisée en partie</strong> — Routes protégées côté serveur, middleware de session, validations Zod, séparation des secrets et schéma Supabase avec RLS sont déjà préparés. Le reste ci-dessous correspond aux points encore à finir.</div>
+        <div class="card" style="margin-bottom:14px;"><div class="ch"><span class="ct-l">Checklist sécurité</span></div><div id="set-sec"></div></div>
+        <div class="card"><div class="ch"><span class="ct-l">Authentification</span></div><div id="set-auth"></div></div>
+      </div>
+      <!-- Env -->
+      <div id="ss-env" class="ssec">
+        <div class="ss-tt">Environnement & Variables</div>
+        <div class="ss-ds">Secrets toujours dans .env.local — jamais dans le code.</div>
+        <div class="ibox danger">🔒 <strong style="color:var(--err);">Règle absolue</strong> — Les valeurs réelles des variables sont injectées par l'hébergeur. Le fichier .env.local ne doit jamais être commité.</div>
+        <div class="card"><div class="ch"><span class="ct-l">Variables requises</span></div><div id="set-env"></div></div>
+      </div>
+      <!-- Deployment -->
+      <div id="ss-dep" class="ssec">
+        <div class="ss-tt">Deployment Readiness</div>
+        <div class="ss-ds">Checklist avant déploiement sur GitHub + Vercel.</div>
+        <div class="ibox info">ℹ️ GitHub est déjà actif pour ce projet. Vercel et Supabase production restent à finaliser avec les vrais environnements.</div>
+        <div class="card" style="margin-bottom:14px;"><div class="ch"><span class="ct-l">Fichiers de déploiement</span></div><div id="set-dep-f"></div></div>
+        <div class="card"><div class="ch"><span class="ct-l">Limitations connues</span></div><div id="set-lim"></div></div>
+      </div>
+      <!-- Future Creative Bridge -->
+      <div id="ss-bridge" class="ssec">
+        <div class="ss-tt">Creative Bridge</div>
+        <div class="ss-ds">Passerelle future vers le SaaS privé de création de flyers & vidéos.</div>
+        <div class="bridge-card" style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <div style="width:44px;height:44px;border-radius:var(--rmd);background:var(--gold-dim);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">✦</div>
             <div>
-              <div class="hero-kicker">Cova Club OS</div>
-              <h1 class="hero-title">NightOS</h1>
-              <p class="hero-subtitle">
-                Une couche interne, premium, silencieuse et précise.
-                Le site de réservation reste la source de vérité.
-                NightOS lit, structure, synchronise, éclaire les décisions et transforme l’opérationnel en produit.
-              </p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="https://github.com/silentlng/NightOS" target="_blank" rel="noopener noreferrer">
-                  Open GitHub
-                </a>
-                <a class="btn btn-secondary" href="docs/nightos-handbook.md">
-                  Open Handbook
-                </a>
-              </div>
+              <div style="font-family:var(--fd);font-size:1.15rem;color:var(--gold);">Creative SaaS — Accès privé</div>
+              <div style="font-size:.76rem;color:var(--tx-m);margin-top:2px;">Génération de flyers & vidéos · Non développé pour l'instant</div>
             </div>
-
-            <div class="hero-gridline">
-              <div class="stat">
-                <div class="stat-value">35</div>
-                <div class="stat-label">tables détectées depuis la source réelle de réservation.</div>
-              </div>
-              <div class="stat">
-                <div class="stat-value">6+</div>
-                <div class="stat-label">surfaces produit déjà utilisables dans l’application.</div>
-              </div>
-              <div class="stat">
-                <div class="stat-value">0 fake</div>
-                <div class="stat-label">fausses réservations, faux clients et faux revenus sont interdits.</div>
-              </div>
-            </div>
-          </article>
-
-          <aside class="hero-side">
-            <section class="panel-strong status-card">
-              <div class="status-row">
-                <span class="chip green">Live source</span>
-                <span class="chip green">Week navigation</span>
-                <span class="chip orange">CRM honest mode</span>
-              </div>
-              <h2>Current state</h2>
-              <p>
-                NightOS est maintenant plus qu’une intention.
-                Le produit permet déjà de parcourir les semaines, lire la source live, explorer les réservations,
-                voir l’occupation des tables, suivre les labels RP et piloter la synchronisation depuis Settings.
-              </p>
-
-              <div class="status-list">
-                <div class="status-item">
-                  <strong>Usable now</strong>
-                  <span>Dashboard, Reservations, RP Performance, Analytics, CRM enrichment queue, Settings sync controls.</span>
-                </div>
-                <div class="status-item">
-                  <strong>Still honest</strong>
-                  <span>Le CRM reste volontairement incomplet tant que la source ne livre pas de vraie identité client vérifiée.</span>
-                </div>
-                <div class="status-item">
-                  <strong>Current direction</strong>
-                  <span>Moins de prototype, plus de produit interne premium, plus de contrôle opérationnel réel.</span>
-                </div>
-              </div>
-            </section>
-
-            <section class="panel status-card">
-              <p class="eyebrow">Source of truth</p>
-              <h2 style="font-size: 2rem;">Reservation site writes.</h2>
-              <p>
-                NightOS ne remplace pas le système de réservation.
-                Il le lit, l’expose, le sécurise côté lecture et prépare la couche analytics / CRM / operating system.
-              </p>
-            </section>
-          </aside>
+            <span class="badge b-off" style="margin-left:auto;">Futur</span>
+          </div>
+          <div style="font-size:.82rem;color:var(--tx-2);line-height:1.8;">
+            La passerelle entre NightOS et le SaaS créatif permettra, à terme, de générer automatiquement un <strong style="color:var(--tx-1);">brief créatif</strong> pour chaque soirée — directement alimenté par les données de réservation et les performances RP.
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Brief soirée automatique</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Date, thème, DJ, remplissage prévu → contexte créatif prêt</span></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Ciblage VIP</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Segments clients pour personnaliser les visuels</span></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Branding club</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Charte graphique et assets club intégrés</span></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Export formats</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Flyers, stories Instagram, vidéos teaser</span></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct-l">Préparation technique</span></div>
+          <div style="font-size:.82rem;color:var(--tx-2);line-height:1.8;">
+            Champs déjà prévus dans le modèle de données pour cette intégration future :
+          </div>
+          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">
+            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">creative_brief_ready</code>
+            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">creative_brief_id</code>
+            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">creative_output_url</code>
+            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">brief_generated_at</code>
+            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">brief_approved_by</code>
+          </div>
         </div>
       </div>
-    </section>
 
-    <section class="section" id="vision">
-      <div class="shell cut">
-        <article class="panel-strong cut-main">
-          <p class="eyebrow">Vision</p>
-          <h2 class="cut-title">A luxury internal system, not a public site.</h2>
-          <p class="section-copy">
-            La direction créative du `html` repart ici sur quelque chose de plus net:
-            plus éditorial, plus silencieux, moins dashboard générique.
-            L’intention est de montrer un produit premium, contrôlé, discret et crédible.
-          </p>
-
-          <div class="feature-line">
-            <div class="feature">
-              <div class="feature-label">Position</div>
-              <div class="feature-text">
-                NightOS est une couche d’exploitation interne. Le site de réservation reste l’entrée opérationnelle.
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature-label">Method</div>
-              <div class="feature-text">
-                Lire la donnée réelle, montrer l’état réel, laisser vide ce qui n’est pas encore fiable.
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature-label">Aesthetic</div>
-              <div class="feature-text">
-                Noir, tension, précision, hiérarchie forte, peu de bruit, beaucoup d’air.
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <aside class="panel cut-side">
-          <p class="eyebrow">Direction</p>
-          <h2 class="cut-title" style="font-size: 2rem;">Dior-like, but operational.</h2>
-          <div class="side-stack">
-            <div class="stack">
-              <h3>Not flashy</h3>
-              <p>Pas de gimmicks cheap. Le luxe vient de la retenue, de la composition et du rythme.</p>
-            </div>
-            <div class="stack">
-              <h3>Not fake</h3>
-              <p>Le produit garde des états vides premium au lieu d’inventer une activité business.</p>
-            </div>
-            <div class="stack">
-              <h3>Not static only</h3>
-              <p>Le `html` sert à visualiser l’avancement, pendant que l’application Next.js devient réellement exploitable.</p>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section" id="product">
-      <div class="shell">
-        <article class="panel cut-main">
-          <p class="eyebrow">Product</p>
-          <h2 class="cut-title">What is actually usable right now.</h2>
-          <p class="section-copy">
-            La valeur n’est plus seulement narrative. Plusieurs briques sont désormais opérables dans l’application,
-            même quand la semaine courante est vide.
-          </p>
-
-          <div class="modules">
-            <div class="module">
-              <h3>Dashboard</h3>
-              <p>Vue de soirée, health sync, pression sur les tables et signaux RP sur la fenêtre live choisie.</p>
-            </div>
-            <div class="module">
-              <h3>Reservations</h3>
-              <p>Feed des réservations live, IDs externes, filtres, détail sync-aware et board d’occupation par table.</p>
-            </div>
-            <div class="module">
-              <h3>RP Performance</h3>
-              <p>Classement live des labels source, revenus associés et structure de follow-up sans inventer de ranking.</p>
-            </div>
-            <div class="module">
-              <h3>CRM Queue</h3>
-              <p>Une file réelle d’enrichissement d’identité remplace le faux CRM quand la source ne livre pas encore les bons champs.</p>
-            </div>
-            <div class="module">
-              <h3>Analytics</h3>
-              <p>Navigation par semaine, nightly comparison et utilisation des tables à partir des fenêtres live.</p>
-            </div>
-            <div class="module">
-              <h3>Settings</h3>
-              <p>Contrôle live de la source, readiness environnement, sécurité, et point d’entrée pour la persistance Supabase.</p>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="reality">
-      <div class="shell cut">
-        <article class="panel cut-main">
-          <p class="eyebrow">Reality</p>
-          <h2 class="cut-title">The product is honest about what the source gives.</h2>
-          <p class="section-copy">
-            La source actuelle expose de l’occupation, des labels et des montants.
-            Elle n’expose pas encore un vrai modèle CRM exploitable. NightOS n’essaie pas de maquiller ce manque.
-          </p>
-
-          <div class="split-grid">
-            <div class="side-block">
-              <h3>Already read</h3>
-              <p>slots occupés, IDs de tables, labels RP/source, spend fields, week snapshots.</p>
-            </div>
-            <div class="side-block">
-              <h3>Still missing</h3>
-              <p>identité client vérifiée, préférences CRM, foreign keys propres côté RP et clients.</p>
-            </div>
-            <div class="side-block">
-              <h3>Correct behavior</h3>
-              <p>laisser le CRM vide, mais exploiter immédiatement l’opérationnel, le fill, les tables et la perf RP.</p>
-            </div>
-          </div>
-        </article>
-
-        <aside class="panel-strong cut-side">
-          <p class="eyebrow">Sync</p>
-          <h2 class="cut-title" style="font-size: 2rem;">Read now. Persist when ready.</h2>
-          <div class="side-stack">
-            <div class="stack">
-              <h3>Live read</h3>
-              <p>NightOS lit la source réelle de réservation et peut naviguer de semaine en semaine pour trouver la donnée disponible.</p>
-            </div>
-            <div class="stack">
-              <h3>Manual control</h3>
-              <p>Settings expose maintenant un check live de la source et un trigger de persistance vers Supabase.</p>
-            </div>
-            <div class="stack">
-              <h3>Production path</h3>
-              <p>Quand Supabase et les secrets sont finalisés, la lecture live devient une vraie couche historisée et sécurisée.</p>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section" id="next">
-      <div class="shell">
-        <article class="panel-strong cut-main">
-          <p class="eyebrow">Next</p>
-          <h2 class="cut-title">What comes after this version.</h2>
-          <p class="section-copy">
-            Cette version pose enfin un vrai socle produit premium. La suite logique n’est pas de refaire le visuel encore une fois,
-            mais de brancher complètement la donnée, les rôles, la persistance et le déploiement.
-          </p>
-
-          <div class="feature-line">
-            <div class="feature">
-              <div class="feature-label">01</div>
-              <div class="feature-text">
-                Finaliser Supabase en production et activer la persistance réelle de la sync.
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature-label">02</div>
-              <div class="feature-text">
-                Ajouter une UI admin pour gérer les alias RP / source labels et les mappings propres.
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature-label">03</div>
-              <div class="feature-text">
-                Faire passer le CRM de “identity enrichment queue” à vrai module client historisé.
-              </div>
-            </div>
-            <div class="feature">
-              <div class="feature-label">04</div>
-              <div class="feature-text">
-                Déployer sur Vercel avec l’environnement complet et vérifier les flux end-to-end.
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="shell">
-      <div class="panel footer-card">
-        <p>
-          NightOS n’est plus seulement une idée de produit. C’est maintenant une base sérieuse,
-          premium, plus contrôlée visuellement, et plus utilisable opérationnellement.
-        </p>
-        <div class="footer-meta">
-          <span id="footerYear">NightOS</span>
-          <span>Desktop view aligned with the repository and the live app direction.</span>
-        </div>
-      </div>
     </div>
-  </footer>
+  </div>
+</div>
 
-  <script>
-    document.getElementById("footerYear").textContent = `NightOS — ${new Date().getFullYear()}`;
-  </script>
+    </div><!-- /ct -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+/* ════════════════ DATA LAYER ════════════════ */
+const COVA={
+  syncState:{status:"connected",lastSync:new Date().toISOString(),importedToday:0,pendingCount:0,sourceConfigured:true},
+  currentUser:{id:"usr_preview",firstName:"Preview",lastName:"Admin",role:"admin",initials:"PA"},
+  reservations:[],rps:[],clients:[],alerts:[],
+  teamMembers:[
+    {nom:"Preview Admin",role:"admin",email:"preview@nightos.app",status:"active",last:new Date().toISOString()},
+  ],
+  activityLog:[],
+  helpers:{
+    esc:s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'),
+    fmt:n=>n!=null?new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n):'—',
+    fmtD:d=>d?new Intl.DateTimeFormat('fr-FR',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(d)):'—',
+    fmtT:d=>d?new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'—',
+    isConnected:()=>COVA.syncState.status==='connected',
+  }
+};
+const{esc}=COVA.helpers;
+
+/* ════════════════ TOAST ════════════════ */
+function toast(msg,type='info',dur=3200){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');t.className='toast';
+  const cols={ok:'var(--ok)',warn:'var(--warn)',err:'var(--err)',info:'var(--info)',gold:'var(--gold)'};
+  t.style.borderLeftColor=cols[type]||cols.info;t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 300ms';setTimeout(()=>t.remove(),300);},dur);
+}
+
+/* ════════════════ NAV ════════════════ */
+const PM={
+  db:{t:'Dashboard',s:"Vue d'ensemble · NightOS operating layer"},
+  res:{t:'Réservations',s:'Synchronisation automatique depuis le site réservation'},
+  rp:{t:'RP Performance',s:'Classement & analyse des RP'},
+  crm:{t:'CRM Clients VIP',s:'Gestion & suivi des clients premium'},
+  an:{t:'Analytics',s:'Métriques & performances business'},
+  set:{t:'Paramètres',s:'Configuration, intégrations & déploiement'},
+};
+function nav(p,el){
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
+  document.getElementById('pg-'+p).classList.add('on');
+  const n=el||document.querySelector(`.ni[data-p="${p}"]`);if(n)n.classList.add('active');
+  const m=PM[p]||{t:p,s:''};
+  document.getElementById('tb-tt').textContent=m.t;
+  document.getElementById('tb-sb').textContent=m.s;
+  document.getElementById('ct').style.animation='none';
+  requestAnimationFrame(()=>{document.getElementById('ct').style.animation='fadeUp 260ms ease both';});
+  const renders={db:renderDB,res:()=>{},rp:()=>{},crm:()=>{},an:renderAN,set:renderSet};
+  if(renders[p])renders[p]();
+}
+function swSet(sec,el){
+  document.querySelectorAll('.sni').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.ssec').forEach(s=>s.classList.remove('on'));
+  if(el)el.classList.add('active');
+  const found=document.querySelector(`.sni[data-s="${sec}"]`);if(found)found.classList.add('active');
+  document.getElementById('ss-'+sec).classList.add('on');
+}
+
+/* ════════════════ PANEL ════════════════ */
+function closePanel(){document.querySelectorAll('.sp').forEach(p=>p.classList.remove('on'));document.getElementById('ov').classList.remove('on');}
+
+/* ════════════════ DASHBOARD ════════════════ */
+function renderDB(){
+  const k=COVA.helpers;
+  // KPIs — empty state
+  document.getElementById('kpi-row').innerHTML=[
+    {l:'CA estimé ce soir',     ico:'<circle cx="10" cy="10" r="7"/><path d="M10 6v1.5m0 5V14m-2.5-5.5h3.5a1 1 0 010 2h-2a1 1 0 000 2H12"/>'},
+    {l:'Tables réservées',      ico:'<rect x="2" y="6" width="16" height="10" rx="2"/><path d="M6 6V4a2 2 0 014 0M10 6V4a2 2 0 014 0"/>'},
+    {l:'Clients attendus',      ico:'<path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/>'},
+    {l:'RP actifs ce soir',     ico:'<path d="M12 13a3 3 0 100-6 3 3 0 000 6z"/><path d="M18 17a6 6 0 00-12 0"/><path d="M4 12a2 2 0 100-4 2 2 0 000 4"/>'},
+    {l:'Panier moyen',          ico:'<path d="M2 5h3l2 8h8l2-6H7"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/>'},
+  ].map((c,i)=>`<div class="kpi empty au" style="animation-delay:${i*55}ms"><div class="kpi-h"><span class="kpi-lbl">${c.l}</span><div class="kpi-ico"><svg viewBox="0 0 20 20" stroke="currentColor" fill="none" stroke-width="1.5">${c.ico}</svg></div></div><div class="kpi-v placeholder">—</div><div class="kpi-sub">Aucune donnée synchronisée</div></div>`).join('');
+
+  // Filling health — empty
+  document.getElementById('db-fill').innerHTML=`<div class="empty-sm" style="padding:36px 20px;"><div style="width:44px;height:44px;border-radius:var(--rmd);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--tx-m)" stroke-width="1.4"><path d="M2 16l4-8 4 4 3-6 5 10"/></svg></div><div class="empty-sm-t">État du remplissage</div><span class="empty-tag" style="margin-top:4px;"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Apparaîtra dès les premières réservations</span></div>`;
+
+  // Alerts — empty
+  document.getElementById('al-cnt').textContent='—';
+  document.getElementById('db-alerts').innerHTML=`<div class="empty-sm"><div class="empty-sm-t">Aucune alerte</div><div style="font-size:.74rem;color:var(--tx-m);margin-top:4px;">Les alertes opérationnelles seront générées automatiquement :<br>tables non pourvues, RP inactifs, clients VIP à relancer.</div></div>`;
+
+  // Top RP — empty
+  document.getElementById('db-rp').innerHTML=`<div class="empty-sm"><div class="empty-sm-t">Aucun RP à afficher</div><div style="font-size:.74rem;color:var(--tx-m);margin-top:4px;">Le classement apparaîtra automatiquement<br>dès la synchronisation des réservations.</div></div>`;
+
+  // Relances — empty
+  document.getElementById('db-rel').innerHTML=`<div class="empty-sm"><div class="empty-sm-t">Aucun client VIP</div><div style="font-size:.74rem;color:var(--tx-m);margin-top:4px;">Les opportunités de relance seront identifiées<br>automatiquement selon la fréquence de visite.</div></div>`;
+}
+
+/* ════════════════ ANALYTICS ════════════════ */
+function renderAN(){
+  document.getElementById('an-preview').innerHTML=[
+    {l:'CA par soirée',d:'Évolution du chiffre d\'affaires estimé sur la période'},
+    {l:'Taux de remplissage',d:'% de tables occupées par soirée'},
+    {l:'Performance RP',d:'Répartition du CA généré par RP'},
+    {l:'Segments clients',d:'Diamond, Gold, Silver, Regular — distribution'},
+  ].map(k=>`<div class="kpi empty"><div class="kpi-h"><span class="kpi-lbl">${esc(k.l)}</span></div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;font-style:italic;">${esc(k.d)}</div></div>`).join('');
+}
+
+/* ════════════════ SETTINGS ════════════════ */
+function renderSet(){
+  // Team
+  document.getElementById('set-team').innerHTML=`<div class="ch"><span class="ct-l">Membres</span><button class="btn btn-p btn-sm" onclick="toast('Invitation — back-end requis en production','info')">+ Inviter</button></div>`+
+  COVA.teamMembers.map(m=>`<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);"><div style="width:28px;height:28px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.9rem;color:var(--gold);flex-shrink:0;">${m.nom.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div style="flex:1;min-width:0;"><div style="font-size:.83rem;font-weight:500;color:var(--tx-1);">${esc(m.nom)}</div><div style="font-size:.7rem;color:var(--tx-m);">${esc(m.email)}</div></div><span class="badge b-adm">${m.role}</span><span class="badge b-ok"><span class="bdot" style="background:var(--ok);"></span>Actif</span></div>`).join('');
+
+  // Sync methods
+  document.getElementById('sync-methods').innerHTML=[
+    {t:'Option A — Webhook (recommandé)',d:'Le site réservation envoie un POST à /api/sync/reservation à chaque modification.',s:'todo'},
+    {t:'Option B — Polling périodique',d:'NightOS interroge l\'API du site réservation toutes les N minutes.',s:'todo'},
+    {t:'Option C — Base Supabase partagée (cible)',d:'Les deux systèmes partagent les mêmes tables PostgreSQL avec RLS.',s:'future'},
+  ].map(x=>`<div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">${esc(x.t)}</div><div style="font-size:.74rem;color:var(--tx-m);">${esc(x.d)}</div></div><span class="badge ${x.s==='future'?'b-vip':'b-pend'}">${x.s==='future'?'Futur':'À implémenter'}</span></div>`).join('');
+
+  // Sync fields
+  document.getElementById('sync-fields').innerHTML=[
+    'external_source','external_booking_id','sync_status','last_synced_at',
+    'imported_at','created_from','updated_from_source','source_event_id','source_client_id',
+  ].map(f=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);"><code style="font-size:.76rem;color:var(--gold);">${f}</code><span class="badge b-off" style="font-size:.6rem;">Modélisé</span></div>`).join('');
+
+  // Integrations
+  document.getElementById('set-int').innerHTML=[
+    {i:'🗓️',n:'Site Réservation',d:'Source primaire des réservations — WRITER',s:'planned'},
+    {i:'🗄️',n:'Supabase',d:'Base PostgreSQL partagée avec RLS activé',s:'planned'},
+    {i:'▲',n:'Vercel',d:'Hébergement Next.js + déploiement automatique',s:'planned'},
+    {i:'🐙',n:'GitHub',d:'Repo versionné, CI/CD via GitHub Actions',s:'planned'},
+    {i:'📧',n:'Resend',d:'Emails automatiques pour les relances clients',s:'future'},
+    {i:'✦',n:'Creative SaaS (privé)',d:'Génération flyers & vidéos — SaaS privé futur',s:'future'},
+  ].map(x=>`<div style="background:var(--bg-elev);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:var(--rmd);background:var(--bg-hov);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">${x.i}</div><div style="flex:1;"><div style="font-size:.86rem;font-weight:600;color:var(--tx-1);margin-bottom:3px;">${esc(x.n)}</div><div style="font-size:.74rem;color:var(--tx-m);">${esc(x.d)}</div></div><span class="badge ${x.s==='future'?'b-off':'b-pend'}">${x.s==='future'?'Futur':'Prévu'}</span></div>`).join('');
+
+  // Security
+  document.getElementById('set-sec').innerHTML=[
+    {l:'HTTPS en production',s:'todo',n:'Automatique sur Vercel'},
+    {l:'JWT + sessions sécurisées',s:'ok',n:'Supabase Auth + middleware de session'},
+    {l:'RLS sur toutes les tables',s:'ok',n:'Migrations SQL préparées dans le repo'},
+    {l:'Rate limiting API',s:'todo',n:'Middleware Next.js + Vercel Edge'},
+    {l:'2FA Admin & Manager',s:'todo',n:'Supabase Auth — à activer'},
+    {l:'Secrets hors du code source',s:'ok',n:'Variables d\'environnement côté serveur seulement'},
+    {l:'Cookies Secure + HttpOnly',s:'todo',n:'Dépend du déploiement final et de la config auth production'},
+  ].map(s=>`<div class="secr"><div><div style="font-size:.83rem;font-weight:500;color:var(--tx-1);">${esc(s.l)}</div><div style="font-size:.72rem;color:var(--tx-m);">${esc(s.n)}</div></div><span class="sci ${s.s}">${s.s==='ok'?'Respecté':'À faire'}</span></div>`).join('');
+
+  document.getElementById('set-auth').innerHTML=[
+    {t:'2FA Admin & Manager',d:'Recommandé pour la production finale',on:false},
+    {t:'Validation session côté serveur',d:'Déjà utilisée sur les routes protégées',on:true},
+    {t:'Blocage après 5 tentatives',d:'Protection brute-force à compléter côté auth provider',on:false},
+  ].map(a=>`<div class="tgl-w"><div><div class="tgl-l">${esc(a.t)} <span style="font-size:.67rem;color:var(--tx-m);">(simulé)</span></div><div class="tgl-s">${esc(a.d)}</div></div><label class="tgl"><input type="checkbox" ${a.on?'checked':''} onchange="toast('Paramètre — back-end requis en production','warn')"><span class="tgls"></span></label></div>`).join('');
+
+  // Env
+  document.getElementById('set-env').innerHTML=[
+    {k:'NEXT_PUBLIC_SUPABASE_URL',v:'https://your-project.supabase.co',p:true},
+    {k:'NEXT_PUBLIC_SUPABASE_ANON_KEY',v:'eyJ... (anon key)',p:true},
+    {k:'SUPABASE_SERVICE_ROLE_KEY',v:'●●●●●●●●●●●●●●●●',p:false},
+    {k:'NEXT_PUBLIC_SITE_URL',v:'https://nightos.vercel.app',p:true},
+    {k:'COVA_RESERVATION_SOURCE_URL',v:'https://cova-club-resa-production.up.railway.app/',p:false},
+    {k:'COVA_RESERVATION_SOURCE_PIN',v:'●●●●',p:false},
+    {k:'RESERVATION_SYNC_SHARED_SECRET',v:'●●●●●●●●●●●●●●●●',p:false},
+    {k:'RESEND_API_KEY',v:'●●●●●●●●●●●●●●●●',p:false},
+  ].map(v=>`<div class="er"><span class="ek">${esc(v.k)}</span><span class="ev">${esc(v.v)}</span><span class="badge ${v.p?'b-ok':'b-no'}" style="flex-shrink:0;">${v.p?'Public':'Serveur uniquement'}</span></div>`).join('');
+
+  // Deploy files
+  document.getElementById('set-dep-f').innerHTML=[
+    {f:'.gitignore',n:'.env.local, node_modules et artefacts exclus'},
+    {f:'.env.example',n:'Variables requises sans valeurs réelles'},
+    {f:'README.md',n:'Instructions de déploiement et de connexion'},
+    {f:'middleware.ts',n:'Protection de session pour les routes /app'},
+    {f:'next.config.ts',n:'Headers de sécurité'},
+    {f:'supabase/migrations/*.sql',n:'Schéma, RLS et mappings RP source labels'},
+  ].map(f=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);"><div><code style="font-size:.81rem;color:var(--gold);">${esc(f.f)}</code><span style="font-size:.74rem;color:var(--tx-m);margin-left:10px;">${esc(f.n)}</span></div><span class="badge b-ok">Présent</span></div>`).join('');
+
+  // Known limitations
+  document.getElementById('set-lim').innerHTML=[
+    'Le html reste une vitrine locale, distincte de l’application Next.js réelle',
+    'La source live est lisible, mais la persistance historique complète dépend encore du projet Supabase final',
+    'Le CRM reste volontairement incomplet tant que la source ne livre pas de vraie identité client',
+    'Le build Next n’a pas pu être validé dans ce shell à cause du runtime local SWC de l’environnement Codex',
+    'Le responsive du html de démonstration peut encore être raffiné ensuite',
+  ].map(x=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.79rem;color:var(--tx-2);"><span style="color:var(--warn);flex-shrink:0;">⚠</span>${esc(x)}</div>`).join('');
+}
+
+/* ════════════════ INIT ════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('tb-dt').textContent=new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+  renderDB();
+  renderAN();
+  renderSet();
+});
+</script>
 </body>
 </html>
