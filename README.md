@@ -57,6 +57,7 @@ Source docs:
 
 - [docs/nightos-reservation-sync.md](/Users/lng/Documents/Playground/docs/nightos-reservation-sync.md)
 - [docs/nightos-deployment.md](/Users/lng/Documents/Playground/docs/nightos-deployment.md)
+- [docs/nightos-handbook.md](/Users/lng/Documents/Playground/docs/nightos-handbook.md)
 
 ## Run locally
 
