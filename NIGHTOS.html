@@ -3,39 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>NightOS — Internal Club Operating System</title>
+  <title>NightOS</title>
   <meta
     name="description"
-    content="NightOS, système d'exploitation interne premium pour la gestion opérationnelle, la performance RP, le CRM VIP et la synchronisation des réservations."
+    content="NightOS, couche premium d'opérations, analytics et CRM connectée au site de réservation."
   >
-  <meta name="theme-color" content="#07090d">
-  <meta property="og:title" content="NightOS — Internal Club Operating System">
+  <meta name="theme-color" content="#060606">
+  <meta property="og:title" content="NightOS">
   <meta
     property="og:description"
-    content="Layer analytics, CRM, RP performance et décisionnel connecté au site de réservation."
+    content="Internal club operating system connected to the reservation source of truth."
   >
   <meta property="og:type" content="website">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     :root {
-      --bg: #07090d;
-      --bg-soft: #0d1118;
-      --panel: rgba(13, 18, 27, 0.88);
-      --panel-strong: rgba(9, 13, 20, 0.94);
-      --line: rgba(255, 255, 255, 0.09);
-      --line-strong: rgba(201, 168, 76, 0.28);
-      --text: #f4f1eb;
-      --muted: #9ea5b1;
-      --gold: #c9a84c;
-      --gold-soft: #f2dbab;
-      --green: #36b37e;
-      --orange: #f2a65a;
-      --red: #ef6b73;
-      --shadow: rgba(0, 0, 0, 0.42);
-      --radius-xl: 32px;
+      --bg: #060606;
+      --bg-soft: #0d0d0d;
+      --panel: rgba(255, 255, 255, 0.035);
+      --panel-strong: rgba(255, 255, 255, 0.055);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-soft: rgba(255, 255, 255, 0.04);
+      --text: #f3ede3;
+      --muted: #a79f93;
+      --gold: #d7bf95;
+      --gold-soft: #f3e4c8;
+      --green: #83c18d;
+      --orange: #d9a76a;
+      --radius-xl: 34px;
       --radius-lg: 24px;
       --radius-md: 18px;
-      --max: 1320px;
+      --shadow: rgba(0, 0, 0, 0.38);
+      --max: 1440px;
     }
 
     * {
@@ -48,13 +47,26 @@
 
     body {
       margin: 0;
-      font-family: "Inter", "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(201, 168, 76, 0.14), transparent 24rem),
-        radial-gradient(circle at top right, rgba(55, 74, 105, 0.17), transparent 26rem),
-        linear-gradient(180deg, #07090d 0%, #0a0e15 48%, #07090d 100%);
       min-height: 100vh;
+      color: var(--text);
+      font-family: "Helvetica Neue", "Arial Nova", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(215, 191, 149, 0.08), transparent 24rem),
+        radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.03), transparent 28rem),
+        linear-gradient(180deg, #060606 0%, #090909 46%, #060606 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 84px 84px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 92%);
+      opacity: 0.24;
     }
 
     a {
@@ -62,29 +74,24 @@
       text-decoration: none;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
     .shell {
-      width: min(var(--max), calc(100% - 32px));
+      width: min(var(--max), calc(100% - 36px));
       margin: 0 auto;
     }
 
     .nav {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 30;
       backdrop-filter: blur(18px);
-      background: rgba(7, 9, 13, 0.78);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(6, 6, 6, 0.76);
+      border-bottom: 1px solid var(--line-soft);
     }
 
     .nav-inner {
-      width: min(var(--max), calc(100% - 32px));
+      width: min(var(--max), calc(100% - 36px));
       margin: 0 auto;
-      min-height: 78px;
+      min-height: 82px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -94,37 +101,36 @@
     .brand {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
-    .brand-kicker,
+    .brand-top,
     .eyebrow {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.28em;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--gold);
     }
 
     .brand-name {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 1.08rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
     .nav-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
       justify-content: flex-end;
+      gap: 10px;
     }
 
     .nav-links a {
-      color: var(--muted);
-      font-size: 0.92rem;
       padding: 10px 14px;
       border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--muted);
       transition: 0.2s ease;
     }
 
@@ -134,55 +140,90 @@
     }
 
     .hero {
-      padding: 72px 0 28px;
+      padding: 44px 0 20px;
+    }
+
+    .hero-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 42px;
+      border: 1px solid rgba(215, 191, 149, 0.18);
+      box-shadow: 0 30px 100px -52px var(--shadow);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
+        radial-gradient(circle at top left, rgba(215, 191, 149, 0.09), transparent 24rem),
+        rgba(255, 255, 255, 0.018);
+    }
+
+    .hero-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 96px 96px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 88%);
+      pointer-events: none;
+      opacity: 0.22;
     }
 
     .hero-grid {
+      position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .panel,
-    .panel-strong {
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      box-shadow: 0 28px 80px -42px var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel {
-      background: var(--panel);
-    }
-
-    .panel-strong {
-      background: var(--panel-strong);
-      border-color: var(--line-strong);
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+      gap: 26px;
+      padding: 42px;
     }
 
     .hero-copy {
-      padding: 42px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 560px;
+      min-height: 720px;
+      gap: 32px;
     }
 
-    .hero-copy h1 {
-      margin: 0;
-      font-family: "Georgia", "Times New Roman", serif;
-      font-size: clamp(3rem, 7vw, 5.2rem);
-      line-height: 0.94;
-      letter-spacing: 0.03em;
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.025);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      width: fit-content;
     }
 
-    .hero-copy p {
+    .hero-kicker::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 20px rgba(215, 191, 149, 0.6);
+    }
+
+    .hero-title {
       margin: 0;
-      max-width: 760px;
+      font-family: "Times New Roman", "Iowan Old Style", Georgia, serif;
+      font-size: clamp(4.4rem, 9vw, 8.4rem);
+      line-height: 0.84;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-subtitle {
+      max-width: 900px;
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.85;
       color: var(--muted);
-      line-height: 1.75;
-      font-size: 1rem;
     }
 
     .hero-actions {
@@ -196,20 +237,21 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      min-height: 48px;
+      min-height: 50px;
       padding: 0 22px;
       border-radius: 999px;
       border: 1px solid transparent;
-      font-size: 0.92rem;
+      font-size: 0.84rem;
       font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       transition: 0.2s ease;
     }
 
     .btn-primary {
       background: var(--gold);
-      color: #0a0d12;
-      box-shadow: 0 20px 44px -28px rgba(201, 168, 76, 0.82);
+      color: #0c0c0c;
+      box-shadow: 0 16px 40px -24px rgba(215, 191, 149, 0.7);
     }
 
     .btn-primary:hover {
@@ -217,304 +259,340 @@
     }
 
     .btn-secondary {
-      border-color: var(--line-strong);
+      border-color: rgba(255, 255, 255, 0.12);
       color: var(--text);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.025);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    .hero-stats {
+    .hero-gridline {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 36px;
+      margin-top: auto;
     }
 
     .stat {
-      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.024);
       padding: 18px;
     }
 
     .stat-value {
-      font-family: "Georgia", "Times New Roman", serif;
-      font-size: 2rem;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 2.25rem;
       line-height: 1;
-      margin-bottom: 10px;
+      letter-spacing: 0.04em;
     }
 
     .stat-label {
+      margin-top: 10px;
+      font-size: 0.83rem;
+      line-height: 1.7;
       color: var(--muted);
-      font-size: 0.85rem;
-      line-height: 1.6;
     }
 
-    .status-panel {
-      padding: 28px;
+    .hero-side {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      min-height: 560px;
+      gap: 14px;
     }
 
-    .status-chip-row {
+    .panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 22px 80px -48px var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-strong {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(215, 191, 149, 0.18);
+      background: var(--panel-strong);
+      box-shadow: 0 28px 90px -50px var(--shadow);
+      overflow: hidden;
+    }
+
+    .status-card {
+      padding: 24px;
+    }
+
+    .status-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-bottom: 22px;
     }
 
     .chip {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 14px;
+      min-height: 34px;
+      padding: 0 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      border: 1px solid transparent;
     }
 
     .chip.green {
-      background: rgba(54, 179, 126, 0.12);
       color: var(--green);
-      border-color: rgba(54, 179, 126, 0.22);
+      border-color: rgba(131, 193, 141, 0.2);
+      background: rgba(131, 193, 141, 0.08);
     }
 
     .chip.orange {
-      background: rgba(242, 166, 90, 0.12);
       color: var(--orange);
-      border-color: rgba(242, 166, 90, 0.24);
+      border-color: rgba(217, 167, 106, 0.2);
+      background: rgba(217, 167, 106, 0.08);
     }
 
-    .chip.red {
-      background: rgba(239, 107, 115, 0.12);
-      color: var(--red);
-      border-color: rgba(239, 107, 115, 0.24);
-    }
-
-    .status-panel h2,
-    .section-title {
+    .status-card h2,
+    .section-title,
+    .cut-title {
       margin: 0;
-      font-family: "Georgia", "Times New Roman", serif;
-      font-size: clamp(1.8rem, 4vw, 2.5rem);
-      letter-spacing: 0.02em;
-      line-height: 1;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 0.96;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    .status-panel p,
-    .section-copy,
-    .mini-copy {
-      margin: 0;
+    .status-card p,
+    .section-copy {
+      margin: 16px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 0.96rem;
+    }
+
+    .status-list {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-item {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 16px;
+    }
+
+    .status-item strong {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .status-item span {
+      display: block;
       color: var(--muted);
       line-height: 1.7;
-    }
-
-    .list-card {
-      border-radius: var(--radius-lg);
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 18px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .list-card strong {
-      font-size: 0.92rem;
-      letter-spacing: 0.03em;
-    }
-
-    .list-card span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
     }
 
     .section {
       padding: 18px 0;
     }
 
-    .section-grid {
+    .cut {
       display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 20px;
+      gap: 18px;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: stretch;
     }
 
-    .section-main {
-      grid-column: span 12;
-      padding: 32px;
-    }
-
-    .modules,
-    .cards-3 {
-      display: grid;
-      gap: 16px;
+    .cut-main,
+    .cut-side {
+      padding: 28px;
     }
 
     .modules {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .module {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.018);
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .module h3,
+    .stack h3,
+    .side-block h3 {
+      margin: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .module p,
+    .stack p,
+    .side-block p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 0.92rem;
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 14px;
       margin-top: 28px;
     }
 
-    .cards-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin-top: 24px;
-    }
-
-    .module-card,
-    .info-card {
-      border-radius: var(--radius-lg);
-      padding: 22px;
+    .stack {
+      padding: 18px;
+      border-radius: var(--radius-md);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.018);
     }
 
-    .module-card h3,
-    .info-card h3 {
-      margin: 0 0 10px;
-      font-size: 1.03rem;
-      letter-spacing: 0.02em;
-    }
-
-    .module-card p,
-    .info-card p,
-    .module-card li,
-    .info-card li {
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 0.92rem;
-      margin: 0;
-    }
-
-    .module-card ul,
-    .info-card ul {
-      margin: 14px 0 0;
-      padding-left: 18px;
-    }
-
-    .module-card li + li,
-    .info-card li + li {
-      margin-top: 8px;
-    }
-
-    .timeline {
+    .feature-line {
+      margin-top: 30px;
       display: grid;
+      gap: 12px;
+    }
+
+    .feature {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
       gap: 16px;
-      margin-top: 24px;
-    }
-
-    .timeline-step {
-      display: grid;
-      grid-template-columns: 92px minmax(0, 1fr);
-      gap: 18px;
-      padding: 18px 0;
+      padding: 14px 0;
       border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .timeline-step:first-child {
-      border-top: none;
-      padding-top: 0;
+    .feature:first-child {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .step-number {
+    .feature-label {
       color: var(--gold);
-      font-size: 0.8rem;
-      font-weight: 800;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      letter-spacing: 0.22em;
-      padding-top: 3px;
     }
 
-    .step-body h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    .step-body p {
-      margin: 0;
+    .feature-text {
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.8;
       font-size: 0.94rem;
     }
 
+    .split-grid {
+      margin-top: 30px;
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .side-block {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.018);
+    }
+
     .footer {
-      padding: 26px 0 52px;
+      padding: 28px 0 44px;
     }
 
     .footer-card {
-      padding: 26px 30px;
+      padding: 26px;
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      flex-direction: column;
+      gap: 18px;
     }
 
     .footer-card p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.88rem;
+      line-height: 1.8;
+      font-size: 0.94rem;
+    }
+
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.84rem;
     }
 
     code {
-      font-family: "SFMono-Regular", "Menlo", monospace;
-      font-size: 0.9em;
+      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.84em;
       color: var(--gold-soft);
     }
 
-    @media (max-width: 1040px) {
+    @media (max-width: 1160px) {
       .hero-grid,
-      .modules,
-      .cards-3 {
+      .cut {
         grid-template-columns: 1fr;
       }
 
-      .hero-copy,
-      .status-panel {
+      .hero-copy {
         min-height: auto;
+      }
+
+      .modules,
+      .split-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 760px) {
       .nav-inner,
       .shell {
-        width: min(var(--max), calc(100% - 20px));
+        width: min(var(--max), calc(100% - 22px));
       }
 
-      .nav-inner {
-        min-height: 74px;
-        padding: 10px 0;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav-links {
-        justify-content: flex-start;
-      }
-
-      .hero {
-        padding-top: 34px;
-      }
-
-      .hero-copy,
-      .status-panel,
-      .section-main,
+      .hero-grid,
+      .cut-main,
+      .cut-side,
+      .status-card,
       .footer-card {
-        padding: 22px;
+        padding: 20px;
       }
 
-      .hero-stats {
+      .hero-gridline,
+      .modules,
+      .split-grid {
         grid-template-columns: 1fr;
       }
 
-      .timeline-step {
+      .feature {
         grid-template-columns: 1fr;
         gap: 8px;
+      }
+
+      .hero-title {
+        font-size: clamp(3.4rem, 20vw, 5.2rem);
       }
     }
   </style>
@@ -523,260 +601,275 @@
   <nav class="nav">
     <div class="nav-inner">
       <div class="brand">
-        <span class="brand-kicker">Internal Operating System</span>
+        <span class="brand-top">Internal Operating System</span>
         <span class="brand-name">NightOS</span>
       </div>
       <div class="nav-links">
-        <a href="#modules">Modules</a>
-        <a href="#sync">Sync</a>
-        <a href="#architecture">Architecture</a>
-        <a href="#handoff">Deployment</a>
+        <a href="#vision">Vision</a>
+        <a href="#product">Product</a>
+        <a href="#reality">Reality</a>
+        <a href="#next">Next</a>
       </div>
     </div>
   </nav>
 
   <main>
     <section class="hero">
-      <div class="shell hero-grid">
-        <article class="panel-strong hero-copy">
-          <div>
-            <p class="eyebrow">Cova Club OS Foundation</p>
-            <h1>NightOS</h1>
-            <p style="margin-top: 22px;">
-              Système d'exploitation interne premium pour managers, staff, promoters et direction.
-              NightOS ne remplace pas le site de réservation: il lit la donnée opérationnelle, la structure,
-              l'exploite et prépare le club pour un vrai pilotage business.
-            </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="https://github.com/silentlng/NightOS" target="_blank" rel="noopener noreferrer">
-                Open GitHub
-              </a>
-              <a class="btn btn-secondary" href="docs/nightos-handbook.md">
-                Open Handbook
-              </a>
+      <div class="shell hero-frame">
+        <div class="hero-grid">
+          <article class="hero-copy">
+            <div>
+              <div class="hero-kicker">Cova Club OS</div>
+              <h1 class="hero-title">NightOS</h1>
+              <p class="hero-subtitle">
+                Une couche interne, premium, silencieuse et précise.
+                Le site de réservation reste la source de vérité.
+                NightOS lit, structure, synchronise, éclaire les décisions et transforme l’opérationnel en produit.
+              </p>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="https://github.com/silentlng/NightOS" target="_blank" rel="noopener noreferrer">
+                  Open GitHub
+                </a>
+                <a class="btn btn-secondary" href="docs/nightos-handbook.md">
+                  Open Handbook
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div class="hero-stats">
-            <div class="stat">
-              <div class="stat-value">6+</div>
-              <div class="stat-label">Operational modules now navigable by live week window inside the app.</div>
+            <div class="hero-gridline">
+              <div class="stat">
+                <div class="stat-value">35</div>
+                <div class="stat-label">tables détectées depuis la source réelle de réservation.</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">6+</div>
+                <div class="stat-label">surfaces produit déjà utilisables dans l’application.</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">0 fake</div>
+                <div class="stat-label">fausses réservations, faux clients et faux revenus sont interdits.</div>
+              </div>
             </div>
-            <div class="stat">
-              <div class="stat-value">35</div>
-              <div class="stat-label">Live tables detected from the current reservation source layout.</div>
+          </article>
+
+          <aside class="hero-side">
+            <section class="panel-strong status-card">
+              <div class="status-row">
+                <span class="chip green">Live source</span>
+                <span class="chip green">Week navigation</span>
+                <span class="chip orange">CRM honest mode</span>
+              </div>
+              <h2>Current state</h2>
+              <p>
+                NightOS est maintenant plus qu’une intention.
+                Le produit permet déjà de parcourir les semaines, lire la source live, explorer les réservations,
+                voir l’occupation des tables, suivre les labels RP et piloter la synchronisation depuis Settings.
+              </p>
+
+              <div class="status-list">
+                <div class="status-item">
+                  <strong>Usable now</strong>
+                  <span>Dashboard, Reservations, RP Performance, Analytics, CRM enrichment queue, Settings sync controls.</span>
+                </div>
+                <div class="status-item">
+                  <strong>Still honest</strong>
+                  <span>Le CRM reste volontairement incomplet tant que la source ne livre pas de vraie identité client vérifiée.</span>
+                </div>
+                <div class="status-item">
+                  <strong>Current direction</strong>
+                  <span>Moins de prototype, plus de produit interne premium, plus de contrôle opérationnel réel.</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel status-card">
+              <p class="eyebrow">Source of truth</p>
+              <h2 style="font-size: 2rem;">Reservation site writes.</h2>
+              <p>
+                NightOS ne remplace pas le système de réservation.
+                Il le lit, l’expose, le sécurise côté lecture et prépare la couche analytics / CRM / operating system.
+              </p>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="vision">
+      <div class="shell cut">
+        <article class="panel-strong cut-main">
+          <p class="eyebrow">Vision</p>
+          <h2 class="cut-title">A luxury internal system, not a public site.</h2>
+          <p class="section-copy">
+            La direction créative du `html` repart ici sur quelque chose de plus net:
+            plus éditorial, plus silencieux, moins dashboard générique.
+            L’intention est de montrer un produit premium, contrôlé, discret et crédible.
+          </p>
+
+          <div class="feature-line">
+            <div class="feature">
+              <div class="feature-label">Position</div>
+              <div class="feature-text">
+                NightOS est une couche d’exploitation interne. Le site de réservation reste l’entrée opérationnelle.
+              </div>
             </div>
-            <div class="stat">
-              <div class="stat-value">2 live</div>
-              <div class="stat-label">Source control actions: live source check and Supabase persistence trigger.</div>
+            <div class="feature">
+              <div class="feature-label">Method</div>
+              <div class="feature-text">
+                Lire la donnée réelle, montrer l’état réel, laisser vide ce qui n’est pas encore fiable.
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-label">Aesthetic</div>
+              <div class="feature-text">
+                Noir, tension, précision, hiérarchie forte, peu de bruit, beaucoup d’air.
+              </div>
             </div>
           </div>
         </article>
 
-        <aside class="panel status-panel">
-          <div class="status-chip-row">
-            <span class="chip green">Live source path ready</span>
-            <span class="chip green">Week explorer active</span>
-            <span class="chip orange">Warehouse pending</span>
-            <span class="chip orange">CRM waiting for real identity data</span>
-          </div>
-
-          <h2>Current Product Truth</h2>
-          <p>
-            The operational reservation site remains the source of truth. NightOS is the analytics,
-            CRM, RP performance, and decision-support layer built around that source.
-          </p>
-
-          <div class="list-card">
-            <strong>What NightOS already reads</strong>
-            <span>Date-scoped occupied slots, table identifiers, supplemental slots, source labels, and price values.</span>
-          </div>
-
-          <div class="list-card">
-            <strong>What is usable right now</strong>
-            <span>Week-by-week navigation, live reservation feed, table occupancy board, RP performance board, analytics by live window, and source control actions.</span>
-          </div>
-
-          <div class="list-card">
-            <strong>What NightOS intentionally leaves empty</strong>
-            <span>VIP CRM, client history, and preference logic remain empty until true client identities are synchronized.</span>
-          </div>
-
-          <div class="list-card">
-            <strong>What this HTML is</strong>
-            <span>A static NightOS overview page for the Desktop folder and the repository, aligned with the current internal operating system.</span>
+        <aside class="panel cut-side">
+          <p class="eyebrow">Direction</p>
+          <h2 class="cut-title" style="font-size: 2rem;">Dior-like, but operational.</h2>
+          <div class="side-stack">
+            <div class="stack">
+              <h3>Not flashy</h3>
+              <p>Pas de gimmicks cheap. Le luxe vient de la retenue, de la composition et du rythme.</p>
+            </div>
+            <div class="stack">
+              <h3>Not fake</h3>
+              <p>Le produit garde des états vides premium au lieu d’inventer une activité business.</p>
+            </div>
+            <div class="stack">
+              <h3>Not static only</h3>
+              <p>Le `html` sert à visualiser l’avancement, pendant que l’application Next.js devient réellement exploitable.</p>
+            </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="modules">
+    <section class="section" id="product">
       <div class="shell">
-        <article class="panel section-main">
-          <p class="eyebrow">Core Modules</p>
-          <h2 class="section-title">The operational heart of NightOS</h2>
-          <p class="section-copy" style="margin-top: 16px;">
-            The product is centered on operational clarity, not on a fake marketing shell.
-            These modules are already represented in the Next.js application and are designed to stay honest
-            when real synchronized data is still incomplete.
+        <article class="panel cut-main">
+          <p class="eyebrow">Product</p>
+          <h2 class="cut-title">What is actually usable right now.</h2>
+          <p class="section-copy">
+            La valeur n’est plus seulement narrative. Plusieurs briques sont désormais opérables dans l’application,
+            même quand la semaine courante est vide.
           </p>
 
           <div class="modules">
-            <div class="module-card">
+            <div class="module">
               <h3>Dashboard</h3>
-              <p>Tonight status, sync health, fill structure, estimated revenue structure, active promoters, table plan board, and operational alerts.</p>
+              <p>Vue de soirée, health sync, pression sur les tables et signaux RP sur la fenêtre live choisie.</p>
             </div>
-            <div class="module-card">
+            <div class="module">
               <h3>Reservations</h3>
-              <p>Operational reservation visibility with external booking IDs, source visibility, sync state, detail panel, and live table occupancy by selected night.</p>
+              <p>Feed des réservations live, IDs externes, filtres, détail sync-aware et board d’occupation par table.</p>
             </div>
-            <div class="module-card">
+            <div class="module">
               <h3>RP Performance</h3>
-              <p>Who brings value, who drives revenue, and which live labels still need enrichment, without fabricating rankings.</p>
+              <p>Classement live des labels source, revenus associés et structure de follow-up sans inventer de ranking.</p>
             </div>
-            <div class="module-card">
-              <h3>VIP CRM</h3>
-              <p>Prepared around imported reservation activity, with a real identity-enrichment queue instead of fake VIP profiles.</p>
+            <div class="module">
+              <h3>CRM Queue</h3>
+              <p>Une file réelle d’enrichissement d’identité remplace le faux CRM quand la source ne livre pas encore les bons champs.</p>
             </div>
-            <div class="module-card">
+            <div class="module">
               <h3>Analytics</h3>
-              <p>Lighter, decision-oriented business visibility with nightly comparison and table utilization from the real source window.</p>
+              <p>Navigation par semaine, nightly comparison et utilisation des tables à partir des fenêtres live.</p>
             </div>
-            <div class="module-card">
+            <div class="module">
               <h3>Settings</h3>
-              <p>Roles, access, reservation sync, live source controls, security architecture, deployment readiness, and future creative bridge placeholders.</p>
+              <p>Contrôle live de la source, readiness environnement, sécurité, et point d’entrée pour la persistance Supabase.</p>
             </div>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="section" id="sync">
-      <div class="shell">
-        <article class="panel section-main">
-          <p class="eyebrow">Reservation Sync</p>
-          <h2 class="section-title">Connected to the real reservation source</h2>
-          <p class="section-copy" style="margin-top: 16px;">
-            NightOS is already wired to the current operational reservation site:
-            <code>https://cova-club-resa-production.up.railway.app/</code>.
-            The current live path uses Socket.IO to read week snapshots in a way that respects the reservation site as the writer.
+    <section class="section" id="reality">
+      <div class="shell cut">
+        <article class="panel cut-main">
+          <p class="eyebrow">Reality</p>
+          <h2 class="cut-title">The product is honest about what the source gives.</h2>
+          <p class="section-copy">
+            La source actuelle expose de l’occupation, des labels et des montants.
+            Elle n’expose pas encore un vrai modèle CRM exploitable. NightOS n’essaie pas de maquiller ce manque.
           </p>
 
-          <div class="cards-3">
-            <div class="info-card">
-              <h3>Current useful payload</h3>
-              <ul>
-                <li>occupied table slots</li>
-                <li>supplemental booking slots</li>
-                <li>source label text</li>
-                <li>price / spend fields</li>
-              </ul>
+          <div class="split-grid">
+            <div class="side-block">
+              <h3>Already read</h3>
+              <p>slots occupés, IDs de tables, labels RP/source, spend fields, week snapshots.</p>
             </div>
-            <div class="info-card">
-              <h3>Current limitations</h3>
-              <ul>
-                <li>no verified client identity</li>
-                <li>no structured CRM-grade preferences</li>
-                <li>no explicit RP foreign key model yet</li>
-              </ul>
+            <div class="side-block">
+              <h3>Still missing</h3>
+              <p>identité client vérifiée, préférences CRM, foreign keys propres côté RP et clients.</p>
             </div>
-            <div class="info-card">
-              <h3>Current sync behavior</h3>
-              <ul>
-                <li>maps slots to <code>external_booking_id</code></li>
-                <li>keeps source metadata visible</li>
-                <li>lets operators inspect any live week window</li>
-                <li>can trigger live source checks from settings</li>
-                <li>leaves CRM empty instead of inventing clients</li>
-              </ul>
+            <div class="side-block">
+              <h3>Correct behavior</h3>
+              <p>laisser le CRM vide, mais exploiter immédiatement l’opérationnel, le fill, les tables et la perf RP.</p>
             </div>
           </div>
         </article>
-      </div>
-    </section>
 
-    <section class="section" id="architecture">
-      <div class="shell">
-        <article class="panel section-main">
-          <p class="eyebrow">Architecture</p>
-          <h2 class="section-title">Production-oriented structure</h2>
-          <p class="section-copy" style="margin-top: 16px;">
-            NightOS is now structured as a real application base with Next.js App Router, TypeScript,
-            Tailwind CSS, Supabase-ready auth and data modeling, and Row Level Security preparation.
-          </p>
-
-          <div class="timeline">
-            <div class="timeline-step">
-              <div class="step-number">Step 01</div>
-              <div class="step-body">
-                <h3>Reservation site writes</h3>
-                <p>The existing operational reservation site remains the booking entry point and source of truth.</p>
-              </div>
+        <aside class="panel-strong cut-side">
+          <p class="eyebrow">Sync</p>
+          <h2 class="cut-title" style="font-size: 2rem;">Read now. Persist when ready.</h2>
+          <div class="side-stack">
+            <div class="stack">
+              <h3>Live read</h3>
+              <p>NightOS lit la source réelle de réservation et peut naviguer de semaine en semaine pour trouver la donnée disponible.</p>
             </div>
-            <div class="timeline-step">
-              <div class="step-number">Step 02</div>
-              <div class="step-body">
-                <h3>NightOS reads and structures</h3>
-                <p>NightOS pulls live source data, maps source identifiers, exposes week-by-week operational views, and renders a premium internal operating layer.</p>
-              </div>
+            <div class="stack">
+              <h3>Manual control</h3>
+              <p>Settings expose maintenant un check live de la source et un trigger de persistance vers Supabase.</p>
             </div>
-            <div class="timeline-step">
-              <div class="step-number">Step 03</div>
-              <div class="step-body">
-                <h3>Supabase persists and secures</h3>
-                <p>Profiles, RP profiles, clients, tables, events, reservations, visits, audit logs, and RP source-label aliases are prepared with RLS.</p>
-              </div>
-            </div>
-            <div class="timeline-step">
-              <div class="step-number">Step 04</div>
-              <div class="step-body">
-                <h3>Analytics and CRM become trustworthy</h3>
-                <p>As soon as richer synchronized data exists, CRM and performance modules move from empty states to real business visibility.</p>
-              </div>
+            <div class="stack">
+              <h3>Production path</h3>
+              <p>Quand Supabase et les secrets sont finalisés, la lecture live devient une vraie couche historisée et sécurisée.</p>
             </div>
           </div>
-        </article>
+        </aside>
       </div>
     </section>
 
-    <section class="section" id="handoff">
+    <section class="section" id="next">
       <div class="shell">
-        <article class="panel-strong section-main">
-          <p class="eyebrow">Deployment & Handoff</p>
-          <h2 class="section-title">What remains to connect</h2>
-          <p class="section-copy" style="margin-top: 16px;">
-            The project is already pushed to GitHub, mirrored into the Desktop folder, and organized for Vercel deployment.
-            What remains is real environment configuration and production data plumbing.
+        <article class="panel-strong cut-main">
+          <p class="eyebrow">Next</p>
+          <h2 class="cut-title">What comes after this version.</h2>
+          <p class="section-copy">
+            Cette version pose enfin un vrai socle produit premium. La suite logique n’est pas de refaire le visuel encore une fois,
+            mais de brancher complètement la donnée, les rôles, la persistance et le déploiement.
           </p>
 
-          <div class="cards-3">
-            <div class="info-card">
-              <h3>Ready now</h3>
-              <ul>
-                <li>GitHub repository</li>
-                <li>Desktop mirror</li>
-                <li>Next.js application structure</li>
-                <li>Supabase migration SQL</li>
-                <li>week navigation across core modules</li>
-                <li>live source control panel in settings</li>
-              </ul>
+          <div class="feature-line">
+            <div class="feature">
+              <div class="feature-label">01</div>
+              <div class="feature-text">
+                Finaliser Supabase en production et activer la persistance réelle de la sync.
+              </div>
             </div>
-            <div class="info-card">
-              <h3>Pending setup</h3>
-              <ul>
-                <li>real Supabase credentials</li>
-                <li>auth users and role rows</li>
-                <li>persistent sync execution</li>
-                <li>Vercel environment configuration</li>
-              </ul>
+            <div class="feature">
+              <div class="feature-label">02</div>
+              <div class="feature-text">
+                Ajouter une UI admin pour gérer les alias RP / source labels et les mappings propres.
+              </div>
             </div>
-            <div class="info-card">
-              <h3>Future bridge</h3>
-              <ul>
-                <li>private creative SaaS placeholders</li>
-                <li>flyer/video brief handoff structure</li>
-                <li>no creative product built yet</li>
-              </ul>
+            <div class="feature">
+              <div class="feature-label">03</div>
+              <div class="feature-text">
+                Faire passer le CRM de “identity enrichment queue” à vrai module client historisé.
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-label">04</div>
+              <div class="feature-text">
+                Déployer sur Vercel avec l’environnement complet et vérifier les flux end-to-end.
+              </div>
             </div>
           </div>
         </article>
@@ -787,15 +880,20 @@
   <footer class="footer">
     <div class="shell">
       <div class="panel footer-card">
-        <p>NightOS static overview page aligned with the actual repository and internal product.</p>
-        <p id="footerYear">NightOS</p>
+        <p>
+          NightOS n’est plus seulement une idée de produit. C’est maintenant une base sérieuse,
+          premium, plus contrôlée visuellement, et plus utilisable opérationnellement.
+        </p>
+        <div class="footer-meta">
+          <span id="footerYear">NightOS</span>
+          <span>Desktop view aligned with the repository and the live app direction.</span>
+        </div>
       </div>
     </div>
   </footer>
 
   <script>
-    const year = new Date().getFullYear();
-    document.getElementById("footerYear").textContent = `NightOS — ${year}`;
+    document.getElementById("footerYear").textContent = `NightOS — ${new Date().getFullYear()}`;
   </script>
 </body>
 </html>
