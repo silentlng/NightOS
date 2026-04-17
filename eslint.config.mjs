@@ -14,7 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "bootstrap-cova/**",
     "script.js",
-    "index.html",
+    "NIGHTOS.html",
     "style.css",
     "sw.js",
     "trading_agent/**",
