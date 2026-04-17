@@ -1,18 +1,21 @@
 import Link from "next/link";
-import { PageIntro } from "@/components/page-intro";
 import { EmptyState } from "@/components/empty-state";
+import { PageIntro } from "@/components/page-intro";
 import { SectionCard } from "@/components/section-card";
 import { StatusPill } from "@/components/status-pill";
+import { TableOccupancyBoard } from "@/components/table-occupancy-board";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
+import { WeekNavigator } from "@/components/week-navigator";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
-import { getWorkspaceInsights } from "@/lib/workspace-data";
+import { getWorkspaceInsightsForWeek } from "@/lib/workspace-data";
 import type { AppAccess } from "@/types/app";
 
 export async function ReservationsPage({
   access,
   filters,
   basePath,
+  weekOffset,
 }: {
   access: AppAccess;
   filters: {
@@ -22,8 +25,9 @@ export async function ReservationsPage({
     selected?: string;
   };
   basePath: string;
+  weekOffset: number;
 }) {
-  const data = await getWorkspaceInsights(access);
+  const data = await getWorkspaceInsightsForWeek(access, weekOffset);
   const filteredReservations = data.reservationsInScope.filter((reservation) => {
     if (filters.day && reservation.dateId !== filters.day) {
       return false;
@@ -44,6 +48,10 @@ export async function ReservationsPage({
     filteredReservations.find(
       (reservation) => reservation.externalBookingId === filters.selected,
     ) || filteredReservations[0];
+  const selectedNight =
+    data.snapshot.nights.find(
+      (night) => night.dateId === (filters.day || selectedReservation?.dateId),
+    ) || data.tonight;
 
   return (
     <div className="space-y-6">
@@ -53,12 +61,23 @@ export async function ReservationsPage({
         description="NightOS keeps reservations tied to the operational writer. Each record shows where it came from, whether sync is live, and how it will map into the warehouse."
       />
 
+      <WeekNavigator
+        pathname={`${basePath}/reservations`}
+        params={{
+          syncState: filters.syncState,
+          source: filters.source,
+        }}
+        weekLabel={data.snapshot.weekLabel}
+        weekOffset={data.weekOffset}
+      />
+
       <SectionCard
         eyebrow="Filters"
         title="Refine the operational list"
         description="Filters stay honest: source and sync state reflect what NightOS truly knows."
       >
         <form className="grid gap-3 md:grid-cols-4" method="get">
+          <input name="week" type="hidden" value={String(data.weekOffset)} />
           <Select defaultValue={filters.day || ""} name="day">
             <option value="">All nights</option>
             {data.snapshot.nights.map((night) => (
@@ -81,6 +100,24 @@ export async function ReservationsPage({
         </form>
       </SectionCard>
 
+      <SectionCard
+        eyebrow="Table Plan"
+        title="Live occupancy by table"
+        description="Use this to understand open versus occupied inventory for the selected night."
+      >
+        {selectedNight ? (
+          <TableOccupancyBoard
+            inventory={data.snapshot.tableInventory}
+            selectedNight={selectedNight}
+          />
+        ) : (
+          <EmptyState
+            title="No live night selected"
+            description="Pick a night from the filters or wait for a live Thursday-to-Saturday window."
+          />
+        )}
+      </SectionCard>
+
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
         <SectionCard
           eyebrow="Reservation Feed"
@@ -97,11 +134,11 @@ export async function ReservationsPage({
                       ? "border-accent/30 bg-accent/8"
                       : ""
                   }`}
-                  href={`${basePath}/reservations?day=${filters.day || ""}&syncState=${
-                    filters.syncState || ""
-                  }&source=${filters.source || ""}&selected=${
-                    reservation.externalBookingId
-                  }`}
+                  href={`${basePath}/reservations?week=${data.weekOffset}&day=${
+                    filters.day || ""
+                  }&syncState=${filters.syncState || ""}&source=${
+                    filters.source || ""
+                  }&selected=${reservation.externalBookingId}`}
                   key={reservation.externalBookingId}
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -133,7 +170,7 @@ export async function ReservationsPage({
           ) : (
             <EmptyState
               title="No reservations match the current filters"
-              description="Either the live reservation source returned no occupied tables for this week, or the current filter scope removes every result."
+              description="Either the live reservation source returned no occupied tables for this week, or the current filter scope removes every result. Use the week controls above to inspect another live window."
             />
           )}
         </SectionCard>
@@ -179,6 +216,14 @@ export async function ReservationsPage({
                 </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   The current source does not expose a verified client identity for this booking. NightOS stores the live source label separately until richer data is available.
+                </p>
+              </div>
+              <div className="surface-muted p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  Spend field quality
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Revenue uses only the price string currently exposed by the source. Missing or unparsable values stay blank rather than being estimated.
                 </p>
               </div>
             </div>

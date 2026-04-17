@@ -48,6 +48,8 @@ What it does **not** expose cleanly yet:
 - stores source fields for sync-aware visibility
 - keeps CRM empty instead of inventing clients
 - can scope RP views through dedicated `rp_profiles.source_labels` aliases instead of relying only on viewer names
+- lets operators move week by week through the live source window in the product UI
+- exposes a manual live source check and a Supabase persistence trigger in Settings
 
 ## Production sync path
 

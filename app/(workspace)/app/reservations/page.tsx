@@ -1,5 +1,6 @@
 import { ReservationsPage } from "@/components/workspace-pages/reservations-page";
 import { getAuthenticatedAccess } from "@/lib/auth/access";
+import { parseWeekOffset } from "@/lib/workspace-navigation";
 
 export default async function AppReservationsPage({
   searchParams,
@@ -13,6 +14,7 @@ export default async function AppReservationsPage({
     <ReservationsPage
       access={access}
       basePath="/app"
+      weekOffset={parseWeekOffset(params.week)}
       filters={{
         day: typeof params.day === "string" ? params.day : undefined,
         syncState:

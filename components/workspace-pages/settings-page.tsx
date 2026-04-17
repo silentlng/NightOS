@@ -1,15 +1,25 @@
 import Link from "next/link";
+import { EmptyState } from "@/components/empty-state";
 import { PageIntro } from "@/components/page-intro";
 import { SectionCard } from "@/components/section-card";
+import { SourceControlPanel } from "@/components/source-control-panel";
 import { StatusPill } from "@/components/status-pill";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/empty-state";
+import { WeekNavigator } from "@/components/week-navigator";
 import { canAccessSection } from "@/lib/auth/permissions";
 import { formatDateTime } from "@/lib/utils";
-import { getWorkspaceInsights } from "@/lib/workspace-data";
+import { getWorkspaceInsightsForWeek } from "@/lib/workspace-data";
 import type { AppAccess } from "@/types/app";
 
-export async function SettingsPage({ access }: { access: AppAccess }) {
+export async function SettingsPage({
+  access,
+  basePath,
+  weekOffset,
+}: {
+  access: AppAccess;
+  basePath: string;
+  weekOffset: number;
+}) {
   if (!canAccessSection(access.role, "settings")) {
     return (
       <div className="space-y-6">
@@ -27,7 +37,7 @@ export async function SettingsPage({ access }: { access: AppAccess }) {
     );
   }
 
-  const data = await getWorkspaceInsights(access);
+  const data = await getWorkspaceInsightsForWeek(access, weekOffset);
   const readiness = data.environmentReadiness;
 
   return (
@@ -36,6 +46,12 @@ export async function SettingsPage({ access }: { access: AppAccess }) {
         eyebrow="Settings"
         title="Roles, sync, integrations, deployment readiness, and future architecture."
         description="This page separates what is already implemented from what is connected later, while keeping the future creative bridge explicitly out of scope for now."
+      />
+
+      <WeekNavigator
+        pathname={`${basePath}/settings`}
+        weekLabel={data.snapshot.weekLabel}
+        weekOffset={data.weekOffset}
       />
 
       <div className="grid gap-4 xl:grid-cols-2">
@@ -105,6 +121,7 @@ export async function SettingsPage({ access }: { access: AppAccess }) {
                 POST /api/sync/reservation-source/pull with x-sync-secret
               </p>
             </div>
+            <SourceControlPanel weekOffset={data.weekOffset} />
           </div>
         </SectionCard>
       </div>

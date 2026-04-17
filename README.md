@@ -41,9 +41,9 @@ It **is**:
 - Dashboard
 - Reservations
 - RP Performance
-- VIP CRM empty-state architecture
-- Analytics
-- Settings
+- VIP CRM identity-enrichment queue
+- Analytics with live week navigation and table utilization
+- Settings with live source control actions
 - Live read-only connection path to the operational reservation source
 - Sync route ready for Supabase persistence
 - RP source-label alias mapping for cleaner scoped visibility
@@ -54,6 +54,8 @@ NightOS is wired to read the current source site in live mode through Socket.IO 
 
 - `COVA_RESERVATION_SOURCE_URL`
 - `COVA_RESERVATION_SOURCE_PIN`
+
+Core product modules now support week-by-week inspection with `?week=<offset>`, which makes the app usable even when the current week is empty but a recent or future live window contains real reservations.
 
 Source docs:
 
@@ -115,6 +117,7 @@ The schema includes:
 - VIP CRM therefore stays intentionally empty for now.
 - Deletion reconciliation in the sync pipeline is not complete yet.
 - RP scoping is now cleaner via source-label aliases, but still depends on the reservation site exposing consistent labels.
+- The current live source can be inspected and persisted from the settings UI, but full historical automation still depends on Supabase + scheduled execution.
 
 ## Legacy files
 

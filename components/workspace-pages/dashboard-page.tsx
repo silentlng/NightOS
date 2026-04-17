@@ -1,10 +1,12 @@
-import { PageIntro } from "@/components/page-intro";
 import { EmptyState } from "@/components/empty-state";
 import { MetricCard } from "@/components/metric-card";
+import { PageIntro } from "@/components/page-intro";
 import { SectionCard } from "@/components/section-card";
 import { StatusPill } from "@/components/status-pill";
+import { TableOccupancyBoard } from "@/components/table-occupancy-board";
+import { WeekNavigator } from "@/components/week-navigator";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
-import { getWorkspaceInsights } from "@/lib/workspace-data";
+import { getWorkspaceInsightsForWeek } from "@/lib/workspace-data";
 import type { AppAccess } from "@/types/app";
 
 function readinessTone(readiness: "ready" | "needs_attention" | "critical") {
@@ -19,8 +21,16 @@ function readinessLabel(readiness: "ready" | "needs_attention" | "critical") {
   return "Needs attention";
 }
 
-export async function DashboardPage({ access }: { access: AppAccess }) {
-  const data = await getWorkspaceInsights(access);
+export async function DashboardPage({
+  access,
+  basePath,
+  weekOffset,
+}: {
+  access: AppAccess;
+  basePath: string;
+  weekOffset: number;
+}) {
+  const data = await getWorkspaceInsightsForWeek(access, weekOffset);
   const tonightFillRate =
     typeof data.metrics.fillRate === "number"
       ? `${Math.round(data.metrics.fillRate * 100)}%`
@@ -30,7 +40,7 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
     <div className="space-y-6">
       <PageIntro
         eyebrow="Dashboard"
-        title="Business status for tonight, sync health, and what NightOS can already read from the reservation source."
+        title="Business status for tonight, sync health, and the live reservation operating picture."
         description="This dashboard stays honest: it reads live reservation occupancy from the operational source when available, and keeps premium empty states where richer CRM or warehouse data does not exist yet."
         aside={
           <div className="surface-muted space-y-4 p-5">
@@ -46,6 +56,12 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
             </div>
           </div>
         }
+      />
+
+      <WeekNavigator
+        pathname={`${basePath}/dashboard`}
+        weekLabel={data.snapshot.weekLabel}
+        weekOffset={data.weekOffset}
       />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -84,7 +100,7 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
         />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
+      <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
         <SectionCard
           eyebrow="Tonight Status"
           title={
@@ -124,11 +140,65 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
           ) : (
             <EmptyState
               title="No occupied tables returned for the upcoming night"
-              description="The reservation source is connected, but it did not return any occupied standard or supplemental slots for the current Thursday-to-Saturday window."
+              description="The reservation source is connected, but it did not return any occupied standard or supplemental slots for the selected Thursday-to-Saturday window. Use the week controls above to inspect another live window."
             />
           )}
         </SectionCard>
 
+        <SectionCard
+          eyebrow="Promoter Signals"
+          title="Who is currently driving the week"
+          description="This board stays tied to the exact labels exposed by the reservation source."
+        >
+          {data.promoterStatsInScope.length > 0 ? (
+            <div className="space-y-3">
+              {data.promoterStatsInScope.slice(0, 5).map((stat) => (
+                <div
+                  className="surface-muted flex items-center justify-between gap-4 p-4"
+                  key={stat.sourceLabel}
+                >
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-foreground">
+                      {stat.sourceLabel}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {stat.reservations} live source bookings
+                    </p>
+                  </div>
+                  <p className="text-sm font-medium text-foreground">
+                    {formatCurrency(stat.estimatedRevenue)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="No live promoter signals yet"
+              description="The current week is structurally loaded, but no source labels were returned for the active window. Use the week controls above to inspect another live window."
+            />
+          )}
+        </SectionCard>
+      </div>
+
+      <SectionCard
+        eyebrow="Table Plan"
+        title="Live occupancy board"
+        description="A table-by-table view of the selected upcoming night, using the reservation source directly."
+      >
+        {data.tonight ? (
+          <TableOccupancyBoard
+            inventory={data.snapshot.tableInventory}
+            selectedNight={data.tonight}
+          />
+        ) : (
+          <EmptyState
+            title="No selected live night yet"
+            description="NightOS will show a table plan board as soon as a live Thursday-to-Saturday window is available."
+          />
+        )}
+      </SectionCard>
+
+      <div className="grid gap-4 xl:grid-cols-[1fr_1fr]">
         <SectionCard
           eyebrow="Operational Alerts"
           title="What needs attention"
@@ -140,7 +210,15 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-medium">{alert.title}</p>
                   <StatusPill
-                    label={alert.tone === "danger" ? "Critical" : alert.tone === "warning" ? "Attention" : alert.tone === "success" ? "Connected" : "Structured"}
+                    label={
+                      alert.tone === "danger"
+                        ? "Critical"
+                        : alert.tone === "warning"
+                          ? "Attention"
+                          : alert.tone === "success"
+                            ? "Connected"
+                            : "Structured"
+                    }
                     tone={
                       alert.tone === "danger"
                         ? "danger"
@@ -159,9 +237,7 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
             ))}
           </div>
         </SectionCard>
-      </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
         <SectionCard
           eyebrow="Source Visibility"
           title="Reservation source"
@@ -200,17 +276,6 @@ export async function DashboardPage({ access }: { access: AppAccess }) {
               </div>
             </div>
           </div>
-        </SectionCard>
-
-        <SectionCard
-          eyebrow="VIP Follow-up"
-          title="CRM readiness"
-          description="VIP follow-up becomes useful only after NightOS has true client-level identity data."
-        >
-          <EmptyState
-            title="No synchronized client identities yet"
-            description="The current reservation source gives NightOS occupancy labels and spend values, but not reliable client profiles. VIP CRM will auto-populate once a richer reservation payload or Supabase sync layer is active."
-          />
         </SectionCard>
       </div>
     </div>

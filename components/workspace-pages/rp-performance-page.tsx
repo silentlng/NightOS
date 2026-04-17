@@ -2,12 +2,21 @@ import { EmptyState } from "@/components/empty-state";
 import { PageIntro } from "@/components/page-intro";
 import { SectionCard } from "@/components/section-card";
 import { StatusPill } from "@/components/status-pill";
+import { WeekNavigator } from "@/components/week-navigator";
 import { formatCurrency } from "@/lib/utils";
-import { getWorkspaceInsights } from "@/lib/workspace-data";
+import { getWorkspaceInsightsForWeek } from "@/lib/workspace-data";
 import type { AppAccess } from "@/types/app";
 
-export async function RpPerformancePage({ access }: { access: AppAccess }) {
-  const data = await getWorkspaceInsights(access);
+export async function RpPerformancePage({
+  access,
+  basePath,
+  weekOffset,
+}: {
+  access: AppAccess;
+  basePath: string;
+  weekOffset: number;
+}) {
+  const data = await getWorkspaceInsightsForWeek(access, weekOffset);
 
   return (
     <div className="space-y-6">
@@ -15,6 +24,12 @@ export async function RpPerformancePage({ access }: { access: AppAccess }) {
         eyebrow="RP Performance"
         title="Promoter value, inactivity, and follow-up structure built only from real reservation-source activity."
         description="This module intentionally refuses to fake rankings. If the source returns no activity, NightOS keeps the board empty and shows exactly what will populate once live data appears."
+      />
+
+      <WeekNavigator
+        pathname={`${basePath}/rp-performance`}
+        weekLabel={data.snapshot.weekLabel}
+        weekOffset={data.weekOffset}
       />
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -42,9 +57,11 @@ export async function RpPerformancePage({ access }: { access: AppAccess }) {
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
             Follow-up needed
           </p>
-          <p className="mt-3 font-display text-4xl">—</p>
+          <p className="mt-3 font-display text-4xl">
+            {data.labelEnrichmentQueue.length || "—"}
+          </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Follow-up recommendations stay disabled until promoter identity and visit history are truly synchronized.
+            Live labels already exist, but identity enrichment is still needed before real CRM follow-up can start.
           </p>
         </div>
       </div>
@@ -87,8 +104,46 @@ export async function RpPerformancePage({ access }: { access: AppAccess }) {
             description={
               access.role === "rp"
                 ? "This RP account does not currently map to any live reservation-source label, so NightOS keeps the RP performance view empty."
-                : "The source is connected, but it returned no reservation labels for the current Thursday-to-Saturday window."
+                : "The source is connected, but it returned no reservation labels for the selected Thursday-to-Saturday window. Use the week controls above to inspect another live window."
             }
+          />
+        )}
+      </SectionCard>
+
+      <SectionCard
+        eyebrow="Follow-up Structure"
+        title="What NightOS can already highlight"
+        description="These are operationally useful even before full CRM identity sync exists."
+      >
+        {data.promoterStatsInScope.length > 0 ? (
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="surface-muted p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                Labels to enrich
+              </p>
+              <p className="mt-3 font-display text-4xl">
+                {data.labelEnrichmentQueue.length}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Active labels exist, but they still need verified client identity to become proper CRM records.
+              </p>
+            </div>
+            <div className="surface-muted p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                Unlabeled bookings
+              </p>
+              <p className="mt-3 font-display text-4xl">
+                {data.unlabeledReservations || "—"}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Bookings without a label are impossible to attribute, so they should be fixed at source or during sync enrichment.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <EmptyState
+            title="No follow-up signals yet"
+            description="NightOS keeps this honest until the selected week exposes live RP activity from the source. Use the week controls above to inspect another live window."
           />
         )}
       </SectionCard>

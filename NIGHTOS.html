@@ -559,16 +559,16 @@
 
           <div class="hero-stats">
             <div class="stat">
-              <div class="stat-value">6</div>
-              <div class="stat-label">Core product modules already structured in the app.</div>
+              <div class="stat-value">6+</div>
+              <div class="stat-label">Operational modules now navigable by live week window inside the app.</div>
             </div>
             <div class="stat">
               <div class="stat-value">35</div>
               <div class="stat-label">Live tables detected from the current reservation source layout.</div>
             </div>
             <div class="stat">
-              <div class="stat-value">0 fake</div>
-              <div class="stat-label">Invented business numbers, fake clients, and fake rankings are forbidden.</div>
+              <div class="stat-value">2 live</div>
+              <div class="stat-label">Source control actions: live source check and Supabase persistence trigger.</div>
             </div>
           </div>
         </article>
@@ -576,6 +576,7 @@
         <aside class="panel status-panel">
           <div class="status-chip-row">
             <span class="chip green">Live source path ready</span>
+            <span class="chip green">Week explorer active</span>
             <span class="chip orange">Warehouse pending</span>
             <span class="chip orange">CRM waiting for real identity data</span>
           </div>
@@ -589,6 +590,11 @@
           <div class="list-card">
             <strong>What NightOS already reads</strong>
             <span>Date-scoped occupied slots, table identifiers, supplemental slots, source labels, and price values.</span>
+          </div>
+
+          <div class="list-card">
+            <strong>What is usable right now</strong>
+            <span>Week-by-week navigation, live reservation feed, table occupancy board, RP performance board, analytics by live window, and source control actions.</span>
           </div>
 
           <div class="list-card">
@@ -618,27 +624,27 @@
           <div class="modules">
             <div class="module-card">
               <h3>Dashboard</h3>
-              <p>Tonight status, sync health, fill structure, estimated revenue structure, active promoters, VIP follow-up readiness, and operational alerts.</p>
+              <p>Tonight status, sync health, fill structure, estimated revenue structure, active promoters, table plan board, and operational alerts.</p>
             </div>
             <div class="module-card">
               <h3>Reservations</h3>
-              <p>Operational reservation visibility with external booking IDs, source visibility, sync state, and a future-ready detail panel.</p>
+              <p>Operational reservation visibility with external booking IDs, source visibility, sync state, detail panel, and live table occupancy by selected night.</p>
             </div>
             <div class="module-card">
               <h3>RP Performance</h3>
-              <p>Who brings value, who is inactive, who drives revenue, and who needs follow-up, without fabricating rankings.</p>
+              <p>Who brings value, who drives revenue, and which live labels still need enrichment, without fabricating rankings.</p>
             </div>
             <div class="module-card">
               <h3>VIP CRM</h3>
-              <p>Prepared around imported reservation activity, but intentionally empty until a reliable client identity source exists.</p>
+              <p>Prepared around imported reservation activity, with a real identity-enrichment queue instead of fake VIP profiles.</p>
             </div>
             <div class="module-card">
               <h3>Analytics</h3>
-              <p>Lighter, decision-oriented business visibility that only uses real source data or transparent empty states.</p>
+              <p>Lighter, decision-oriented business visibility with nightly comparison and table utilization from the real source window.</p>
             </div>
             <div class="module-card">
               <h3>Settings</h3>
-              <p>Roles, access, reservation sync, integrations, security architecture, deployment readiness, and future creative bridge placeholders.</p>
+              <p>Roles, access, reservation sync, live source controls, security architecture, deployment readiness, and future creative bridge placeholders.</p>
             </div>
           </div>
         </article>
@@ -679,6 +685,8 @@
               <ul>
                 <li>maps slots to <code>external_booking_id</code></li>
                 <li>keeps source metadata visible</li>
+                <li>lets operators inspect any live week window</li>
+                <li>can trigger live source checks from settings</li>
                 <li>leaves CRM empty instead of inventing clients</li>
               </ul>
             </div>
@@ -709,14 +717,14 @@
               <div class="step-number">Step 02</div>
               <div class="step-body">
                 <h3>NightOS reads and structures</h3>
-                <p>NightOS pulls live source data, maps source identifiers, and exposes a premium internal operating layer.</p>
+                <p>NightOS pulls live source data, maps source identifiers, exposes week-by-week operational views, and renders a premium internal operating layer.</p>
               </div>
             </div>
             <div class="timeline-step">
               <div class="step-number">Step 03</div>
               <div class="step-body">
                 <h3>Supabase persists and secures</h3>
-                <p>Profiles, RP profiles, clients, tables, events, reservations, visits, and audit logs are prepared with RLS.</p>
+                <p>Profiles, RP profiles, clients, tables, events, reservations, visits, audit logs, and RP source-label aliases are prepared with RLS.</p>
               </div>
             </div>
             <div class="timeline-step">
@@ -749,6 +757,8 @@
                 <li>Desktop mirror</li>
                 <li>Next.js application structure</li>
                 <li>Supabase migration SQL</li>
+                <li>week navigation across core modules</li>
+                <li>live source control panel in settings</li>
               </ul>
             </div>
             <div class="info-card">

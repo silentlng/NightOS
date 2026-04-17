@@ -170,7 +170,14 @@ function getRpSourceLabels(access: AppAccess) {
 }
 
 export async function getWorkspaceInsights(access: AppAccess) {
-  const snapshot = await getReservationSourceSnapshot();
+  return getWorkspaceInsightsForWeek(access, 0);
+}
+
+export async function getWorkspaceInsightsForWeek(
+  access: AppAccess,
+  weekOffset = 0,
+) {
+  const snapshot = await getReservationSourceSnapshot(weekOffset);
   const rpSourceLabels = getRpSourceLabels(access);
   const reservationsInScope =
     access.role === "rp"
@@ -217,9 +224,32 @@ export async function getWorkspaceInsights(access: AppAccess) {
   ).length;
   const fillRate =
     snapshot.totalTables > 0 ? tonightTableBookings / snapshot.totalTables : null;
+  const tableOccupancy = snapshot.tableInventory.map((tableId) => {
+    const occupiedNights = snapshot.nights.filter((night) =>
+      night.slots.some(
+        (reservation) => reservation.slotType === "table" && reservation.slotId === tableId,
+      ),
+    );
+
+    return {
+      tableId,
+      occupiedNightCount: occupiedNights.length,
+      occupiedNightLabels: occupiedNights.map(
+        (night) => `${night.weekdayLabel} ${night.dateLabel}`,
+      ),
+    };
+  });
+  const labelEnrichmentQueue = [...promoterStatsInScope].map((item) => ({
+    ...item,
+    crmStatus: "needs_identity_enrichment" as const,
+  }));
+  const unlabeledReservations = reservationsInScope.filter(
+    (reservation) => !reservation.sourceLabel,
+  ).length;
 
   return {
     snapshot,
+    weekOffset,
     reservationsInScope,
     promoterStatsInScope,
     tonight,
@@ -228,6 +258,9 @@ export async function getWorkspaceInsights(access: AppAccess) {
     businessReadiness,
     operationalAlerts,
     environmentReadiness,
+    tableOccupancy,
+    labelEnrichmentQueue,
+    unlabeledReservations,
     metrics: {
       weekendRevenue,
       weekendReservations: reservationsInScope.length,
