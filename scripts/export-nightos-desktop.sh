@@ -1,6 +1,9 @@
 #!/bin/sh
 set -eu
 
+export LC_ALL=C
+export LANG=C
+
 ROOT_DIR="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 DEST_DIR="/Users/lng/Desktop/NIGHTOS"
 
