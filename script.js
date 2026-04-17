@@ -1,0 +1,550 @@
+/* ═══════════════════════════════════════════════════════
+   MAISON PANTHERA — script.js v2
+═══════════════════════════════════════════════════════ */
+'use strict';
+
+/* ── Portable Form Redirects ───────────────────────── */
+function setPortableFormRedirects() {
+  const pageUrl = `${window.location.origin}${window.location.pathname}`;
+  document.querySelectorAll('input[name="_next"]').forEach(input => {
+    const targetHash = input.value.includes('#') ? input.value.slice(input.value.indexOf('#')) : '';
+    input.value = `${pageUrl}${targetHash}`;
+  });
+}
+window.addEventListener('load', setPortableFormRedirects);
+
+/* ── Preloader ──────────────────────────────────────── */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('hidden');
+    document.getElementById('hero').classList.add('loaded');
+  }, 2400);
+});
+
+/* ── Navbar scroll ──────────────────────────────────── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ── Mobile Menu ────────────────────────────────────── */
+const burger     = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileClose = document.getElementById('mobileClose');
+
+function openMenu() {
+  mobileMenu.classList.add('open');
+  burger.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  mobileMenu.classList.remove('open');
+  burger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+burger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
+mobileClose.addEventListener('click', closeMenu);
+document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
+
+/* ── Scroll Reveal ──────────────────────────────────── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal-up,.reveal-left,.reveal-right,.testi-card').forEach(el => revealObs.observe(el));
+
+/* ── Hero Parallax ──────────────────────────────────── */
+const heroBg = document.querySelector('.hero-bg');
+window.addEventListener('scroll', () => {
+  if (heroBg && window.scrollY < window.innerHeight) {
+    heroBg.style.transform = `scale(1) translateY(${window.scrollY * 0.22}px)`;
+  }
+}, { passive: true });
+
+/* ── Smooth anchor scroll ───────────────────────────── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    const top = target.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+  });
+});
+
+/* ── Chat Widget ────────────────────────────────────── */
+const chatWidget = document.getElementById('chatWidget');
+const chatToggle = document.getElementById('chatToggle');
+const chatClose  = document.getElementById('chatClose');
+const chatBadge  = chatToggle.querySelector('.chat-badge');
+const icoOpen    = chatToggle.querySelector('.chat-ico-open');
+const icoClose   = chatToggle.querySelector('.chat-ico-close');
+
+function openChat() {
+  chatWidget.classList.add('open');
+  icoOpen.style.display  = 'none';
+  icoClose.style.display = 'block';
+  if (chatBadge) chatBadge.style.display = 'none';
+}
+function closeChat() {
+  chatWidget.classList.remove('open');
+  icoOpen.style.display  = 'block';
+  icoClose.style.display = 'none';
+}
+chatToggle.addEventListener('click', () => chatWidget.classList.contains('open') ? closeChat() : openChat());
+chatClose.addEventListener('click', closeChat);
+
+// Close chat on outside click
+document.addEventListener('click', e => {
+  if (chatWidget.classList.contains('open') && !chatWidget.contains(e.target)) {
+    closeChat();
+  }
+});
+
+// Close chat when clicking a link inside it
+document.querySelectorAll('.chat-opt').forEach(opt => {
+  opt.addEventListener('click', () => setTimeout(closeChat, 150));
+});
+
+/* ── Contact Form ───────────────────────────────────── */
+const form       = document.getElementById('contactForm');
+const formBtn    = document.getElementById('formBtn');
+const formSuccess = document.getElementById('formSuccess');
+const formError   = document.getElementById('formError');
+
+if (form) {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    formSuccess.style.display = 'none';
+    formError.style.display   = 'none';
+
+    // Basic validation
+    const required = form.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(f => {
+      if (!f.value.trim()) { f.style.borderBottom = '1px solid #ff8080'; valid = false; }
+      else f.style.borderBottom = '';
+    });
+    if (!valid) return;
+
+    // Rate limiting: prevent double submit
+    if (formBtn.disabled) return;
+    formBtn.disabled = true;
+    formBtn.querySelector('.btn-text').style.display = 'none';
+    formBtn.querySelector('.btn-loader').style.display = 'inline-block';
+
+    try {
+      const data = new FormData(form);
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok || res.redirected) {
+        formSuccess.style.display = 'block';
+        form.reset();
+      } else {
+        throw new Error('Network error');
+      }
+    } catch {
+      // Fallback: open email client
+      const name    = form.querySelector('[name="nom"]').value;
+      const email   = form.querySelector('[name="email"]').value;
+      const service = form.querySelector('[name="service"]').value;
+      const msg     = form.querySelector('[name="message"]').value;
+      const subject = encodeURIComponent('Nouvelle demande — Maison Panthera');
+      const body    = encodeURIComponent(`Nom: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${msg}`);
+      window.location.href = `mailto:maisonpanthera@outlook.com?subject=${subject}&body=${body}`;
+      formSuccess.style.display = 'block';
+    } finally {
+      formBtn.disabled = false;
+      formBtn.querySelector('.btn-text').style.display = 'inline';
+      formBtn.querySelector('.btn-loader').style.display = 'none';
+    }
+  });
+
+  // Input validation feedback
+  form.querySelectorAll('input[required], textarea[required]').forEach(f => {
+    f.addEventListener('blur', () => {
+      if (!f.value.trim()) f.style.borderBottom = '1px solid rgba(255,80,80,.5)';
+      else f.style.borderBottom = '';
+    });
+  });
+}
+
+/* ── PWA Service Worker ─────────────────────────────── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+/* ── i18n Language Switcher ─────────────────────────── */
+const translations = {
+  fr: {
+    'nav.services': 'SERVICES',
+    'nav.about':    'À PROPOS',
+    'nav.contact':  'CONTACT',
+    'hero.subtitle': "CONCIERGERIE D'EXCEPTION",
+    'hero.tagline':  'Votre vie mérite le meilleur.<br>Nous le rendons possible.',
+    'hero.cta1':     'DÉCOUVRIR NOS SERVICES',
+    'hero.cta2':     'PRENDRE CONTACT',
+    'stats.missions':    'MISSIONS RÉALISÉES',
+    'stats.services':    'SERVICES PREMIUM',
+    'stats.availability':'DISPONIBILITÉ',
+    'stats.discretion':  'DISCRÉTION GARANTIE',
+    'about1.label': 'À PROPOS',
+    'about1.title': "L'ART DU<br>SERVICE<br>ABSOLU",
+    'about1.body':  'Maison Panthera est une conciergerie full service dédiée à proposer les meilleurs services pour pouvoir répondre à toutes vos demandes dans la plus grande réactivité.',
+    'about1.feat1': 'Réponse en moins de 30 minutes',
+    'about1.feat2': "Réseau de prestataires d'exception",
+    'about1.feat3': 'Service 100% personnalisé',
+    'about2.label': 'NOTRE RÉSEAU',
+    'about2.title': "PARTENAIRES<br>D'EXCEPTION",
+    'about2.body':  "Maison Panthera collabore avec un réseau de prestataires reconnus, nous permettant de vous proposer une large gamme de services personnalisés et de haute qualité — VTC, booking, accès événements sportifs et festifs, locations privées.",
+    'about2.cta':   'FAIRE UNE DEMANDE',
+    'values.discretion': 'DISCRÉTION',
+    'values.reactivity': 'RÉACTIVITÉ',
+    'values.bespoke':    'SUR MESURE',
+    'services.title': 'NOS SERVICES',
+    'services.sub':   'Une gamme complète de services premium, disponible 7j/7',
+    'card.vtc':      'Van chauffeur & transport privé premium. Véhicules haut de gamme, chauffeurs professionnels.',
+    'card.shopper':  'Accès aux plus grandes maisons de luxe. Shopping personnalisé & exclusif.',
+    'card.carrental':'Location de véhicules prestige & supercars. Ferrari, Lamborghini, Rolls-Royce.',
+    'card.booking':  'Restaurants étoilés, hôtels de prestige, réservations VIP partout dans le monde.',
+    'card.matchconcert': 'Loges VIP & carré or pour matchs et concerts. Roland-Garros, PSG, F1, artistes internationaux.',
+    'card.nightlife': 'Accès VIP aux meilleurs clubs & soirées privées. Tables réservées, liste VIP, entrées garanties.',
+    'card.jet':      'Voyagez à votre rythme. Destinations mondiales, disponibilité immédiate.',
+    'card.yacht':    'Location de yachts de luxe. Croisières privées en Méditerranée & au-delà.',
+    'card.cta':      'RÉSERVER →',
+    'quote.text':    'Chaque détail est une promesse.<br>Chaque service, une expérience inoubliable.',
+    'quote.cta':     "VIVRE L'EXPÉRIENCE",
+    'gallery.title': "L'EXPÉRIENCE<br>PANTHERA",
+    'form.title':    'PARLONS DE<br>VOTRE<br>PROJET',
+    'form.body':     'Notre équipe répond à toutes vos demandes en moins de 30 minutes, 7j/7, 24h/24.',
+    'form.phone':    'TÉLÉPHONE',
+    'form.waDirect': 'Message direct',
+    'form.name':     'NOM & PRÉNOM *',
+    'form.phoneLabel':'TÉLÉPHONE',
+    'form.service':  'SERVICE SOUHAITÉ',
+    'form.message':  'VOTRE DEMANDE *',
+    'form.other':    'Autre',
+    'form.mention':  '* Champs obligatoires. Vos données sont traitées de façon confidentielle.',
+    'form.submit':   'ENVOYER MA DEMANDE',
+    'form.success':  '✓ Message envoyé — Nous vous répondons sous 30 minutes.',
+    'form.error':    'Une erreur est survenue. Contactez-nous directement au +33 6 68 73 11 09.',
+    'reviews.label':   'VOTRE EXPÉRIENCE',
+    'reviews.title':   'LAISSEZ UN AVIS',
+    'reviews.sub':     'Votre retour nous aide à grandir',
+    'reviews.rating':  'VOTRE NOTE',
+    'reviews.name':    'VOTRE NOM *',
+    'reviews.service': 'SERVICE UTILISÉ',
+    'reviews.message': 'VOTRE AVIS *',
+    'reviews.submit':  'ENVOYER MON AVIS',
+    'testi.label':   'ILS NOUS FONT CONFIANCE',
+    'testi.title':   'TÉMOIGNAGES',
+    'testi.t1':      '« Table obtenue au Guy Savoy un vendredi soir, en moins de 2h. Je n\'y croyais pas. Service parfait du début à la fin. »',
+    'testi.t2':      '« Loges PSG pour le Classique contre l\'OM. Accueil champagne, repas gastronomique, ambiance incroyable. Maison Panthera a tout géré. »',
+    'testi.t3':      '« Carré Or pour le concert de Drake à Paris. Placement devant la scène, accès backstage. Une soirée dont je me souviendrai toujours. »',
+    'testi.t4':      '« Impossible d\'avoir des billets pour la finale de Roland-Garros — Maison Panthera les a trouvés en 20 minutes. Loges VIP, champagne. Inoubliable. »',
+    'testi.t5':      '« Dîner surprise pour l\'anniversaire de ma femme au Grand Restaurant de Jean-François Piège. Décoration florale, menu personnalisé. Merci infiniment. »',
+    'testi.t6':      '« Grand Prix de Monaco en loges privées avec vue sur le circuit. Tout était organisé : transfert, hôtel, paddock. Un niveau d\'exception. »',
+    'testi.t7':      '« Réservation d\'un jet privé en moins d\'une heure pour Dubai. Discrétion totale, équipe ultra réactive. Je ne travaille plus qu\'avec eux. »',
+    'testi.t8':      '« Concert Beyoncé en carré or, accueil VIP et loge privée. Tout était parfait, de l\'arrivée au départ. Une organisation au millimètre. »',
+    'testi.t9':      '« VTC de luxe pour toute une semaine à Paris, disponible 24h/24. Ponctualité irréprochable, véhicule impeccable. À recommander sans hésiter. »',
+    'footer.tag':    'CONCIERGERIE FULL SERVICES',
+    'footer.copy':   '© 2026 MAISON PANTHERA — TOUS DROITS RÉSERVÉS',
+    'chat.available':'Disponible maintenant',
+    'chat.hello':    'Bonjour 👋 Comment puis-je vous aider ?',
+  },
+  en: {
+    'nav.services': 'SERVICES',
+    'nav.about':    'ABOUT',
+    'nav.contact':  'CONTACT',
+    'hero.subtitle': 'FULL-SERVICE CONCIERGE',
+    'hero.tagline':  'Your life deserves the best.<br>We make it happen.',
+    'hero.cta1':     'DISCOVER OUR SERVICES',
+    'hero.cta2':     'GET IN TOUCH',
+    'stats.missions':    'COMPLETED MISSIONS',
+    'stats.services':    'PREMIUM SERVICES',
+    'stats.availability':'AVAILABILITY',
+    'stats.discretion':  'GUARANTEED DISCRETION',
+    'about1.label': 'ABOUT US',
+    'about1.title': 'THE ART OF<br>ABSOLUTE<br>SERVICE',
+    'about1.body':  'Maison Panthera is a full-service concierge dedicated to providing the finest services, responding to your every request with the utmost responsiveness.',
+    'about1.feat1': 'Response in under 30 minutes',
+    'about1.feat2': 'A network of exceptional partners',
+    'about1.feat3': '100% personalized service',
+    'about2.label': 'OUR NETWORK',
+    'about2.title': 'EXCEPTIONAL<br>PARTNERS',
+    'about2.body':  'Maison Panthera works with a network of renowned partners, allowing us to offer a wide range of high-quality personalized services — VTC, bookings, access to sports & entertainment events, private rentals.',
+    'about2.cta':   'SUBMIT A REQUEST',
+    'values.discretion': 'DISCRETION',
+    'values.reactivity': 'RESPONSIVENESS',
+    'values.bespoke':    'BESPOKE',
+    'services.title': 'OUR SERVICES',
+    'services.sub':   'A complete range of premium services, available 7 days a week',
+    'card.vtc':      'Premium chauffeur & private transport. Luxury vehicles, professional drivers.',
+    'card.shopper':  "Access to the world's finest luxury houses. Exclusive personalized shopping.",
+    'card.carrental':'Prestige & supercar rentals. Ferrari, Lamborghini, Rolls-Royce.',
+    'card.booking':  'Starred restaurants, prestige hotels, VIP reservations worldwide.',
+    'card.matchconcert': 'VIP boxes & front-row seats for matches and concerts. Roland-Garros, PSG, F1, international artists.',
+    'card.nightlife': 'VIP access to the best clubs & private events. Reserved tables, VIP list, guaranteed entry.',
+    'card.jet':      'Travel on your terms. Worldwide destinations, immediate availability.',
+    'card.yacht':    'Luxury yacht rentals. Private cruises in the Mediterranean & beyond.',
+    'card.cta':      'BOOK NOW →',
+    'quote.text':    'Every detail is a promise.<br>Every service, an unforgettable experience.',
+    'quote.cta':     'LIVE THE EXPERIENCE',
+    'gallery.title': 'THE PANTHERA<br>EXPERIENCE',
+    'form.title':    "LET'S TALK<br>ABOUT YOUR<br>PROJECT",
+    'form.body':     'Our team responds to all requests in under 30 minutes, 7 days a week, 24/7.',
+    'form.phone':    'PHONE',
+    'form.waDirect': 'Direct message',
+    'form.name':     'FULL NAME *',
+    'form.phoneLabel':'PHONE',
+    'form.service':  'DESIRED SERVICE',
+    'form.message':  'YOUR REQUEST *',
+    'form.other':    'Other',
+    'form.mention':  '* Required fields. Your data is treated with strict confidentiality.',
+    'form.submit':   'SEND MY REQUEST',
+    'form.success':  '✓ Message sent — We\'ll reply within 30 minutes.',
+    'form.error':    'An error occurred. Contact us directly at +33 6 68 73 11 09.',
+    'reviews.label':   'YOUR EXPERIENCE',
+    'reviews.title':   'LEAVE A REVIEW',
+    'reviews.sub':     'Your feedback helps us grow',
+    'reviews.rating':  'YOUR RATING',
+    'reviews.name':    'YOUR NAME *',
+    'reviews.service': 'SERVICE USED',
+    'reviews.message': 'YOUR REVIEW *',
+    'reviews.submit':  'SUBMIT MY REVIEW',
+    'testi.label':   'THEY TRUST US',
+    'testi.title':   'TESTIMONIALS',
+    'testi.t1':      '« Got a table at Guy Savoy on a Friday evening, in under 2 hours. I couldn\'t believe it. Flawless service from start to finish. »',
+    'testi.t2':      '« VIP box at the PSG vs OM Classique. Champagne welcome, gourmet meal, incredible atmosphere. Maison Panthera handled everything. »',
+    'testi.t3':      '« Front-row seats for Drake\'s concert in Paris. Stage placement, backstage access. A night I\'ll never forget. »',
+    'testi.t4':      '« Couldn\'t get tickets for the Roland-Garros final — Maison Panthera found them in 20 minutes. VIP boxes, champagne welcome. Unforgettable. »',
+    'testi.t5':      '« Surprise birthday dinner for my wife at Jean-François Piège\'s restaurant. Floral decoration, personalized menu. Thank you from the bottom of my heart. »',
+    'testi.t6':      '« Monaco Grand Prix in private boxes overlooking the circuit. Everything arranged: transfers, hotel, paddock access. Absolutely world-class. »',
+    'testi.t7':      '« Private jet booked in under an hour to Dubai. Total discretion, lightning-fast team. I only work with Maison Panthera now. »',
+    'testi.t8':      '« Beyoncé concert in front-row gold seats with VIP welcome and private box. Perfect from arrival to departure. Flawless organisation. »',
+    'testi.t9':      '« Luxury chauffeur service for a full week in Paris, available 24/7. Impeccable punctuality, pristine vehicles. Highly recommended. »',
+    'footer.tag':    'FULL-SERVICE CONCIERGE',
+    'footer.copy':   '© 2026 MAISON PANTHERA — ALL RIGHTS RESERVED',
+    'chat.available':'Available now',
+    'chat.hello':    'Hello 👋 How can I help you?',
+  }
+};
+
+let currentLang = localStorage.getItem('mp_lang') || 'fr';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('mp_lang', lang);
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const text = translations[lang][key];
+    if (text === undefined) return;
+    if (text.includes('<br>') || text.includes('<')) {
+      el.innerHTML = text;
+    } else {
+      el.textContent = text;
+    }
+  });
+
+  // Update all lang toggle buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+}
+
+document.querySelectorAll('.lang-toggle').forEach(toggle => {
+  toggle.addEventListener('click', e => {
+    const btn = e.target.closest('.lang-btn');
+    if (!btn) return;
+    const lang = btn.getAttribute('data-lang');
+    if (lang && lang !== currentLang) applyLang(lang);
+  });
+});
+
+// Init on load
+applyLang(currentLang);
+
+/* ── Stats Count-Up ─────────────────────────────────── */
+function animateCount(el, target, suffix, duration) {
+  let start = 0;
+  const step = Math.ceil(target / (duration / 16));
+  const tick = () => {
+    start = Math.min(start + step, target);
+    el.textContent = start + suffix;
+    if (start < target) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    statsObs.unobserve(e.target);
+    const nums = e.target.querySelectorAll('.stat-num');
+    nums.forEach(n => {
+      const raw = n.textContent.trim();
+      const match = raw.match(/^(\d+)(.*)/);
+      if (!match) return;
+      const target = parseInt(match[1], 10);
+      const suffix = match[2] || '';
+      animateCount(n, target, suffix, 1400);
+    });
+  });
+}, { threshold: 0.4 });
+
+const statsEl = document.querySelector('.hero-stats');
+if (statsEl) statsObs.observe(statsEl);
+
+/* ── Scroll to Top ──────────────────────────────────── */
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  if (scrollTopBtn) scrollTopBtn.classList.toggle('visible', window.scrollY > 600);
+}, { passive: true });
+if (scrollTopBtn) {
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ── Star Rating ────────────────────────────────────── */
+const stars = document.querySelectorAll('.star');
+const ratingInput = document.getElementById('reviewRating');
+let selectedRating = 5;
+stars.forEach(star => {
+  star.addEventListener('mouseover', () => {
+    const val = +star.dataset.val;
+    stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= val));
+  });
+  star.addEventListener('mouseleave', () => {
+    stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= selectedRating));
+  });
+  star.addEventListener('click', () => {
+    selectedRating = +star.dataset.val;
+    if (ratingInput) ratingInput.value = selectedRating + '/5';
+    stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= selectedRating));
+  });
+});
+// Default: 5 stars selected
+stars.forEach(s => s.classList.add('active'));
+
+/* ── Testimonials Infinite Slider ───────────────────── */
+(function () {
+  const viewport = document.getElementById('testiViewport');
+  const track    = document.getElementById('testiTrack');
+  const prevBtn  = document.querySelector('.testi-prev');
+  const nextBtn  = document.querySelector('.testi-next');
+  if (!track || !viewport) return;
+
+  // Collect real cards once (before any cloning)
+  const REAL = [...track.querySelectorAll('.testi-card')];
+  const N    = REAL.length; // 9
+
+  let VIS = 3, cw = 0, pos = 0, busy = false, timer = null;
+
+  function getVis() {
+    return window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+  }
+
+  function build() {
+    stopAuto();
+    VIS = getVis();
+
+    // Remove existing clones
+    track.querySelectorAll('.testi-clone').forEach(e => e.remove());
+
+    // Prepend clones of last VIS real cards (keeps order: [N-VIS … N-1])
+    [...REAL].slice(-VIS).reverse().forEach(c => {
+      const cl = c.cloneNode(true);
+      cl.classList.add('testi-clone');
+      track.prepend(cl);
+    });
+
+    // Append clones of first VIS real cards
+    REAL.slice(0, VIS).forEach(c => {
+      const cl = c.cloneNode(true);
+      cl.classList.add('testi-clone');
+      track.appendChild(cl);
+    });
+
+    // Set uniform width on every card slot
+    cw = viewport.offsetWidth / VIS;
+
+    // Guard: if layout not ready yet, retry after next paint
+    if (!cw) {
+      requestAnimationFrame(build);
+      return;
+    }
+
+    [...track.querySelectorAll('.testi-card')].forEach(c => {
+      c.style.width = cw + 'px';
+    });
+
+    // Start at first real card (position VIS, after front clones)
+    pos = VIS;
+    translate(false);
+    startAuto();
+  }
+
+  function translate(anim = true) {
+    track.style.transition = anim
+      ? 'transform 0.6s cubic-bezier(0.16,1,0.3,1)'
+      : 'none';
+    track.style.transform = `translateX(${-pos * cw}px)`;
+  }
+
+  function next() { if (busy) return; busy = true; pos++; translate(); }
+  function prev() { if (busy) return; busy = true; pos--; translate(); }
+
+  track.addEventListener('transitionend', () => {
+    busy = false;
+    // Wrap forward: clones after last real → jump back to real
+    if (pos >= N + VIS) { pos -= N; translate(false); }
+    // Wrap backward: clones before first real → jump forward to real
+    else if (pos < VIS) { pos += N; translate(false); }
+  });
+
+  function startAuto() { timer = setInterval(next, 5000); }
+  function stopAuto()  { clearInterval(timer); timer = null; }
+
+  nextBtn?.addEventListener('click', () => { stopAuto(); next(); startAuto(); });
+  prevBtn?.addEventListener('click', () => { stopAuto(); prev(); startAuto(); });
+
+  // Pause on hover (desktop)
+  viewport.addEventListener('mouseenter', stopAuto);
+  viewport.addEventListener('mouseleave', startAuto);
+
+  // Touch swipe support (mobile)
+  let touchX = 0;
+  viewport.addEventListener('touchstart', e => {
+    touchX = e.touches[0].clientX;
+  }, { passive: true });
+  viewport.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 45) {
+      stopAuto();
+      dx < 0 ? next() : prev();
+      startAuto();
+    }
+  }, { passive: true });
+
+  // Rebuild on resize
+  let resizeT;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(build, 200);
+  });
+
+  // Double rAF ensures layout is fully calculated before build()
+  requestAnimationFrame(() => requestAnimationFrame(build));
+})();
