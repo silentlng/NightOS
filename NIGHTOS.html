@@ -3,647 +3,789 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Maison Panthera — Conciergerie Full Services</title>
-  <meta name="description" content="Maison Panthera, conciergerie d'exception à Paris. VTC, Private Jet, Yacht, Personal Shopper, Booking VIP. Excellence, discrétion, réactivité 24h/24.">
-  <meta name="theme-color" content="#080808">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Maison Panthera">
-
-  <!-- Security Headers -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self' https://formsubmit.co;">
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="images/logo-site.png">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Maison Panthera — Conciergerie d'Exception">
-  <meta property="og:description" content="Excellence. Discrétion. Réactivité. Paris & International.">
-  <meta property="og:image" content="images/yacht.jpeg">
+  <title>NightOS — Internal Club Operating System</title>
+  <meta
+    name="description"
+    content="NightOS, système d'exploitation interne premium pour la gestion opérationnelle, la performance RP, le CRM VIP et la synchronisation des réservations."
+  >
+  <meta name="theme-color" content="#07090d">
+  <meta property="og:title" content="NightOS — Internal Club Operating System">
+  <meta
+    property="og:description"
+    content="Layer analytics, CRM, RP performance et décisionnel connecté au site de réservation."
+  >
   <meta property="og:type" content="website">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg: #07090d;
+      --bg-soft: #0d1118;
+      --panel: rgba(13, 18, 27, 0.88);
+      --panel-strong: rgba(9, 13, 20, 0.94);
+      --line: rgba(255, 255, 255, 0.09);
+      --line-strong: rgba(201, 168, 76, 0.28);
+      --text: #f4f1eb;
+      --muted: #9ea5b1;
+      --gold: #c9a84c;
+      --gold-soft: #f2dbab;
+      --green: #36b37e;
+      --orange: #f2a65a;
+      --red: #ef6b73;
+      --shadow: rgba(0, 0, 0, 0.42);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1320px;
+    }
 
-  <!-- Preload hero image -->
-  <link rel="preload" as="image" href="images/hero-palace.jpeg">
+    * {
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="style.css?v=22">
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(201, 168, 76, 0.14), transparent 24rem),
+        radial-gradient(circle at top right, rgba(55, 74, 105, 0.17), transparent 26rem),
+        linear-gradient(180deg, #07090d 0%, #0a0e15 48%, #07090d 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(7, 9, 13, 0.78);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-inner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .brand-kicker,
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .brand-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+      transition: 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hero {
+      padding: 72px 0 28px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .panel,
+    .panel-strong {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      box-shadow: 0 28px 80px -42px var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel {
+      background: var(--panel);
+    }
+
+    .panel-strong {
+      background: var(--panel-strong);
+      border-color: var(--line-strong);
+    }
+
+    .hero-copy {
+      padding: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 560px;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: clamp(3rem, 7vw, 5.2rem);
+      line-height: 0.94;
+      letter-spacing: 0.03em;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.92rem;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: #0a0d12;
+      box-shadow: 0 20px 44px -28px rgba(201, 168, 76, 0.82);
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-soft);
+    }
+
+    .btn-secondary {
+      border-color: var(--line-strong);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .stat {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.025);
+      padding: 18px;
+    }
+
+    .stat-value {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .status-panel {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 560px;
+    }
+
+    .status-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .chip.green {
+      background: rgba(54, 179, 126, 0.12);
+      color: var(--green);
+      border-color: rgba(54, 179, 126, 0.22);
+    }
+
+    .chip.orange {
+      background: rgba(242, 166, 90, 0.12);
+      color: var(--orange);
+      border-color: rgba(242, 166, 90, 0.24);
+    }
+
+    .chip.red {
+      background: rgba(239, 107, 115, 0.12);
+      color: var(--red);
+      border-color: rgba(239, 107, 115, 0.24);
+    }
+
+    .status-panel h2,
+    .section-title {
+      margin: 0;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .status-panel p,
+    .section-copy,
+    .mini-copy {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .list-card {
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-card strong {
+      font-size: 0.92rem;
+      letter-spacing: 0.03em;
+    }
+
+    .list-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .section {
+      padding: 18px 0;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .section-main {
+      grid-column: span 12;
+      padding: 32px;
+    }
+
+    .modules,
+    .cards-3 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .modules {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 28px;
+    }
+
+    .cards-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 24px;
+    }
+
+    .module-card,
+    .info-card {
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .module-card h3,
+    .info-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.03rem;
+      letter-spacing: 0.02em;
+    }
+
+    .module-card p,
+    .info-card p,
+    .module-card li,
+    .info-card li {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.92rem;
+      margin: 0;
+    }
+
+    .module-card ul,
+    .info-card ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+    }
+
+    .module-card li + li,
+    .info-card li + li {
+      margin-top: 8px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .timeline-step:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .step-number {
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      padding-top: 3px;
+    }
+
+    .step-body h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .step-body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.94rem;
+    }
+
+    .footer {
+      padding: 26px 0 52px;
+    }
+
+    .footer-card {
+      padding: 26px 30px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    code {
+      font-family: "SFMono-Regular", "Menlo", monospace;
+      font-size: 0.9em;
+      color: var(--gold-soft);
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .modules,
+      .cards-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy,
+      .status-panel {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-inner,
+      .shell {
+        width: min(var(--max), calc(100% - 20px));
+      }
+
+      .nav-inner {
+        min-height: 74px;
+        padding: 10px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-copy,
+      .status-panel,
+      .section-main,
+      .footer-card {
+        padding: 22px;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-step {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- ══ PRELOADER ══════════════════════════════════════ -->
-  <div id="preloader">
-    <div class="preloader-inner">
-      <img class="preloader-logo" src="images/logo-site.png" alt="Maison Panthera">
-      <div class="preloader-bar"><div class="preloader-fill"></div></div>
-      <p class="preloader-name">MAISON PANTHERA</p>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="brand-kicker">Internal Operating System</span>
+        <span class="brand-name">NightOS</span>
+      </div>
+      <div class="nav-links">
+        <a href="#modules">Modules</a>
+        <a href="#sync">Sync</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#handoff">Deployment</a>
+      </div>
     </div>
-  </div>
-
-  <!-- ══ NAVIGATION ════════════════════════════════════ -->
-  <nav id="navbar">
-    <a href="#hero" class="nav-logo">
-      <img src="images/logo-site.png" alt="Logo Maison Panthera">
-    </a>
-    <div class="nav-links">
-      <a href="#services" class="nav-link" data-i18n="nav.services">SERVICES</a>
-      <a href="#about" class="nav-link" data-i18n="nav.about">À PROPOS</a>
-      <a href="#formulaire" class="nav-link" data-i18n="nav.contact">CONTACT</a>
-    </div>
-    <button class="lang-toggle" id="langToggle" aria-label="Switch language">
-      <span class="lang-btn active" data-lang="fr">FR</span>
-      <span class="lang-sep">/</span>
-      <span class="lang-btn" data-lang="en">EN</span>
-    </button>
-    <a href="tel:+33668731109" class="nav-cta">+33 6 68 73 11 09</a>
-    <button class="nav-burger" id="burger" aria-label="Menu">
-      <span></span><span></span>
-    </button>
   </nav>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <button class="mobile-close" id="mobileClose">✕</button>
-    <a href="#services"  class="mobile-link" data-i18n="nav.services">SERVICES</a>
-    <a href="#about"     class="mobile-link" data-i18n="nav.about">À PROPOS</a>
-    <a href="#formulaire" class="mobile-link" data-i18n="nav.contact">CONTACT</a>
-    <button class="lang-toggle lang-toggle--mobile" id="langToggleMobile" aria-label="Switch language">
-      <span class="lang-btn active" data-lang="fr">FR</span>
-      <span class="lang-sep">/</span>
-      <span class="lang-btn" data-lang="en">EN</span>
-    </button>
-    <a href="tel:+33668731109" class="mobile-phone">+33 6 68 73 11 09</a>
-  </div>
-
-  <!-- ══ HERO ══════════════════════════════════════════ -->
-  <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <h1 class="visually-hidden">Maison Panthera — Conciergerie Full Services</h1>
-
-    <div class="hero-identity">
-      <img class="hero-logo-mark" src="images/logo-site.png" alt="Maison Panthera">
-      <p class="hero-name">MAISON PANTHERA</p>
-      <span class="hero-rule"></span>
-      <p class="hero-tagline" data-i18n="hero.subtitle">CONCIERGERIE D'EXCEPTION</p>
-    </div>
-
-    <div class="hero-cta">
-      <a href="#services" class="btn-gold">
-        <span data-i18n="hero.cta1">DÉCOUVRIR NOS SERVICES</span>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </a>
-      <a href="#formulaire" class="btn-outline" data-i18n="hero.cta2">PRENDRE CONTACT</a>
-    </div>
-
-    <div class="hero-scroll">
-      <div class="hero-scroll-line"></div>
-      <span>SCROLL</span>
-    </div>
-  </section>
-
-  <!-- Stats strip -->
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <span class="stat-num">500<em>+</em></span>
-      <span class="stat-label" data-i18n="stats.missions">MISSIONS RÉALISÉES</span>
-    </div>
-    <div class="stat-sep"></div>
-    <div class="hero-stat">
-      <span class="stat-num">8</span>
-      <span class="stat-label" data-i18n="stats.services">SERVICES PREMIUM</span>
-    </div>
-    <div class="stat-sep"></div>
-    <div class="hero-stat">
-      <span class="stat-num">24<em>/7</em></span>
-      <span class="stat-label" data-i18n="stats.availability">DISPONIBILITÉ</span>
-    </div>
-    <div class="stat-sep"></div>
-    <div class="hero-stat">
-      <span class="stat-num">100<em>%</em></span>
-      <span class="stat-label" data-i18n="stats.discretion">DISCRÉTION GARANTIE</span>
-    </div>
-  </div>
-
-  <!-- ══ ABOUT ══════════════════════════════════════════ -->
-  <section id="about">
-
-    <div class="about-block">
-      <div class="about-media reveal-left">
-        <img src="images/maldives.jpeg" alt="Maison Panthera — Service prestige" loading="lazy">
-      </div>
-      <div class="about-body reveal-right">
-        <p class="label" data-i18n="about1.label">À PROPOS</p>
-        <h2 class="display-title" data-i18n="about1.title">L'ART DU<br>SERVICE<br>ABSOLU</h2>
-        <div class="gold-rule"></div>
-        <p class="body-text" data-i18n="about1.body">
-          Maison Panthera est une conciergerie full service dédiée à proposer les meilleurs services pour pouvoir répondre à toutes vos demandes dans la plus grande réactivité.
-        </p>
-        <div class="about-feature-list">
-          <div class="about-feature"><span class="feat-dot"></span><span data-i18n="about1.feat1">Réponse en moins de 30 minutes</span></div>
-          <div class="about-feature"><span class="feat-dot"></span><span data-i18n="about1.feat2">Réseau de prestataires d'exception</span></div>
-          <div class="about-feature"><span class="feat-dot"></span><span data-i18n="about1.feat3">Service 100% personnalisé</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="about-block about-block--reverse">
-      <div class="about-body reveal-left">
-        <p class="label" data-i18n="about2.label">NOTRE RÉSEAU</p>
-        <h2 class="display-title" data-i18n="about2.title">PARTENAIRES<br>D'EXCEPTION</h2>
-        <div class="gold-rule"></div>
-        <p class="body-text" data-i18n="about2.body">
-          Maison Panthera collabore avec un réseau de prestataires reconnus, nous permettant de vous proposer une large gamme de services personnalisés et de haute qualité — VTC, booking, accès événements sportifs et festifs, locations privées.
-        </p>
-        <a href="#formulaire" class="btn-gold-sm" data-i18n="about2.cta">FAIRE UNE DEMANDE</a>
-      </div>
-      <div class="about-media reveal-right">
-        <img src="images/corridor.jpeg" alt="Maison Panthera — Partenaires" loading="lazy">
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ══ VALUES ════════════════════════════════════════ -->
-  <!-- ══ SERVICES ══════════════════════════════════════ -->
-  <section id="services">
-    <div class="section-head reveal-up">
-      <p class="label">EXPERTISE</p>
-      <h2 class="display-title-xl" data-i18n="services.title">NOS SERVICES</h2>
-      <p class="section-sub" data-i18n="services.sub">Une gamme complète de services premium, disponible 7j/7</p>
-    </div>
-
-    <div class="services-grid">
-
-      <article class="service-card reveal-up" style="--d:0ms">
-        <div class="card-bg" style="background-image:url('images/vtc-2.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">01</span>
-          <h3 class="card-title">VTC</h3>
-          <p class="card-desc" data-i18n="card.vtc">Van chauffeur &amp; transport privé premium. Véhicules haut de gamme, chauffeurs professionnels.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:80ms">
-        <div class="card-bg" style="background-image:url('images/personal-shopper.jpeg?v=2')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">02</span>
-          <h3 class="card-title">PERSONAL<br>SHOPPER</h3>
-          <p class="card-desc" data-i18n="card.shopper">Accès aux plus grandes maisons de luxe. Shopping personnalisé &amp; exclusif.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:160ms">
-        <div class="card-bg" style="background-image:url('images/car-interior.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">03</span>
-          <h3 class="card-title">CAR RENTAL</h3>
-          <p class="card-desc" data-i18n="card.carrental">Location de véhicules prestige &amp; supercars. Ferrari, Lamborghini, Rolls-Royce.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:240ms">
-        <div class="card-bg" style="background-image:url('images/booking-rest.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">04</span>
-          <h3 class="card-title">BOOKING</h3>
-          <p class="card-desc" data-i18n="card.booking">Restaurants étoilés, hôtels de prestige, réservations VIP partout dans le monde.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:0ms">
-        <div class="card-bg" style="background-image:url('images/roland-garros.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">05</span>
-          <h3 class="card-title">MATCH/<br>CONCERT ACCESS</h3>
-          <p class="card-desc" data-i18n="card.matchconcert">Loges VIP &amp; carré or pour matchs et concerts. Roland-Garros, PSG, F1, artistes internationaux.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:80ms">
-        <div class="card-bg" style="background-image:url('images/neon.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">06</span>
-          <h3 class="card-title">NIGHTLIFE<br>ACCESS</h3>
-          <p class="card-desc" data-i18n="card.nightlife">Accès VIP aux meilleurs clubs &amp; soirées privées. Tables réservées, liste VIP, entrées garanties.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:160ms">
-        <div class="card-bg" style="background-image:url('images/private-jet.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">07</span>
-          <h3 class="card-title">PRIVATE JET</h3>
-          <p class="card-desc" data-i18n="card.jet">Voyagez à votre rythme. Destinations mondiales, disponibilité immédiate.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-      <article class="service-card reveal-up" style="--d:240ms">
-        <div class="card-bg" style="background-image:url('images/yacht.jpeg')"></div>
-        <div class="card-layer"></div>
-        <div class="card-body">
-          <span class="card-num">08</span>
-          <h3 class="card-title">YACHT</h3>
-          <p class="card-desc" data-i18n="card.yacht">Location de yachts de luxe. Croisières privées en Méditerranée &amp; au-delà.</p>
-          <a href="#formulaire" class="card-cta" data-i18n="card.cta">RÉSERVER →</a>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ══ QUOTE ══════════════════════════════════════════ -->
-  <div class="quote-section">
-    <div class="quote-bg" style="background-image:url('images/finedining.jpeg')"></div>
-    <div class="quote-overlay"></div>
-    <div class="quote-inner reveal-up">
-      <div class="quote-logo">
-        <img src="images/logo-site.png" alt="">
-      </div>
-      <p class="quote-text" data-i18n="quote.text">Chaque détail est une promesse.<br>Chaque service, une expérience inoubliable.</p>
-      <p class="quote-author">— MAISON PANTHERA</p>
-      <a href="#formulaire" class="btn-gold" data-i18n="quote.cta">VIVRE L'EXPÉRIENCE</a>
-    </div>
-  </div>
-
-  <!-- ══ GALLERY ════════════════════════════════════════ -->
-  <!-- ══ CONTACT FORM ═══════════════════════════════════ -->
-  <section id="formulaire">
-    <div class="form-section-inner">
-
-      <div class="form-left reveal-left">
-        <p class="label">CONTACT</p>
-        <h2 class="display-title" data-i18n="form.title">PARLONS DE<br>VOTRE<br>PROJET</h2>
-        <div class="gold-rule"></div>
-        <p class="body-text" data-i18n="form.body">Notre équipe répond à toutes vos demandes en moins de 30 minutes, 7j/7, 24h/24.</p>
-        <div class="contact-direct">
-          <a href="tel:+33668731109" class="contact-direct-item">
-            <span class="cd-icon">📞</span>
-            <div>
-              <p class="cd-label" data-i18n="form.phone">TÉLÉPHONE</p>
-              <p class="cd-val">+33 6 68 73 11 09</p>
-            </div>
-          </a>
-          <a href="mailto:maisonpanthera@outlook.com" class="contact-direct-item">
-            <span class="cd-icon">✉</span>
-            <div>
-              <p class="cd-label">EMAIL</p>
-              <p class="cd-val">maisonpanthera@outlook.com</p>
-            </div>
-          </a>
-          <a href="https://wa.me/33668731109?text=Bonjour%20Maison%20Panthera%2C%20je%20souhaite%20avoir%20des%20informations%20sur%20vos%20services." target="_blank" rel="noopener noreferrer" class="contact-direct-item">
-            <span class="cd-icon">💬</span>
-            <div>
-              <p class="cd-label">WHATSAPP</p>
-              <p class="cd-val" data-i18n="form.waDirect">Message direct</p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="form-right reveal-right">
-        <form
-          id="contactForm"
-          action="https://formsubmit.co/maisonpanthera@outlook.com"
-          method="POST"
-          novalidate>
-
-          <!-- FormSubmit config -->
-          <input type="hidden" name="_subject" value="Nouvelle demande — Maison Panthera">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_next" value="./#formulaire">
-          <!-- Honeypot anti-spam -->
-          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-
-          <div class="form-row">
-            <div class="form-group">
-              <input type="text" name="nom" id="fNom" placeholder=" " required autocomplete="name">
-              <label for="fNom" data-i18n="form.name">NOM &amp; PRÉNOM *</label>
-            </div>
-            <div class="form-group">
-              <input type="email" name="email" id="fEmail" placeholder=" " required autocomplete="email">
-              <label for="fEmail">EMAIL *</label>
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <article class="panel-strong hero-copy">
+          <div>
+            <p class="eyebrow">Cova Club OS Foundation</p>
+            <h1>NightOS</h1>
+            <p style="margin-top: 22px;">
+              Système d'exploitation interne premium pour managers, staff, promoters et direction.
+              NightOS ne remplace pas le site de réservation: il lit la donnée opérationnelle, la structure,
+              l'exploite et prépare le club pour un vrai pilotage business.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/silentlng/NightOS" target="_blank" rel="noopener noreferrer">
+                Open GitHub
+              </a>
+              <a class="btn btn-secondary" href="docs/nightos-handbook.md">
+                Open Handbook
+              </a>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <input type="tel" name="telephone" id="fTel" placeholder=" " autocomplete="tel">
-              <label for="fTel" data-i18n="form.phoneLabel">TÉLÉPHONE</label>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-value">6</div>
+              <div class="stat-label">Core product modules already structured in the app.</div>
             </div>
-            <div class="form-group select-group">
-              <select name="service" id="fService">
-                <option value="" disabled selected></option>
-                <option>VTC</option>
-                <option>Personal Shopper</option>
-                <option>Car Rental</option>
-                <option>Booking (Restaurant / Hôtel)</option>
-                <option>Match / Concert Access</option>
-                <option>Nightlife Access</option>
-                <option>Private Jet</option>
-                <option>Yacht</option>
-                <option data-i18n="form.other">Autre</option>
-              </select>
-              <label for="fService" data-i18n="form.service">SERVICE SOUHAITÉ</label>
+            <div class="stat">
+              <div class="stat-value">35</div>
+              <div class="stat-label">Live tables detected from the current reservation source layout.</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">0 fake</div>
+              <div class="stat-label">Invented business numbers, fake clients, and fake rankings are forbidden.</div>
             </div>
           </div>
+        </article>
 
-          <div class="form-group full">
-            <textarea name="message" id="fMessage" placeholder=" " rows="4" required></textarea>
-            <label for="fMessage" data-i18n="form.message">VOTRE DEMANDE *</label>
+        <aside class="panel status-panel">
+          <div class="status-chip-row">
+            <span class="chip green">Live source path ready</span>
+            <span class="chip orange">Warehouse pending</span>
+            <span class="chip orange">CRM waiting for real identity data</span>
           </div>
 
-          <div class="form-footer">
-            <p class="form-mention" data-i18n="form.mention">* Champs obligatoires. Vos données sont traitées de façon confidentielle.</p>
-            <button type="submit" class="btn-gold form-submit" id="formBtn">
-              <span class="btn-text" data-i18n="form.submit">ENVOYER MA DEMANDE</span>
-              <span class="btn-loader" style="display:none">⟳</span>
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </button>
+          <h2>Current Product Truth</h2>
+          <p>
+            The operational reservation site remains the source of truth. NightOS is the analytics,
+            CRM, RP performance, and decision-support layer built around that source.
+          </p>
+
+          <div class="list-card">
+            <strong>What NightOS already reads</strong>
+            <span>Date-scoped occupied slots, table identifiers, supplemental slots, source labels, and price values.</span>
           </div>
 
-          <div class="form-success" id="formSuccess" style="display:none">
-            <p data-i18n="form.success">✓ Message envoyé — Nous vous répondons sous 30 minutes.</p>
-          </div>
-          <div class="form-error" id="formError" style="display:none">
-            <p data-i18n="form.error">Une erreur est survenue. Contactez-nous directement au +33 6 68 73 11 09.</p>
+          <div class="list-card">
+            <strong>What NightOS intentionally leaves empty</strong>
+            <span>VIP CRM, client history, and preference logic remain empty until true client identities are synchronized.</span>
           </div>
 
-        </form>
+          <div class="list-card">
+            <strong>What this HTML is</strong>
+            <span>A static NightOS overview page for the Desktop folder and the repository, aligned with the current internal operating system.</span>
+          </div>
+        </aside>
       </div>
+    </section>
 
-    </div>
-  </section>
+    <section class="section" id="modules">
+      <div class="shell">
+        <article class="panel section-main">
+          <p class="eyebrow">Core Modules</p>
+          <h2 class="section-title">The operational heart of NightOS</h2>
+          <p class="section-copy" style="margin-top: 16px;">
+            The product is centered on operational clarity, not on a fake marketing shell.
+            These modules are already represented in the Next.js application and are designed to stay honest
+            when real synchronized data is still incomplete.
+          </p>
 
-  <!-- ══ TESTIMONIALS ══════════════════════════════════ -->
-  <section id="temoignages">
-    <div class="section-head reveal-up">
-      <p class="label" data-i18n="testi.label">ILS NOUS FONT CONFIANCE</p>
-      <h2 class="display-title-xl" data-i18n="testi.title">TÉMOIGNAGES</h2>
-    </div>
+          <div class="modules">
+            <div class="module-card">
+              <h3>Dashboard</h3>
+              <p>Tonight status, sync health, fill structure, estimated revenue structure, active promoters, VIP follow-up readiness, and operational alerts.</p>
+            </div>
+            <div class="module-card">
+              <h3>Reservations</h3>
+              <p>Operational reservation visibility with external booking IDs, source visibility, sync state, and a future-ready detail panel.</p>
+            </div>
+            <div class="module-card">
+              <h3>RP Performance</h3>
+              <p>Who brings value, who is inactive, who drives revenue, and who needs follow-up, without fabricating rankings.</p>
+            </div>
+            <div class="module-card">
+              <h3>VIP CRM</h3>
+              <p>Prepared around imported reservation activity, but intentionally empty until a reliable client identity source exists.</p>
+            </div>
+            <div class="module-card">
+              <h3>Analytics</h3>
+              <p>Lighter, decision-oriented business visibility that only uses real source data or transparent empty states.</p>
+            </div>
+            <div class="module-card">
+              <h3>Settings</h3>
+              <p>Roles, access, reservation sync, integrations, security architecture, deployment readiness, and future creative bridge placeholders.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-    <div class="testi-slider">
-      <button class="testi-arrow testi-prev" aria-label="Précédent">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M14 5L8 11L14 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+    <section class="section" id="sync">
+      <div class="shell">
+        <article class="panel section-main">
+          <p class="eyebrow">Reservation Sync</p>
+          <h2 class="section-title">Connected to the real reservation source</h2>
+          <p class="section-copy" style="margin-top: 16px;">
+            NightOS is already wired to the current operational reservation site:
+            <code>https://cova-club-resa-production.up.railway.app/</code>.
+            The current live path uses Socket.IO to read week snapshots in a way that respects the reservation site as the writer.
+          </p>
 
-      <div class="testi-viewport" id="testiViewport">
-        <div class="testi-track" id="testiTrack">
+          <div class="cards-3">
+            <div class="info-card">
+              <h3>Current useful payload</h3>
+              <ul>
+                <li>occupied table slots</li>
+                <li>supplemental booking slots</li>
+                <li>source label text</li>
+                <li>price / spend fields</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <h3>Current limitations</h3>
+              <ul>
+                <li>no verified client identity</li>
+                <li>no structured CRM-grade preferences</li>
+                <li>no explicit RP foreign key model yet</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <h3>Current sync behavior</h3>
+              <ul>
+                <li>maps slots to <code>external_booking_id</code></li>
+                <li>keeps source metadata visible</li>
+                <li>leaves CRM empty instead of inventing clients</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t1">« Table obtenue au Guy Savoy un vendredi soir, en moins de 2h. Je n'y croyais pas. Service parfait du début à la fin. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Thomas R.</span>
-                <span class="testi-service">Restaurant — Guy Savoy, Paris</span>
+    <section class="section" id="architecture">
+      <div class="shell">
+        <article class="panel section-main">
+          <p class="eyebrow">Architecture</p>
+          <h2 class="section-title">Production-oriented structure</h2>
+          <p class="section-copy" style="margin-top: 16px;">
+            NightOS is now structured as a real application base with Next.js App Router, TypeScript,
+            Tailwind CSS, Supabase-ready auth and data modeling, and Row Level Security preparation.
+          </p>
+
+          <div class="timeline">
+            <div class="timeline-step">
+              <div class="step-number">Step 01</div>
+              <div class="step-body">
+                <h3>Reservation site writes</h3>
+                <p>The existing operational reservation site remains the booking entry point and source of truth.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-number">Step 02</div>
+              <div class="step-body">
+                <h3>NightOS reads and structures</h3>
+                <p>NightOS pulls live source data, maps source identifiers, and exposes a premium internal operating layer.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-number">Step 03</div>
+              <div class="step-body">
+                <h3>Supabase persists and secures</h3>
+                <p>Profiles, RP profiles, clients, tables, events, reservations, visits, and audit logs are prepared with RLS.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-number">Step 04</div>
+              <div class="step-body">
+                <h3>Analytics and CRM become trustworthy</h3>
+                <p>As soon as richer synchronized data exists, CRM and performance modules move from empty states to real business visibility.</p>
               </div>
             </div>
           </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t2">« Loges PSG pour le Classique contre l'OM. Accueil champagne, repas gastronomique, ambiance incroyable. Maison Panthera a tout géré. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Julien K.</span>
-                <span class="testi-service">Match — PSG vs OM, Parc des Princes</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t3">« Carré Or pour le concert de Drake à Paris. Placement devant la scène, accès backstage. Une soirée dont je me souviendrai toujours. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Inès B.</span>
-                <span class="testi-service">Concert — Accor Arena, Paris</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t4">« Impossible d'avoir des billets pour la finale de Roland-Garros — Maison Panthera les a trouvés en 20 minutes. Loges VIP, champagne. Inoubliable. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Karim B.</span>
-                <span class="testi-service">Match — Roland-Garros, Paris</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t5">« Dîner surprise pour l'anniversaire de ma femme au Grand Restaurant de Jean-François Piège. Décoration florale, menu personnalisé. Merci infiniment. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Marc L.</span>
-                <span class="testi-service">Restaurant — Le Grand Restaurant, Paris</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t6">« Grand Prix de Monaco en loges privées avec vue sur le circuit. Tout était organisé : transfert, hôtel, paddock. Un niveau d'exception. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Sofia M.</span>
-                <span class="testi-service">F1 — Grand Prix de Monaco</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t7">« Réservation d'un jet privé en moins d'une heure pour Dubai. Discrétion totale, équipe ultra réactive. Je ne travaille plus qu'avec eux. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Alexandre D.</span>
-                <span class="testi-service">Private Jet — Paris / Dubai</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t8">« Concert Beyoncé en carré or, accueil VIP et loge privée. Tout était parfait, de l'arrivée au départ. Une organisation au millimètre. »</p>
-              <div class="testi-author">
-                <span class="testi-name">Amina S.</span>
-                <span class="testi-service">Concert — Stade de France</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="testi-stars">★★★★★</div>
-              <p class="testi-text" data-i18n="testi.t9">« VTC de luxe pour toute une semaine à Paris, disponible 24h/24. Ponctualité irréprochable, véhicule impeccable. À recommander sans hésiter. »</p>
-              <div class="testi-author">
-                <span class="testi-name">David N.</span>
-                <span class="testi-service">VTC Prestige — Paris</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        </article>
       </div>
+    </section>
 
-      <button class="testi-arrow testi-next" aria-label="Suivant">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M8 5L14 11L8 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-  </section>
+    <section class="section" id="handoff">
+      <div class="shell">
+        <article class="panel-strong section-main">
+          <p class="eyebrow">Deployment & Handoff</p>
+          <h2 class="section-title">What remains to connect</h2>
+          <p class="section-copy" style="margin-top: 16px;">
+            The project is already pushed to GitHub, mirrored into the Desktop folder, and organized for Vercel deployment.
+            What remains is real environment configuration and production data plumbing.
+          </p>
 
-  <!-- ══ LAISSER UN AVIS ═══════════════════════════════ -->
-  <section id="avis" class="reviews-section">
-    <div class="section-head reveal-up">
-      <p class="label" data-i18n="reviews.label">VOTRE EXPÉRIENCE</p>
-      <h2 class="display-title-xl" data-i18n="reviews.title">LAISSEZ UN AVIS</h2>
-      <p class="section-sub" data-i18n="reviews.sub">Votre retour nous aide à grandir</p>
-    </div>
-    <form class="review-form reveal-up"
-          action="https://formsubmit.co/maisonpanthera@outlook.com"
-          method="POST">
-      <input type="hidden" name="_subject" value="⭐ Nouvel avis client — Maison Panthera">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_next" value="./#avis">
-      <div class="review-stars-wrap">
-        <p class="review-stars-label" data-i18n="reviews.rating">VOTRE NOTE</p>
-        <div class="review-stars" id="reviewStars">
-          <span class="star" data-val="1">★</span>
-          <span class="star" data-val="2">★</span>
-          <span class="star" data-val="3">★</span>
-          <span class="star" data-val="4">★</span>
-          <span class="star" data-val="5">★</span>
-        </div>
-        <input type="hidden" name="note" id="reviewRating" value="5/5">
+          <div class="cards-3">
+            <div class="info-card">
+              <h3>Ready now</h3>
+              <ul>
+                <li>GitHub repository</li>
+                <li>Desktop mirror</li>
+                <li>Next.js application structure</li>
+                <li>Supabase migration SQL</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <h3>Pending setup</h3>
+              <ul>
+                <li>real Supabase credentials</li>
+                <li>auth users and role rows</li>
+                <li>persistent sync execution</li>
+                <li>Vercel environment configuration</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <h3>Future bridge</h3>
+              <ul>
+                <li>private creative SaaS placeholders</li>
+                <li>flyer/video brief handoff structure</li>
+                <li>no creative product built yet</li>
+              </ul>
+            </div>
+          </div>
+        </article>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="rName" data-i18n="reviews.name">VOTRE NOM *</label>
-          <input type="text" id="rName" name="nom" required>
-        </div>
-        <div class="form-group">
-          <label for="rService" data-i18n="reviews.service">SERVICE UTILISÉ</label>
-          <input type="text" id="rService" name="service">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="rMessage" data-i18n="reviews.message">VOTRE AVIS *</label>
-        <textarea id="rMessage" name="avis" rows="4" required></textarea>
-      </div>
-      <button type="submit" class="btn-gold">
-        <span data-i18n="reviews.submit">ENVOYER MON AVIS</span>
-      </button>
-    </form>
-  </section>
+    </section>
+  </main>
 
-  <!-- ══ FOOTER ════════════════════════════════════════ -->
-  <footer id="footer">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <p class="footer-name">MAISON PANTHERA</p>
-        <p class="footer-tag" data-i18n="footer.tag">CONCIERGERIE FULL SERVICES</p>
+  <footer class="footer">
+    <div class="shell">
+      <div class="panel footer-card">
+        <p>NightOS static overview page aligned with the actual repository and internal product.</p>
+        <p id="footerYear">NightOS</p>
       </div>
-      <nav class="footer-nav">
-        <a href="#services">SERVICES</a>
-        <a href="#about" data-i18n="nav.about">À PROPOS</a>
-        <a href="#formulaire" data-i18n="nav.contact">CONTACT</a>
-      </nav>
-      <div class="footer-contact">
-        <a href="tel:+33668731109">+33 6 68 73 11 09</a>
-        <a href="mailto:maisonpanthera@outlook.com">maisonpanthera@outlook.com</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-social">
-        <a href="https://www.instagram.com/maisonpanthera.eu/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          <span>Instagram</span>
-        </a>
-        <a href="https://wa.me/33668731109" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          <span>WhatsApp</span>
-        </a>
-      </div>
-      <p data-i18n="footer.copy">© 2026 MAISON PANTHERA — TOUS DROITS RÉSERVÉS</p>
     </div>
   </footer>
 
-  <!-- ══ SCROLL TO TOP ══════════════════════════════════ -->
-  <button class="scroll-top" id="scrollTop" aria-label="Retour en haut">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-
-  <!-- ══ CHAT WIDGET ════════════════════════════════════ -->
-  <div class="chat-widget" id="chatWidget">
-    <div class="chat-panel" id="chatPanel">
-      <div class="chat-header">
-        <img src="images/logo-site.png" alt="">
-        <div class="chat-header-info">
-          <p>MAISON PANTHERA</p>
-          <span><i class="chat-dot"></i> <span data-i18n="chat.available">Disponible maintenant</span></span>
-        </div>
-        <button class="chat-close-btn" id="chatClose">✕</button>
-      </div>
-      <div class="chat-body">
-        <div class="chat-bubble bot">
-          <p data-i18n="chat.hello">Bonjour 👋 Comment puis-je vous aider ?</p>
-        </div>
-        <div class="chat-options">
-          <a href="https://wa.me/33668731109?text=Bonjour,%20je%20souhaite%20réserver%20un%20VTC." target="_blank" rel="noopener" class="chat-opt">🚗 Réserver un VTC</a>
-          <a href="https://wa.me/33668731109?text=Bonjour,%20je%20souhaite%20louer%20un%20jet%20privé." target="_blank" rel="noopener" class="chat-opt">✈️ Private Jet</a>
-          <a href="https://wa.me/33668731109?text=Bonjour,%20je%20souhaite%20louer%20un%20yacht." target="_blank" rel="noopener" class="chat-opt">🛥 Yacht</a>
-          <a href="https://wa.me/33668731109?text=Bonjour,%20je%20cherche%20un%20personal%20shopper." target="_blank" rel="noopener" class="chat-opt">🛍 Personal Shopper</a>
-          <a href="https://wa.me/33668731109?text=Bonjour,%20je%20souhaite%20une%20réservation%20VIP." target="_blank" rel="noopener" class="chat-opt">⭐ Booking VIP</a>
-          <a href="#formulaire" class="chat-opt chat-opt-form">📋 Formulaire de contact</a>
-        </div>
-      </div>
-      <div class="chat-footer-bar">
-        <a href="https://wa.me/33668731109" target="_blank" rel="noopener" class="chat-wa-btn">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Écrire sur WhatsApp
-        </a>
-      </div>
-    </div>
-    <button class="chat-toggle" id="chatToggle" aria-label="Ouvrir le chat">
-      <svg class="chat-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="26" height="26"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      <svg class="chat-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24" style="display:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      <span class="chat-badge">1</span>
-    </button>
-  </div>
-
-  <script src="script.js?v=14"></script>
+  <script>
+    const year = new Date().getFullYear();
+    document.getElementById("footerYear").textContent = `NightOS — ${year}`;
+  </script>
 </body>
 </html>
