@@ -36,6 +36,7 @@ It is:
 ## Implemented now
 
 - Premium internal dashboard shell
+- Internal access gate for deployed preview and login routes
 - Protected `/app/*` routes with server-side auth checks
 - Proxy-based Supabase session refresh on protected app routes
 - Preview-safe `/preview/*` routes for controlled demos
@@ -113,6 +114,7 @@ NightOS exposes:
 
 This route returns a no-store JSON summary of:
 
+- internal access gate readiness
 - preview-only vs auth-ready access posture
 - reservation source configuration vs approval
 - warehouse and sync readiness
@@ -143,11 +145,14 @@ The schema includes:
 1. Push to GitHub.
 2. Import the repo into Vercel.
 3. Add the environment variables from `.env.example`.
-4. Run the Supabase migrations.
-5. Create users and role rows in `profiles` and `rp_profiles`.
-6. Validate the reservation contract.
-7. Set `NIGHTOS_RESERVATION_SOURCE_APPROVED=true` only when the source is approved for production use.
-8. Trigger the sync route after credentials and approval are ready.
+4. Set `NIGHTOS_INTERNAL_ACCESS_CODE` to keep the deployed platform private before full Supabase rollout.
+5. Set `NIGHTOS_INTERNAL_ACCESS_SECRET` or let the gate reuse `RESERVATION_SYNC_SHARED_SECRET`.
+6. Add the reservation-source URL and PIN.
+7. Decide whether the current environment is only allowed to inspect the writer or approved to operate against it.
+8. Run the Supabase migrations.
+9. Create users and role rows in `profiles` and `rp_profiles`.
+10. Set `NIGHTOS_RESERVATION_SOURCE_APPROVED=true` only when the source is approved for production use.
+11. Trigger the sync route after credentials and approval are ready.
 
 GitHub Actions CI is included and runs:
 

@@ -2,6 +2,45 @@ export function getReservationSourceName() {
   return process.env.COVA_RESERVATION_SOURCE_NAME?.trim() || "Reservation Site";
 }
 
+export function hasInternalAccessCode() {
+  return Boolean(process.env.NIGHTOS_INTERNAL_ACCESS_CODE?.trim());
+}
+
+export function getInternalAccessCode() {
+  const code = process.env.NIGHTOS_INTERNAL_ACCESS_CODE?.trim();
+
+  if (!code) {
+    throw new Error("NIGHTOS_INTERNAL_ACCESS_CODE is not configured.");
+  }
+
+  return code;
+}
+
+export function hasInternalAccessSecret() {
+  return Boolean(
+    process.env.NIGHTOS_INTERNAL_ACCESS_SECRET?.trim() ||
+      process.env.RESERVATION_SYNC_SHARED_SECRET?.trim(),
+  );
+}
+
+export function getInternalAccessSecret() {
+  const secret =
+    process.env.NIGHTOS_INTERNAL_ACCESS_SECRET?.trim() ||
+    process.env.RESERVATION_SYNC_SHARED_SECRET?.trim();
+
+  if (!secret) {
+    throw new Error(
+      "NIGHTOS_INTERNAL_ACCESS_SECRET is not configured and RESERVATION_SYNC_SHARED_SECRET is unavailable.",
+    );
+  }
+
+  return secret;
+}
+
+export function isInternalAccessConfigured() {
+  return hasInternalAccessCode() && hasInternalAccessSecret();
+}
+
 export function isReservationSourceConfigured() {
   return Boolean(
     process.env.COVA_RESERVATION_SOURCE_URL?.trim() &&
@@ -65,6 +104,9 @@ export function getSyncSecret() {
 
 export function getEnvironmentReadiness() {
   return {
+    internalAccessCode: hasInternalAccessCode(),
+    internalAccessSecret: hasInternalAccessSecret(),
+    internalAccessConfigured: isInternalAccessConfigured(),
     supabaseUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()),
     supabaseAnonKey: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()),
     supabaseServiceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()),

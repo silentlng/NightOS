@@ -1,23 +1,34 @@
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { LoginForm } from "@/components/auth/login-form";
+import { redirect } from "next/navigation";
+import { InternalAccessForm } from "@/components/auth/internal-access-form";
 import { Button } from "@/components/ui/button";
+import { hasValidInternalAccessCookieValue } from "@/lib/auth/internal-access";
+import { isInternalAccessConfigured } from "@/lib/env";
 import { siteConfig } from "@/lib/site";
-import { isInternalAccessConfigured, isSupabaseConfigured } from "@/lib/env";
 
-export default async function LoginPage({
+export default async function InternalAccessPage({
   searchParams,
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
+  if (!isInternalAccessConfigured()) {
+    redirect("/auth/login");
+  }
+
   const params = await searchParams;
-  const nextPath = params.next?.startsWith("/app")
-    ? params.next
-    : "/app/dashboard";
+  const nextPath = params.next?.startsWith("/") ? params.next : "/auth/login";
+  const cookieStore = await cookies();
+  const accessCookie = cookieStore.get("nightos_internal_access")?.value;
+
+  if (await hasValidInternalAccessCookieValue(accessCookie)) {
+    redirect(nextPath);
+  }
 
   return (
     <main className="min-h-screen px-4 py-6 md:px-6 md:py-8">
-      <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-[1420px] gap-5 xl:grid-cols-[1.12fr_0.88fr]">
+      <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-[1360px] gap-5 xl:grid-cols-[1.05fr_0.95fr]">
         <section className="surface-strong relative overflow-hidden p-8 md:p-10">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/45 to-transparent" />
           <div className="flex h-full flex-col justify-between gap-10">
@@ -44,21 +55,21 @@ export default async function LoginPage({
                     {siteConfig.name}
                   </p>
                   <h1 className="display-heading max-w-4xl">
-                    Secure internal access for operations, CRM, and reservation control.
+                    Internal access gate before workspace, preview, and operational data.
                   </h1>
                   <p className="section-copy max-w-3xl">
-                    The reservation site remains the operational source of truth.
-                    NightOS structures the management layer around it for managers,
-                    staff, promoters, and direction.
+                    NightOS is deployed as a private operating platform. Enter the
+                    internal access code to unlock the workspace entry, then continue
+                    to secure sign-in or the controlled preview experience.
                   </p>
                 </div>
               </div>
 
               <div className="grid gap-3 md:grid-cols-3">
                 {[
-                  "Server-side protected routes",
-                  "Scoped visibility by role",
-                  "No fake business data",
+                  "Private internal navigation",
+                  "Source-aware reservation inspection",
+                  "No fake business activity or CRM data",
                 ].map((item) => (
                   <div className="surface-muted p-4 text-sm leading-6 text-muted-foreground" key={item}>
                     {item}
@@ -69,11 +80,12 @@ export default async function LoginPage({
 
             <div className="surface-muted max-w-xl p-5">
               <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
-                Access policy
+                Entry policy
               </p>
               <p className="mt-3 text-sm leading-6 text-foreground">
-                Admins and managers keep business-wide visibility. RP accounts stay
-                scoped to their own reservations, performance, and client context.
+                This gate protects NightOS while Supabase production auth and role
+                provisioning are still being finalized. It keeps the platform private
+                without pretending that permanent identity infrastructure is already complete.
               </p>
             </div>
           </div>
@@ -83,39 +95,22 @@ export default async function LoginPage({
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
           <div className="w-full max-w-md space-y-6">
             <div className="space-y-3">
-              <p className="eyebrow">Secure Access</p>
-              <h2 className="display-subheading">Sign in</h2>
+              <p className="eyebrow">Internal Access</p>
+              <h2 className="display-subheading">Unlock NightOS</h2>
               <p className="text-sm leading-6 text-muted-foreground">
-                Use Supabase Auth for production access. Preview mode stays available
-                for internal walkthroughs while infrastructure is still being finalized.
+                This code gate protects deployed preview routes, login entry, and the
+                internal landing surface before full production auth is switched on.
               </p>
             </div>
 
-            {isInternalAccessConfigured() ? (
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-6 text-muted-foreground">
-                Internal access gating is active in this environment. This login
-                screen is already behind the NightOS private entry check.
-              </div>
-            ) : null}
-
-            {isSupabaseConfigured() ? (
-              <LoginForm nextPath={nextPath} />
-            ) : (
-              <div className="rounded-[1.75rem] border border-warning/25 bg-warning/10 p-5 text-sm leading-6 text-warning">
-                Supabase public credentials are not configured in this environment yet.
-                You can still open the live preview workspace while infrastructure
-                setup is being finalized.
-              </div>
-            )}
+            <InternalAccessForm nextPath={nextPath} />
 
             <div className="grid gap-3 md:grid-cols-2">
               <Button asChild variant="outline">
-                <Link href="/preview/manager/dashboard">Open preview</Link>
+                <Link href="/auth/login">Go to sign-in</Link>
               </Button>
               <Button asChild variant="ghost">
-                <Link href={isInternalAccessConfigured() ? "/auth/access" : "/auth/setup-required"}>
-                  {isInternalAccessConfigured() ? "Re-enter access gate" : "Setup guide"}
-                </Link>
+                <Link href="/">Back to platform entry</Link>
               </Button>
             </div>
           </div>

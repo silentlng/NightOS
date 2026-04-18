@@ -1,5 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  hasValidInternalAccessCookieValue,
+  INTERNAL_ACCESS_COOKIE_NAME,
+} from "@/lib/auth/internal-access";
+import { isInternalAccessConfigured } from "@/lib/env";
 
 function getSupabaseEdgeEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -13,6 +18,28 @@ function getSupabaseEdgeEnv() {
 }
 
 export async function proxy(request: NextRequest) {
+  const isInternalRoute =
+    request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname.startsWith("/preview") ||
+    request.nextUrl.pathname === "/auth/login" ||
+    request.nextUrl.pathname === "/auth/setup-required" ||
+    request.nextUrl.pathname.startsWith("/app");
+
+  if (isInternalRoute && isInternalAccessConfigured()) {
+    const accessCookie = request.cookies.get(INTERNAL_ACCESS_COOKIE_NAME)?.value;
+
+    if (!(await hasValidInternalAccessCookieValue(accessCookie))) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/auth/access";
+      redirectUrl.search = "";
+      redirectUrl.searchParams.set(
+        "next",
+        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+      );
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
   const env = getSupabaseEdgeEnv();
 
   if (!env) {
@@ -67,5 +94,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*", "/auth/login"],
+  matcher: ["/", "/preview/:path*", "/app/:path*", "/auth/login", "/auth/setup-required"],
 };

@@ -33,8 +33,13 @@ export async function GET() {
           ? "staged"
           : "preview_only",
       environment: {
-        accessMode: publicAuthReady ? "auth_ready" : "preview_only",
+        accessMode: publicAuthReady
+          ? "auth_ready"
+          : readiness.internalAccessConfigured
+            ? "internal_gate"
+            : "preview_only",
         sourceName: getReservationSourceName(),
+        internalAccessConfigured: readiness.internalAccessConfigured,
         sourceConfigured: isReservationSourceConfigured(),
         sourceApproved: readiness.reservationSourceApproved,
         publicAuthReady,

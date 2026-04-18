@@ -13,6 +13,8 @@
 Set these in `.env.local` for local development and in Vercel for production:
 
 - `NEXT_PUBLIC_SITE_URL`
+- `NIGHTOS_INTERNAL_ACCESS_CODE`
+- `NIGHTOS_INTERNAL_ACCESS_SECRET`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
@@ -57,9 +59,11 @@ curl -X POST http://localhost:3000/api/sync/reservation-source/pull \
 
 1. Import the GitHub repository in Vercel.
 2. Set the environment variables above.
-3. Deploy.
-4. Keep the source approval flag off during technical validation.
-5. Turn the approval flag on only after contract validation and a successful end-to-end persistence test.
+3. Configure `NIGHTOS_INTERNAL_ACCESS_CODE` so the deployed platform stays private even before Supabase Auth is live.
+4. Reuse `RESERVATION_SYNC_SHARED_SECRET` as the gate secret or set a dedicated `NIGHTOS_INTERNAL_ACCESS_SECRET`.
+5. Deploy.
+6. Keep the source approval flag off during technical validation.
+7. Turn the approval flag on only after contract validation and a successful end-to-end persistence test.
 
 ## Runtime validation
 

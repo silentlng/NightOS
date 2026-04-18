@@ -46,10 +46,10 @@ export default function Home() {
 
               <div className="flex flex-wrap gap-3">
                 <Button asChild size="lg">
-                  <Link href="/auth/login">Open secure workspace</Link>
+                  <Link href="/auth/access">Unlock internal platform</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link href="/preview/manager/dashboard">Open manager preview</Link>
+                  <Link href="/auth/login">Open secure workspace</Link>
                 </Button>
               </div>
             </div>
@@ -120,21 +120,22 @@ export default function Home() {
                 <p className="eyebrow">Access modes</p>
                 <h2 className="display-subheading">Production when ready, preview when needed.</h2>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Production routes stay protected. Preview routes remain useful for
-                  internal walkthroughs while authentication, audit, and sync
+                  NightOS now sits behind an internal access gate first. Production
+                  routes stay protected, and preview routes remain available only for
+                  controlled internal walkthroughs while long-term auth and sync
                   persistence are still being finalized.
                 </p>
               </div>
 
               <div className="grid gap-3">
                 <Button asChild className="w-full">
-                  <Link href="/auth/login">Secure sign-in</Link>
+                  <Link href="/auth/access">Enter internal access</Link>
                 </Button>
                 <Button asChild className="w-full" variant="outline">
-                  <Link href="/preview/manager/dashboard">Preview as manager</Link>
+                  <Link href="/auth/login">Secure sign-in</Link>
                 </Button>
                 <Button asChild className="w-full" variant="ghost">
-                  <Link href="/preview/admin/dashboard">Preview as admin</Link>
+                  <Link href="/preview/admin/dashboard">Admin preview after unlock</Link>
                 </Button>
               </div>
 
