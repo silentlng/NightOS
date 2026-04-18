@@ -3,922 +3,2179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NightOS / Cova Club OS — v3</title>
+<title>NIGHTOS / Cova Club OS</title>
+<meta name="description" content="Plateforme interne privee pour l'exploitation, la reservation, le CRM VIP et la performance RP d'un club premium.">
+<link rel="icon" type="image/png" href="public/favicon-cova.png">
+<link rel="apple-touch-icon" href="public/favicon-cova.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════ TOKENS ═══════════════════ */
 :root{
-  --bg-base:#07070A;--bg-surf:#0D0D11;--bg-elev:#131317;--bg-hov:#18181D;
-  --bdr-sub:rgba(255,255,255,.06);--bdr-def:rgba(255,255,255,.09);--bdr-str:rgba(255,255,255,.14);
-  --tx-1:#EDEAE0;--tx-2:#8A8A97;--tx-m:#4E4E5A;
-  --gold:#C8A250;--gold-l:#D4B46A;--gold-dim:rgba(200,162,80,.10);--gold-bdr:rgba(200,162,80,.28);--gold-glow:rgba(200,162,80,.05);
-  --ok:#34D399;--ok-bg:rgba(52,211,153,.08);--ok-bdr:rgba(52,211,153,.20);
-  --warn:#FBBF24;--warn-bg:rgba(251,191,36,.08);--warn-bdr:rgba(251,191,36,.20);
-  --err:#F87171;--err-bg:rgba(248,113,113,.08);--err-bdr:rgba(248,113,113,.20);
-  --info:#60A5FA;--info-bg:rgba(96,165,250,.08);--info-bdr:rgba(96,165,250,.20);
-  --sw:252px;--th:64px;
-  --fd:'Cormorant',Georgia,serif;--fb:'Plus Jakarta Sans',system-ui,sans-serif;--fm:'JetBrains Mono',monospace;
-  --rsm:6px;--rmd:10px;--rlg:14px;--rxl:20px;--rfull:9999px;
-  --tf:120ms cubic-bezier(.4,0,.2,1);--tb:200ms cubic-bezier(.4,0,.2,1);
-  --sh-md:0 4px 16px rgba(0,0,0,.55);--sh-lg:0 8px 40px rgba(0,0,0,.65);--sh-gold:0 0 30px rgba(200,162,80,.10);
+  --bg-base:#07070a;
+  --bg-surface:#0f1014;
+  --bg-elev:#15161b;
+  --bg-hover:#191b21;
+  --bg-soft:rgba(255,255,255,.03);
+  --line-soft:rgba(255,255,255,.06);
+  --line-def:rgba(255,255,255,.10);
+  --line-strong:rgba(255,255,255,.16);
+  --text-1:#ece8df;
+  --text-2:#a5a1af;
+  --text-3:#686573;
+  --gold:#c9a054;
+  --gold-soft:#ddbb7e;
+  --gold-bg:rgba(201,160,84,.10);
+  --gold-border:rgba(201,160,84,.28);
+  --ok:#46d29a;
+  --ok-bg:rgba(70,210,154,.10);
+  --ok-border:rgba(70,210,154,.22);
+  --warn:#f1b54d;
+  --warn-bg:rgba(241,181,77,.10);
+  --warn-border:rgba(241,181,77,.22);
+  --danger:#ef7f7f;
+  --danger-bg:rgba(239,127,127,.10);
+  --danger-border:rgba(239,127,127,.22);
+  --info:#6aa7ff;
+  --info-bg:rgba(106,167,255,.10);
+  --info-border:rgba(106,167,255,.22);
+  --shadow-lg:0 18px 60px rgba(0,0,0,.48);
+  --shadow-md:0 8px 28px rgba(0,0,0,.32);
+  --radius-sm:8px;
+  --radius-md:12px;
+  --radius-lg:18px;
+  --radius-xl:28px;
+  --sidebar-w:272px;
+  --topbar-h:74px;
+  --font-display:"Cormorant", Georgia, serif;
+  --font-body:"Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono:"JetBrains Mono", monospace;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:14px;-webkit-font-smoothing:antialiased}
-body{background:var(--bg-base);color:var(--tx-1);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+
+*,
+*::before,
+*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(201,160,84,.10), transparent 28rem),
+    radial-gradient(circle at 85% 0%, rgba(255,255,255,.04), transparent 26rem),
+    linear-gradient(180deg,#07070a 0%,#090a0e 45%,#07070a 100%);
+  color:var(--text-1);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+img{display:block;max-width:100%}
+button,input,select{font:inherit}
+button{background:none;border:none;color:inherit}
+a{color:inherit;text-decoration:none}
 ul{list-style:none}
+code{
+  font-family:var(--font-mono);
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line-soft);
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:.78rem;
+  color:var(--gold-soft);
+}
+::selection{background:var(--gold-bg);color:var(--text-1)}
 ::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-thumb{background:var(--bdr-str);border-radius:var(--rfull)}
-::selection{background:var(--gold-dim);color:var(--tx-1)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes shimmer{0%{opacity:.4}50%{opacity:.7}100%{opacity:.4}}
-.au{animation:fadeUp 280ms ease both}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:999px}
 
-/* ═══════════════════ LAYOUT ═══════════════════ */
-#shell{display:flex;min-height:100vh}
-/* Sidebar */
-#sb{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--bg-surf);border-right:1px solid var(--bdr-sub);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
-.sbl{display:flex;align-items:center;gap:12px;padding:24px;border-bottom:1px solid var(--bdr-sub);flex-shrink:0}
-.sbl-m{width:34px;height:34px;background:var(--gold);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;font-weight:600;color:var(--bg-base);box-shadow:var(--sh-gold);flex-shrink:0}
-.sbl-n{font-family:var(--fd);font-size:1.05rem;letter-spacing:.06em;line-height:1;color:var(--tx-1)}
-.sbl-s{font-size:.62rem;color:var(--tx-m);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
-.snav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
-.snl{font-size:.62rem;color:var(--tx-m);text-transform:uppercase;letter-spacing:.12em;font-weight:600;padding:16px 10px 6px}
-.ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rmd);cursor:pointer;transition:all var(--tf);color:var(--tx-2);font-size:.82rem;font-weight:500;border:1px solid transparent}
-.ni:hover{background:var(--bg-hov);color:var(--tx-1)}
-.ni.active{background:var(--gold-dim);color:var(--gold);border-color:var(--gold-bdr)}
-.ni svg{width:15px;height:15px;stroke-width:1.6;fill:none;flex-shrink:0}
-.ni:not(.active) svg{stroke:var(--tx-m)}.ni.active svg{stroke:var(--gold)}
-/* Sync indicator in sidebar */
-.sync-pill{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--bg-elev);border:1px solid var(--bdr-sub);border-radius:var(--rfull);margin:8px 10px 0;font-size:.68rem;color:var(--tx-m)}
-.sync-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.sync-dot.ok{background:var(--ok);animation:pulse 2.5s ease infinite}
-.sync-dot.off{background:var(--tx-m)}
-.sync-dot.err{background:var(--err)}
-.sfot{border-top:1px solid var(--bdr-sub);padding:14px;flex-shrink:0}
-.susr{display:flex;align-items:center;gap:10px;padding:7px;border-radius:var(--rmd);cursor:pointer;transition:background var(--tf)}
-.susr:hover{background:var(--bg-hov)}
-.sav{width:32px;height:32px;border-radius:var(--rfull);background:var(--gold-dim);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.9rem;color:var(--gold);flex-shrink:0}
-.sunm{font-size:.82rem;font-weight:600;color:var(--tx-1)}
-.surl{font-size:.65rem;color:var(--tx-m);text-transform:uppercase;letter-spacing:.08em}
-/* Main */
-#main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column}
-#topbar{position:sticky;top:0;height:var(--th);z-index:90;background:rgba(13,13,17,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr-sub);display:flex;align-items:center;justify-content:space-between;padding:0 32px;gap:16px}
-.tb-tt{font-family:var(--fd);font-size:1.3rem;font-weight:500;letter-spacing:.01em}
-.tb-sb{font-size:.7rem;color:var(--tx-m);letter-spacing:.06em;margin-top:2px}
-.tb-r{display:flex;align-items:center;gap:10px}
-.tb-dt{font-size:.74rem;color:var(--tx-m);font-family:var(--fm)}
-.tb-btn{width:36px;height:36px;border-radius:var(--rmd);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tf);position:relative}
-.tb-btn:hover{background:var(--bg-hov);border-color:var(--bdr-str)}
-.tb-btn svg{width:15px;height:15px;stroke:var(--tx-2);stroke-width:1.6;fill:none}
-#ct{flex:1;padding:32px;animation:fadeUp 260ms ease both}
-.pg{display:none}.pg.on{display:block}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:.45}
+}
 
-/* ═══════════════════ GRIDS ═══════════════════ */
-.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.g53{display:grid;grid-template-columns:5fr 3fr;gap:24px}
-.g32{display:grid;grid-template-columns:3fr 2fr;gap:24px}
-.gcol{display:flex;flex-direction:column;gap:20px}
-.sec{margin-top:28px}
+.hidden{display:none!important}
+.eyebrow{
+  font-size:.66rem;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:700;
+}
+.display-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.4rem,4vw,4rem);
+  line-height:.94;
+  letter-spacing:.03em;
+}
+.display-subtitle{
+  font-family:var(--font-display);
+  font-size:1.7rem;
+  line-height:1;
+  letter-spacing:.04em;
+}
+.muted{color:var(--text-2)}
+.micro{
+  font-size:.72rem;
+  color:var(--text-3);
+  line-height:1.7;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:32px;
+  padding:0 12px;
+  border-radius:999px;
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+.pill::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:currentColor;
+  flex-shrink:0;
+}
+.pill.ok{background:var(--ok-bg);border-color:var(--ok-border);color:var(--ok)}
+.pill.warn{background:var(--warn-bg);border-color:var(--warn-border);color:var(--warn)}
+.pill.danger{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger)}
+.pill.info{background:var(--info-bg);border-color:var(--info-border);color:var(--info)}
+.pill.gold{background:var(--gold-bg);border-color:var(--gold-border);color:var(--gold)}
+.pill.neutral{background:rgba(255,255,255,.03);border-color:var(--line-soft);color:var(--text-3)}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  border:1px solid var(--line-soft);
+  background:rgba(255,255,255,.03);
+  font-size:.72rem;
+  color:var(--text-2);
+}
+.badge strong{font-weight:600;color:var(--text-1)}
+.button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:42px;
+  padding:0 16px;
+  border-radius:12px;
+  border:1px solid transparent;
+  cursor:pointer;
+  transition:all .18s ease;
+  font-size:.82rem;
+  font-weight:600;
+}
+.button.primary{background:var(--gold);color:#090909;border-color:var(--gold)}
+.button.primary:hover{background:var(--gold-soft)}
+.button.secondary{background:var(--bg-elev);border-color:var(--line-def);color:var(--text-1)}
+.button.secondary:hover{background:var(--bg-hover);border-color:var(--line-strong)}
+.button.ghost{background:transparent;border-color:transparent;color:var(--text-2)}
+.button.ghost:hover{background:var(--bg-hover);color:var(--text-1)}
 
-/* ═══════════════════ COMPONENTS ═══════════════════ */
-.card{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:24px;transition:border-color var(--tf)}
-.card:hover{border-color:var(--bdr-def)}
-.csm{padding:16px}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.ct-l{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m)}
-.ca{font-size:.74rem;color:var(--gold);cursor:pointer;transition:color var(--tf)}
-.ca:hover{color:var(--gold-l)}
+.card{
+  background:var(--bg-surface);
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  box-shadow:var(--shadow-md);
+}
+.card-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+.card-title{
+  font-size:.72rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--text-3);
+}
+.card-copy{
+  font-size:.84rem;
+  line-height:1.8;
+  color:var(--text-2);
+}
+.card-grid{display:grid;gap:16px}
+.soft-block{
+  background:var(--bg-elev);
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  padding:16px;
+}
+.soft-block strong{
+  display:block;
+  font-size:.78rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.soft-block p{
+  font-size:.82rem;
+  line-height:1.7;
+  color:var(--text-2);
+}
+.row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.row:last-child{border-bottom:none}
+.row-label{
+  font-size:.82rem;
+  color:var(--text-1);
+  font-weight:500;
+}
+.row-copy{
+  font-size:.76rem;
+  line-height:1.7;
+  color:var(--text-3);
+  margin-top:3px;
+}
+.row-value{
+  font-size:.76rem;
+  color:var(--text-2);
+  font-family:var(--font-mono);
+  text-align:right;
+  white-space:nowrap;
+}
 
-/* Page header */
-.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
-.ph-t{font-family:var(--fd);font-size:1.9rem;font-weight:400;line-height:1.1}
-.ph-s{font-size:.78rem;color:var(--tx-m);margin-top:4px;letter-spacing:.03em}
-.ph-a{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--line-soft);
+  border-radius:18px;
+}
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+.table th{
+  text-align:left;
+  padding:12px 16px;
+  font-size:.66rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  border-bottom:1px solid var(--line-soft);
+  background:rgba(255,255,255,.02);
+}
+.table td{
+  padding:14px 16px;
+  font-size:.83rem;
+  color:var(--text-2);
+  border-bottom:1px solid rgba(255,255,255,.04);
+  vertical-align:top;
+}
+.table tr:last-child td{border-bottom:none}
 
-/* KPI card */
-.kpi{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:20px 22px;display:flex;flex-direction:column;gap:10px;transition:all var(--tb);position:relative;overflow:hidden;cursor:default}
-.kpi::before{content:'';position:absolute;inset:0;background:var(--gold-glow);opacity:0;transition:opacity var(--tb)}
-.kpi.ready:hover{border-color:var(--gold-bdr);box-shadow:var(--sh-gold)}.kpi.ready:hover::before{opacity:1}
-.kpi.empty{opacity:.55}
-.kpi-h{display:flex;align-items:center;justify-content:space-between}
-.kpi-lbl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m)}
-.kpi-ico{width:30px;height:30px;border-radius:var(--rsm);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center}
-.kpi-ico svg{width:14px;height:14px;stroke:var(--tx-m);stroke-width:1.6;fill:none}
-.kpi-v{font-family:var(--fd);font-size:2.1rem;font-weight:400;color:var(--tx-1);line-height:1}
-.kpi-v.placeholder{color:var(--tx-m);font-size:1.3rem;font-family:var(--fb);font-style:italic;font-weight:400}
-.kpi-sub{font-size:.72rem;color:var(--tx-m)}
+.empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:14px;
+  padding:48px 28px;
+}
+.empty-icon{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  background:var(--bg-elev);
+  border:1px solid var(--line-def);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.empty-icon svg{
+  width:24px;
+  height:24px;
+  stroke:var(--text-3);
+  stroke-width:1.5;
+  fill:none;
+}
+.empty-title{
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  color:var(--text-1);
+}
+.empty-copy{
+  max-width:420px;
+  font-size:.84rem;
+  line-height:1.8;
+  color:var(--text-2);
+}
 
-/* Badges */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--rfull);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
-.bdot{width:5px;height:5px;border-radius:var(--rfull);flex-shrink:0}
-.b-ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-bdr)}
-.b-pend{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bdr)}
-.b-no{background:var(--err-bg);color:var(--err);border:1px solid var(--err-bdr)}
-.b-vip{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-bdr)}
-.b-top{background:linear-gradient(135deg,rgba(200,162,80,.15),rgba(200,162,80,.06));color:var(--gold);border:1px solid var(--gold-bdr)}
-.b-rising{background:var(--info-bg);color:var(--info);border:1px solid var(--info-bdr)}
-.b-off{background:rgba(255,255,255,.03);color:var(--tx-m);border:1px solid var(--bdr-sub)}
-.b-adm{background:rgba(139,92,246,.1);color:#A78BFA;border:1px solid rgba(139,92,246,.25)}
-.b-mgr{background:var(--info-bg);color:var(--info);border:1px solid var(--info-bdr)}
-.b-rp{background:rgba(255,255,255,.04);color:var(--tx-2);border:1px solid var(--bdr-def)}
+#access-gate{
+  position:fixed;
+  inset:0;
+  z-index:400;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(7,7,10,.84);
+  backdrop-filter:blur(18px);
+}
+.gate-grid{
+  width:min(1360px,100%);
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:22px;
+}
+.gate-side,
+.gate-panel{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  border:1px solid var(--line-def);
+  background:
+    radial-gradient(circle at top left, rgba(201,160,84,.14), transparent 20rem),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+  box-shadow:var(--shadow-lg);
+}
+.gate-side{padding:34px 36px;min-height:720px;display:flex;flex-direction:column;justify-content:space-between}
+.gate-panel{padding:34px 32px;display:flex;align-items:center}
+.gate-side::before,
+.gate-panel::before{
+  content:"";
+  position:absolute;
+  inset-x:0;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
+}
+.gate-stack{position:relative;z-index:1;display:flex;flex-direction:column;gap:28px}
+.logo-lockup{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.logo-frame{
+  width:146px;
+  height:60px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.025);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo-frame img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+.gate-title{
+  max-width:760px;
+}
+.gate-copy{
+  max-width:640px;
+  font-size:1rem;
+  line-height:1.9;
+  color:var(--text-2);
+}
+.gate-gridline{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:14px;
+}
+.gate-stat{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:18px;
+}
+.gate-stat strong{
+  display:block;
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.gate-stat span{
+  display:block;
+  font-size:.86rem;
+  line-height:1.7;
+  color:var(--text-2);
+}
+.gate-list{display:grid;gap:12px}
+.gate-item{
+  display:grid;
+  grid-template-columns:128px minmax(0,1fr);
+  gap:16px;
+  padding:14px 0;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.gate-item:first-child{border-top:1px solid rgba(255,255,255,.06)}
+.gate-item-label{
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.20em;
+  color:var(--gold);
+  font-weight:700;
+}
+.gate-item-copy{
+  font-size:.88rem;
+  line-height:1.8;
+  color:var(--text-2);
+}
+.form-stack{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+  position:relative;
+  z-index:1;
+}
+.form-card{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--line-soft);
+  border-radius:20px;
+  padding:20px;
+}
+.field-grid{display:grid;gap:14px}
+.field-row{display:grid;gap:8px}
+.field-label{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--text-3);
+}
+.field{
+  min-height:46px;
+  border-radius:14px;
+  border:1px solid var(--line-def);
+  background:var(--bg-elev);
+  color:var(--text-1);
+  padding:0 14px;
+}
+.field:focus{outline:none;border-color:var(--gold-border)}
+.gate-actions{display:flex;flex-wrap:wrap;gap:10px}
 
-/* Buttons */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--rmd);font-size:.8rem;font-weight:600;font-family:var(--fb);cursor:pointer;transition:all var(--tf);border:1px solid transparent;white-space:nowrap}
-.btn svg{width:14px;height:14px;stroke-width:1.8;fill:none;flex-shrink:0}
-.btn-p{background:var(--gold);color:var(--bg-base);border-color:var(--gold)}
-.btn-p:hover{background:var(--gold-l);transform:translateY(-1px);box-shadow:var(--sh-gold)}
-.btn-s{background:var(--bg-elev);color:var(--tx-1);border-color:var(--bdr-def)}
-.btn-s:hover{background:var(--bg-hov);border-color:var(--bdr-str)}
-.btn-g{background:transparent;color:var(--tx-2);border-color:transparent}
-.btn-g:hover{background:var(--bg-hov);color:var(--tx-1)}
-.btn-sm{padding:5px 12px;font-size:.75rem}
-.wf{width:100%}
+#shell{display:flex;min-height:100vh;animation:fadeUp .28s ease both}
+#sb{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--sidebar-w);
+  background:rgba(12,13,17,.92);
+  backdrop-filter:blur(22px);
+  border-right:1px solid var(--line-soft);
+  display:flex;
+  flex-direction:column;
+  z-index:120;
+}
+.sbl{
+  padding:24px 20px;
+  border-bottom:1px solid var(--line-soft);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.sbl-logo{
+  width:132px;
+  height:46px;
+  display:flex;
+  align-items:center;
+}
+.sbl-logo img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+}
+.sbl-title{
+  font-family:var(--font-display);
+  font-size:1.36rem;
+  line-height:1;
+  letter-spacing:.04em;
+}
+.sbl-sub{
+  font-size:.68rem;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  color:var(--text-3);
+}
+.snav{
+  flex:1;
+  padding:16px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  overflow-y:auto;
+}
+.snav-label{
+  padding:12px 10px 8px;
+  font-size:.62rem;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  font-weight:700;
+}
+.ni{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 12px;
+  border-radius:14px;
+  cursor:pointer;
+  border:1px solid transparent;
+  color:var(--text-2);
+  transition:all .16s ease;
+  font-size:.82rem;
+  font-weight:500;
+}
+.ni:hover{background:var(--bg-hover);color:var(--text-1)}
+.ni.active{background:var(--gold-bg);border-color:var(--gold-border);color:var(--gold-soft)}
+.ni svg{
+  width:15px;
+  height:15px;
+  stroke-width:1.6;
+  fill:none;
+  stroke:currentColor;
+}
+.sync-pill{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0 12px 14px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:var(--bg-elev);
+  border:1px solid var(--line-soft);
+  font-size:.74rem;
+  color:var(--text-2);
+}
+.sync-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--text-3);
+  flex-shrink:0;
+}
+.sync-dot.ok{background:var(--ok);animation:pulse 2.3s ease infinite}
+.sync-dot.warn{background:var(--warn);animation:pulse 2.3s ease infinite}
+.sync-dot.danger{background:var(--danger)}
+.sfot{
+  padding:14px 12px 18px;
+  border-top:1px solid var(--line-soft);
+}
+.viewer-card{
+  border-radius:16px;
+  background:var(--bg-elev);
+  border:1px solid var(--line-soft);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.viewer-name{
+  font-size:.9rem;
+  font-weight:600;
+}
+.viewer-role{
+  font-size:.66rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--text-3);
+}
 
-/* Table */
-.tw{overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--bdr-sub)}
-.dtbl{width:100%;border-collapse:collapse}
-.dtbl thead tr{border-bottom:1px solid var(--bdr-sub)}
-.dtbl th{padding:11px 16px;text-align:left;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m);background:var(--bg-surf);white-space:nowrap}
-.dtbl th:last-child{text-align:right}
-.dtbl td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem;color:var(--tx-2);vertical-align:middle}
-.dtbl td:last-child{text-align:right}
-.dtbl tbody tr{cursor:pointer;transition:background var(--tf)}
-.dtbl tbody tr:hover td{background:var(--bg-hov)}
-.dtbl tbody tr:last-child td{border-bottom:none}
-.cp{color:var(--tx-1)!important;font-weight:500}
-.cm{font-family:var(--fm)!important;font-size:.79rem!important}
+#main{
+  margin-left:var(--sidebar-w);
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+#topbar{
+  position:sticky;
+  top:0;
+  z-index:110;
+  min-height:var(--topbar-h);
+  background:rgba(12,13,17,.86);
+  backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--line-soft);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:16px 28px;
+}
+.topbar-title{
+  font-family:var(--font-display);
+  font-size:1.45rem;
+  line-height:1;
+  letter-spacing:.03em;
+}
+.topbar-copy{
+  font-size:.74rem;
+  color:var(--text-3);
+  margin-top:4px;
+}
+.topbar-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+}
 
-/* Form */
-.fi,.fs{background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rmd);padding:6px 12px;font-size:.82rem;font-family:var(--fb);color:var(--tx-1);transition:all var(--tf);appearance:none}
-.fi::placeholder{color:var(--tx-m)}
-.fi:focus,.fs:focus{outline:none;border-color:var(--gold-bdr)}
-.fs{cursor:pointer;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%234E4E5A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-.fs option{background:var(--bg-elev);color:var(--tx-1)}
-.fg{display:flex;align-items:center;gap:8px}
-.fg label{font-size:.68rem;color:var(--tx-m);white-space:nowrap;font-weight:500;text-transform:uppercase;letter-spacing:.07em}
-.fbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:14px 18px;background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg)}
+#ct{
+  flex:1;
+  padding:28px;
+}
+.pg{display:none}
+.pg.on{display:block;animation:fadeUp .26s ease both}
+.page-stack{display:flex;flex-direction:column;gap:24px}
+.page-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.page-copy{
+  max-width:920px;
+  font-size:.84rem;
+  line-height:1.85;
+  color:var(--text-2);
+}
+.private-banner{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  padding:14px 16px;
+  border-radius:16px;
+  background:var(--info-bg);
+  border:1px solid var(--info-border);
+  font-size:.82rem;
+  line-height:1.75;
+  color:var(--text-1);
+}
+.sync-block{
+  display:grid;
+  grid-template-columns:5px minmax(0,1fr);
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid var(--line-soft);
+  background:var(--bg-surface);
+}
+.sync-side{background:var(--warn)}
+.sync-content{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 18px;
+}
+.sync-title{
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  font-weight:700;
+}
+.sync-state{
+  font-size:.92rem;
+  color:var(--warn);
+  font-weight:700;
+  margin-top:4px;
+}
+.sync-copy{
+  max-width:760px;
+  font-size:.82rem;
+  line-height:1.75;
+  color:var(--text-2);
+  margin-top:8px;
+}
 
-/* Stat row */
-.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.sr:last-child{border-bottom:none}
-.sr-l{font-size:.8rem;color:var(--tx-m)}
-.sr-v{font-size:.83rem;font-weight:500;color:var(--tx-1);font-family:var(--fm)}
+.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.g53{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(360px,.75fr);gap:20px}
+.g32{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:20px}
+.stack{display:flex;flex-direction:column;gap:20px}
 
-/* Toggle */
-.tgl-w{display:flex;align-items:center;justify-content:space-between;padding:11px 0}
-.tgl-l{font-size:.83rem;color:var(--tx-2)}
-.tgl-s{font-size:.72rem;color:var(--tx-m);margin-top:2px}
-.tgl{position:relative;width:40px;height:22px;flex-shrink:0}
-.tgl input{opacity:0;width:0;height:0;position:absolute}
-.tgls{position:absolute;inset:0;background:var(--bg-hov);border:1px solid var(--bdr-def);border-radius:var(--rfull);cursor:pointer;transition:all var(--tf)}
-.tgls::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:50%;transform:translateY(-50%);background:var(--tx-m);border-radius:var(--rfull);transition:all var(--tf)}
-.tgl input:checked+.tgls{background:var(--gold-dim);border-color:var(--gold-bdr)}
-.tgl input:checked+.tgls::before{background:var(--gold);transform:translateY(-50%) translateX(18px)}
+.kpi{
+  min-height:168px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  justify-content:space-between;
+}
+.kpi-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.kpi-label{
+  font-size:.66rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  font-weight:700;
+}
+.kpi-icon{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  background:var(--bg-elev);
+  border:1px solid var(--line-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.kpi-icon svg{
+  width:16px;
+  height:16px;
+  stroke:var(--text-3);
+  stroke-width:1.5;
+  fill:none;
+}
+.kpi-value{
+  font-family:var(--font-display);
+  font-size:1.9rem;
+  line-height:1;
+  color:var(--text-1);
+}
+.kpi-value.placeholder{
+  font-family:var(--font-body);
+  font-size:1.08rem;
+  color:var(--text-2);
+  font-style:italic;
+}
+.kpi-note{
+  font-size:.78rem;
+  line-height:1.7;
+  color:var(--text-3);
+}
 
-/* Log */
-.log{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.log:last-child{border-bottom:none}
-.ldot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.ldot.ok{background:var(--ok)}.ldot.warn{background:var(--warn)}.ldot.err{background:var(--err)}.ldot.info{background:var(--info)}
-.log-tx{font-size:.8rem;color:var(--tx-2);line-height:1.5;flex:1}
-.log-tx strong{color:var(--tx-1);font-weight:500}
-.log-ts{font-size:.67rem;color:var(--tx-m);font-family:var(--fm);flex-shrink:0}
+.split-list{display:grid;gap:12px}
+.split-item{
+  display:grid;
+  grid-template-columns:138px minmax(0,1fr);
+  gap:14px;
+  padding:12px 0;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.split-item:first-child{border-top:1px solid rgba(255,255,255,.05)}
+.split-key{
+  font-size:.68rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:700;
+}
+.split-value{
+  font-size:.82rem;
+  line-height:1.8;
+  color:var(--text-2);
+}
 
-/* Side panel */
-.sp{position:fixed;top:0;right:-480px;width:460px;height:100vh;background:var(--bg-elev);border-left:1px solid var(--bdr-def);z-index:200;box-shadow:-8px 0 40px rgba(0,0,0,.5);transition:right 350ms cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
-.sp.on{right:0}
-.sp-h{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--bdr-sub);flex-shrink:0}
-.sp-tt{font-family:var(--fd);font-size:1.2rem;font-weight:500;color:var(--tx-1)}
-.sp-cl{width:28px;height:28px;border-radius:var(--rsm);background:var(--bg-hov);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tf)}
-.sp-cl:hover{background:var(--err-bg);border-color:var(--err-bdr)}
-.sp-cl svg{width:12px;height:12px;stroke:var(--tx-2);stroke-width:2;fill:none}
-.sp-b{flex:1;overflow-y:auto;padding:24px}
-.ov{position:fixed;inset:0;background:rgba(7,7,10,.55);backdrop-filter:blur(3px);z-index:150;display:none}
-.ov.on{display:block}
+.status-matrix{
+  display:grid;
+  gap:10px;
+}
+.status-cell{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  padding:14px;
+  border-radius:16px;
+  background:var(--bg-elev);
+  border:1px solid var(--line-soft);
+}
+.status-cell-copy{
+  font-size:.78rem;
+  line-height:1.8;
+  color:var(--text-2);
+  margin-top:4px;
+}
 
-/* Toast */
-#toasts{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
-.toast{padding:11px 18px;border-radius:var(--rmd);background:var(--bg-elev);border:1px solid var(--bdr-def);font-size:.82rem;color:var(--tx-1);box-shadow:var(--sh-lg);animation:fadeUp 200ms ease both;max-width:300px;border-left:3px solid var(--gold)}
+.filter-bar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  padding:14px;
+  border-radius:18px;
+  background:var(--bg-surface);
+  border:1px solid var(--line-soft);
+}
+.filter{
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid var(--line-def);
+  background:var(--bg-elev);
+  color:var(--text-3);
+  padding:0 14px;
+  min-width:170px;
+}
 
-/* ═══════════════════ EMPTY STATE — premium ═══════════════════ */
-.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 32px;gap:16px}
-.empty-ico{width:56px;height:56px;border-radius:var(--rlg);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;margin-bottom:4px}
-.empty-ico svg{width:22px;height:22px;stroke:var(--tx-m);stroke-width:1.4;fill:none}
-.empty-t{font-family:var(--fd);font-size:1.15rem;font-weight:500;color:var(--tx-2)}
-.empty-d{font-size:.82rem;color:var(--tx-m);line-height:1.7;max-width:320px}
-.empty-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rfull);font-size:.72rem;color:var(--tx-m);margin-top:4px}
-.empty-tag svg{width:11px;height:11px;stroke:var(--tx-m);stroke-width:1.8;fill:none}
-/* Compact empty for cards */
-.empty-sm{display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 20px;gap:10px}
-.empty-sm-t{font-size:.82rem;color:var(--tx-m);font-style:italic}
+.settings-layout{
+  display:grid;
+  grid-template-columns:246px minmax(0,1fr);
+  gap:22px;
+  align-items:start;
+}
+.settings-nav{
+  position:sticky;
+  top:96px;
+  background:var(--bg-surface);
+  border:1px solid var(--line-soft);
+  border-radius:18px;
+  overflow:hidden;
+}
+.settings-link{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:.82rem;
+  color:var(--text-2);
+  cursor:pointer;
+  transition:all .16s ease;
+}
+.settings-link:last-child{border-bottom:none}
+.settings-link:hover{background:var(--bg-hover);color:var(--text-1)}
+.settings-link.active{
+  background:var(--gold-bg);
+  color:var(--gold-soft);
+  border-left:2px solid var(--gold);
+}
+.settings-link svg{
+  width:15px;
+  height:15px;
+  stroke-width:1.6;
+  fill:none;
+  stroke:currentColor;
+  flex-shrink:0;
+}
+.settings-section{display:none}
+.settings-section.on{display:block}
+.settings-title{
+  font-family:var(--font-display);
+  font-size:1.45rem;
+  letter-spacing:.03em;
+}
+.settings-desc{
+  margin-top:4px;
+  margin-bottom:20px;
+  font-size:.82rem;
+  line-height:1.8;
+  color:var(--text-2);
+}
+.info-box{
+  padding:14px 16px;
+  border-radius:16px;
+  margin-bottom:16px;
+  font-size:.82rem;
+  line-height:1.8;
+}
+.info-box.info{background:var(--info-bg);border:1px solid var(--info-border)}
+.info-box.warn{background:var(--warn-bg);border:1px solid var(--warn-border)}
+.info-box.danger{background:var(--danger-bg);border:1px solid var(--danger-border)}
 
-/* ═══════════════════ SYNC STATUS BLOCK ═══════════════════ */
-.sync-block{display:flex;align-items:stretch;gap:0;background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);overflow:hidden;margin-bottom:20px}
-.sync-left{width:4px;flex-shrink:0}
-.sync-left.ok{background:var(--ok)}.sync-left.off{background:var(--tx-m)}.sync-left.err{background:var(--err)}.sync-left.sync{background:var(--info)}
-.sync-inner{flex:1;padding:14px 20px;display:flex;align-items:center;gap:20px}
-.sync-status{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
-.sync-st-l{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-m)}
-.sync-st-v{font-size:.85rem;font-weight:600}
-.sync-st-v.ok{color:var(--ok)}.sync-st-v.off{color:var(--tx-m)}.sync-st-v.err{color:var(--err)}
-.sync-info{flex:1;min-width:0}
-.sync-msg{font-size:.82rem;color:var(--tx-2);line-height:1.5}
-.sync-hint{font-size:.72rem;color:var(--tx-m);margin-top:2px}
-.sync-action{flex-shrink:0}
+.perm-table{
+  width:100%;
+  border-collapse:collapse;
+}
+.perm-table th,
+.perm-table td{
+  padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:.8rem;
+  text-align:left;
+}
+.perm-table th{
+  color:var(--text-3);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-size:.66rem;
+}
+.perm-table tr:last-child td{border-bottom:none}
+.perm-yes{color:var(--ok);font-weight:600}
+.perm-partial{color:var(--warn);font-weight:600}
+.perm-no{color:var(--text-3);font-weight:600}
 
-/* ═══════════════════ RP cards ═══════════════════ */
-.rpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
-.rpc{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:20px;cursor:pointer;transition:all var(--tb)}
-.rpc:hover{border-color:var(--bdr-def);transform:translateY(-2px);box-shadow:var(--sh-md)}
-.rpc.top{border-color:var(--gold-bdr)}
+.log-list{display:grid;gap:10px}
+.log-item{
+  display:grid;
+  grid-template-columns:10px minmax(0,1fr) auto;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.log-item:last-child{border-bottom:none}
+.log-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-top:7px;
+}
+.log-copy{
+  font-size:.82rem;
+  line-height:1.75;
+  color:var(--text-2);
+}
+.log-copy strong{color:var(--text-1);font-weight:600}
+.log-ts{
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  color:var(--text-3);
+}
 
-/* ═══════════════════ SETTINGS ═══════════════════ */
-.sl{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}
-.sn{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);overflow:hidden;position:sticky;top:80px}
-.sni{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;transition:background var(--tf);font-size:.82rem;font-weight:500;color:var(--tx-2);border-bottom:1px solid rgba(255,255,255,.04)}
-.sni:last-child{border-bottom:none}
-.sni:hover{background:var(--bg-hov);color:var(--tx-1)}
-.sni.active{background:var(--gold-dim);color:var(--gold);border-left:2px solid var(--gold)}
-.sni svg{width:14px;height:14px;stroke-width:1.6;fill:none;flex-shrink:0}
-.sni:not(.active) svg{stroke:var(--tx-m)}.sni.active svg{stroke:var(--gold)}
-.ssec{display:none}.ssec.on{display:block}
-.ss-tt{font-family:var(--fd);font-size:1.4rem;color:var(--tx-1);margin-bottom:4px}
-.ss-ds{font-size:.78rem;color:var(--tx-m);margin-bottom:24px}
-.secr{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);gap:16px}
-.secr:last-child{border-bottom:none}
-.sci{display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:500}
-.sci::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-.sci.ok{color:var(--ok)}.sci.warn{color:var(--warn)}.sci.todo{color:var(--tx-m)}
-.er{display:flex;align-items:center;gap:12px;padding:9px 13px;background:var(--bg-base);border:1px solid var(--bdr-sub);border-radius:var(--rmd);margin-bottom:5px;font-family:var(--fm);font-size:.75rem}
-.ek{color:var(--gold);min-width:220px}.ev{color:var(--tx-m);flex:1;overflow:hidden;text-overflow:ellipsis}
-
-/* Info boxes */
-.ibox{border-radius:var(--rmd);padding:12px 16px;font-size:.8rem;color:var(--tx-2);line-height:1.7;margin-bottom:16px}
-.ibox.warn{background:var(--warn-bg);border:1px solid var(--warn-bdr)}
-.ibox.info{background:var(--info-bg);border:1px solid var(--info-bdr)}
-.ibox.danger{background:var(--err-bg);border:1px solid var(--err-bdr)}
-.ibox.gold{background:var(--gold-dim);border:1px solid var(--gold-bdr)}
-
-/* CRM */
-.crml{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
-.clp{background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);overflow:hidden;position:sticky;top:80px}
-.clph{padding:14px 18px;border-bottom:1px solid var(--bdr-sub)}
-.cls{max-height:calc(100vh - 240px);overflow-y:auto}
-
-/* Future bridge */
-.bridge-card{background:linear-gradient(135deg,rgba(200,162,80,.06),rgba(200,162,80,.02));border:1px solid var(--gold-bdr);border-radius:var(--rlg);padding:24px;position:relative;overflow:hidden}
-.bridge-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(200,162,80,.08),transparent);pointer-events:none}
-
-.num{font-family:var(--fm);font-variant-numeric:tabular-nums}
-.stl{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--tx-m);margin-bottom:10px}
+@media (max-width:1300px){
+  .g5{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:1140px){
+  #shell{display:block}
+  #sb{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+  #main{margin-left:0}
+  .settings-layout,
+  .g53,
+  .g32,
+  .gate-grid{grid-template-columns:1fr}
+  .settings-nav{position:relative;top:0}
+}
+@media (max-width:760px){
+  #topbar,
+  #ct{padding:18px}
+  .page-head{flex-direction:column}
+  .g5,
+  .g4,
+  .g3,
+  .g2,
+  .gate-gridline{grid-template-columns:1fr}
+  .gate-side,
+  .gate-panel{padding:24px}
+  .gate-item,
+  .split-item{grid-template-columns:1fr}
+  .logo-lockup{flex-direction:column;align-items:flex-start}
+  .filter{min-width:100%}
+}
 </style>
 </head>
-<body>
+<body class="locked">
 
-<div class="ov" id="ov" onclick="closePanel()"></div>
-<div id="toasts"></div>
+<div id="access-gate">
+  <div class="gate-grid">
+    <section class="gate-side">
+      <div class="gate-stack">
+        <div class="logo-lockup">
+          <div class="logo-frame">
+            <img src="public/cova-logo-white.png" alt="COVA">
+          </div>
+          <div>
+            <p class="eyebrow">Plateforme interne privee</p>
+            <div class="display-subtitle">NIGHTOS / Cova Club OS</div>
+            <p class="micro">Internal command layer for reservation reading, CRM VIP, RP performance, and management visibility.</p>
+          </div>
+        </div>
 
-<!-- Side panel placeholder -->
-<div class="sp" id="sp-main">
-  <div class="sp-h">
-    <span class="sp-tt" id="sp-title">Détail</span>
-    <div class="sp-cl" onclick="closePanel()"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor"/></svg></div>
+        <div class="gate-title">
+          <h1 class="display-title">Un OS prive pour piloter le club, sans jamais faire croire que la data existe si elle n'est pas encore connectee.</h1>
+          <p class="gate-copy">
+            NIGHTOS n'est ni un site public, ni une vitrine marketing. C'est une plateforme interne fermee pour la direction, les managers, le staff et, plus tard, certains RP selon leurs droits. Le site de reservation reste le writer operationnel. NIGHTOS lit, structure, controle et exploite.
+          </p>
+        </div>
+
+        <div class="gate-gridline">
+          <div class="gate-stat">
+            <strong>Produit</strong>
+            <span>Dashboard, reservations, RP performance, CRM VIP, analytics et settings organises comme un vrai poste de commandement.</span>
+          </div>
+          <div class="gate-stat">
+            <strong>Verite</strong>
+            <span>Aucune reservation, aucun client VIP et aucun classement RP ne sont inventes dans cette version.</span>
+          </div>
+          <div class="gate-stat">
+            <strong>Statut</strong>
+            <span>Structure prete pour la connexion reelle, avec auth, roles, journal, permissions et contrat de donnees deja poses.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-list">
+        <div class="gate-item">
+          <div class="gate-item-label">Writer</div>
+          <div class="gate-item-copy">Le site de reservation garde l'ecriture, l'attribution des tables, l'etat des bookings et la source operationnelle officielle.</div>
+        </div>
+        <div class="gate-item">
+          <div class="gate-item-label">Reader</div>
+          <div class="gate-item-copy">NIGHTOS devient la couche de lecture, d'analyse, de CRM, de performance RP et de priorisation manager/direction.</div>
+        </div>
+        <div class="gate-item">
+          <div class="gate-item-label">Prive</div>
+          <div class="gate-item-copy">Aucune page n'est pensee pour le client final. Le langage, les permissions et les modules sont entierement internes.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gate-panel">
+      <div class="form-stack">
+        <div>
+          <p class="eyebrow">Secure Access Demo</p>
+          <h2 class="display-subtitle" style="margin-top:10px;">Acces interne</h2>
+          <p class="card-copy" style="margin-top:12px;">
+            Cette porte d'entree est une demonstration produit. L'authentification reelle doit ensuite etre branchee sur Supabase Auth ou un provider interne. La plateforme reste visuellement fermee et role-aware des maintenant.
+          </p>
+        </div>
+
+        <div class="form-card">
+          <form class="field-grid" id="gate-form">
+            <div class="field-row">
+              <label class="field-label" for="gate-name">Nom interne</label>
+              <input class="field" id="gate-name" name="gate-name" placeholder="Direction Preview" type="text">
+            </div>
+
+            <div class="field-row">
+              <label class="field-label" for="gate-email">Email interne</label>
+              <input class="field" id="gate-email" name="gate-email" placeholder="direction@nightos.local" type="email">
+            </div>
+
+            <div class="field-row">
+              <label class="field-label" for="gate-role">Role de demonstration</label>
+              <select class="field" id="gate-role" name="gate-role">
+                <option value="admin">Admin</option>
+                <option value="manager" selected>Manager</option>
+                <option value="rp">RP</option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <label class="field-label" for="gate-purpose">Mode</label>
+              <select class="field" id="gate-purpose" name="gate-purpose">
+                <option value="private-demo" selected>Private internal demo</option>
+                <option value="manager-review">Direction / manager review</option>
+                <option value="rp-scope">RP scope review</option>
+              </select>
+            </div>
+
+            <div class="gate-actions">
+              <button class="button primary" type="submit">Entrer dans l'espace prive</button>
+              <button class="button secondary" id="gate-rules" type="button">Voir les regles produit</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="form-card">
+          <div class="card-grid">
+            <div class="row">
+              <div>
+                <div class="row-label">Etat de connexion reservation</div>
+                <div class="row-copy">Aucune liaison de production n'est consideree active dans cette version.</div>
+              </div>
+              <span class="pill warn">A brancher</span>
+            </div>
+            <div class="row">
+              <div>
+                <div class="row-label">Authentification reelle</div>
+                <div class="row-copy">Structure preparee, mais demo gate affichee ici pour garder le site prive tout de suite.</div>
+              </div>
+              <span class="pill info">Structure prete</span>
+            </div>
+            <div class="row">
+              <div>
+                <div class="row-label">Promesse produit</div>
+                <div class="row-copy">Ce que tu vois ici est centre exploitation club, reservation, CRM et performance, sans module annexe visible ni promesse hors scope.</div>
+              </div>
+              <span class="pill gold">Premium interne</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
-  <div class="sp-b" id="sp-body"></div>
 </div>
 
-<div id="shell">
-  <!-- ═══ SIDEBAR ═══ -->
+<div id="shell" aria-hidden="true">
   <aside id="sb">
     <div class="sbl">
-      <div class="sbl-m">N</div>
-      <div><div class="sbl-n">NIGHTOS</div><div class="sbl-s">Cova Club OS · Internal Layer</div></div>
+      <div class="sbl-logo">
+        <img src="public/cova-logo-white.png" alt="COVA">
+      </div>
+      <div>
+        <div class="sbl-title">NIGHTOS</div>
+        <div class="sbl-sub">Private internal platform</div>
+      </div>
     </div>
+
     <nav class="snav">
-      <span class="snl">Navigation</span>
-      <div class="ni active" data-p="db" onclick="nav('db',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>Dashboard</div>
-      <div class="ni" data-p="res" onclick="nav('res',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg>Réservations</div>
-      <div class="ni" data-p="rp" onclick="nav('rp',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>RP Performance</div>
-      <div class="ni" data-p="crm" onclick="nav('crm',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/></svg>CRM VIP</div>
-      <div class="ni" data-p="an" onclick="nav('an',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M2 14l4-4 4 2 4-6 4 2"/><path d="M2 17h16"/></svg>Analytics</div>
-      <div class="ni" data-p="set" onclick="nav('set',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><circle cx="10" cy="10" r="2.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.41 1.41M14.37 14.37l1.41 1.41M4.22 15.78l1.41-1.41M14.37 5.63l1.41-1.41"/></svg>Paramètres</div>
+      <div class="snav-label">Modules</div>
+      <div class="ni active" data-p="db" onclick="nav('db',this)"><svg viewBox="0 0 20 20"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>Dashboard</div>
+      <div class="ni" data-p="res" onclick="nav('res',this)"><svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg>Reservations</div>
+      <div class="ni" data-p="rp" onclick="nav('rp',this)"><svg viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>RP Performance</div>
+      <div class="ni" data-p="crm" onclick="nav('crm',this)"><svg viewBox="0 0 20 20"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/></svg>CRM VIP</div>
+      <div class="ni" data-p="an" onclick="nav('an',this)"><svg viewBox="0 0 20 20"><path d="M2 14l4-4 4 2 4-6 4 2"/><path d="M2 17h16"/></svg>Analytics</div>
+      <div class="ni" data-p="set" onclick="nav('set',this)"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="2.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.41 1.41M14.37 14.37l1.41 1.41M4.22 15.78l1.41-1.41M14.37 5.63l1.41-1.41"/></svg>Settings</div>
     </nav>
-    <!-- Sync pill -->
-    <div class="sync-pill" id="sb-sync">
-      <div class="sync-dot ok" id="sb-sync-dot"></div>
-      <span id="sb-sync-lbl">Source live prête</span>
+
+    <div class="sync-pill">
+      <div class="sync-dot warn" id="sb-sync-dot"></div>
+      <span id="sb-sync-label">Connexion reservation non active</span>
     </div>
+
     <div class="sfot">
-      <div class="susr">
-        <div class="sav">PA</div>
-        <div><div class="sunm">Preview Admin</div><div class="surl">Management Preview</div></div>
+      <div class="viewer-card">
+        <div class="viewer-name" id="viewer-name">Direction Preview</div>
+        <div class="viewer-role" id="viewer-role">MANAGER</div>
+        <span class="badge"><strong id="viewer-mode">DEMO</strong> plate-forme fermee</span>
       </div>
     </div>
   </aside>
 
-  <!-- ═══ MAIN ═══ -->
   <div id="main">
     <header id="topbar">
-      <div><div class="tb-tt" id="tb-tt">Dashboard</div><div id="tb-sb" class="tb-sb">Vue d'ensemble · NightOS operating layer</div></div>
-      <div class="tb-r">
-        <span class="tb-dt" id="tb-dt"></span>
-        <div class="tb-btn" onclick="toast('Paramètres de notification — à configurer','info')">
-          <svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2a6 6 0 00-6 6v3l-2 2v1h16v-1l-2-2V8a6 6 0 00-6-6z"/><path d="M8 17a2 2 0 004 0"/></svg>
-        </div>
-        <div class="tb-btn" onclick="toast('Déconnexion — back-end requis en production','info')">
-          <svg viewBox="0 0 20 20" stroke="currentColor"><path d="M9 3H5a2 2 0 00-2 2v10a2 2 0 002 2h4"/><path d="M14 7l4 3-4 3M7 10h11"/></svg>
-        </div>
+      <div>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-copy" id="topbar-copy">Vue manager / direction sur l'exploitation du club, sans data inventee.</div>
+      </div>
+
+      <div class="topbar-actions">
+        <span class="pill gold">Internal only</span>
+        <span class="pill warn" id="topbar-sync">Sync non active</span>
+        <span class="badge"><strong id="current-role-badge">Manager</strong> session demo</span>
+        <span class="badge" id="current-date"></span>
+        <button class="button secondary" onclick="lockWorkspace()">Verrouiller</button>
       </div>
     </header>
 
     <div id="ct">
-
-<!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
-<div id="pg-db" class="pg on">
-
-  <!-- Sync status block -->
-  <div class="sync-block" id="db-sync">
-    <div class="sync-left ok" id="db-sync-bar"></div>
-    <div class="sync-inner">
-      <div class="sync-status">
-        <span class="sync-st-l">Synchronisation</span>
-        <span class="sync-st-v ok" id="db-sync-st">Source live active</span>
-      </div>
-      <div class="sync-info">
-        <div class="sync-msg" id="db-sync-msg">La source de réservation réelle est joignable. NightOS lit les fenêtres live et garde des états vides honnêtes quand une semaine ne contient pas encore de réservations.</div>
-        <div class="sync-hint" id="db-sync-hint">Lecture live active. Persistance Supabase encore dépendante de l'environnement serveur complet.</div>
-      </div>
-      <div class="sync-action">
-        <button class="btn btn-s btn-sm" onclick="nav('set',null);setTimeout(()=>swSet('sync',document.querySelector('.sni[data-s=sync]')),100)">Settings →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- KPI row -->
-  <div class="g5" id="kpi-row"></div>
-
-  <!-- Body -->
-  <div class="g53 sec">
-    <div class="gcol">
-
-      <!-- Remplissage -->
-      <div class="card">
-        <div class="ch">
-          <span class="ct-l">Santé du remplissage</span>
-          <span class="badge b-off">En attente de données</span>
-        </div>
-        <div id="db-fill"></div>
-      </div>
-
-      <!-- Alertes -->
-      <div class="card">
-        <div class="ch">
-          <span class="ct-l">Alertes opérationnelles</span>
-          <span class="badge b-off" id="al-cnt">—</span>
-        </div>
-        <div id="db-alerts"></div>
-      </div>
-
-    </div>
-    <div class="gcol">
-
-      <!-- Top RP -->
-      <div class="card">
-        <div class="ch">
-          <span class="ct-l">Top RP</span>
-          <a class="ca" onclick="nav('rp',null)">Classement →</a>
-        </div>
-        <div id="db-rp"></div>
-      </div>
-
-      <!-- VIP à relancer -->
-      <div class="card">
-        <div class="ch">
-          <span class="ct-l">VIP à relancer</span>
-          <a class="ca" onclick="nav('crm',null)">CRM →</a>
-        </div>
-        <div id="db-rel"></div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════ RÉSERVATIONS ═══════════════════════════════ -->
-<div id="pg-res" class="pg">
-  <div class="ph">
-    <div>
-      <div class="ph-t">Réservations</div>
-      <div class="ph-s">Source : site réservation live · lecture active avec états vides honnêtes</div>
-    </div>
-    <div class="ph-a">
-      <button class="btn btn-s btn-sm" onclick="toast('Export disponible une fois les données synchronisées','info')">
-        <svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 3v10M6 9l4 4 4-4"/><path d="M3 15v2h14v-2"/></svg>Exporter
-      </button>
-    </div>
-  </div>
-
-  <!-- Sync banner for reservations -->
-  <div class="ibox info" style="margin-bottom:16px;">
-    <strong style="color:var(--info);">ℹ Source des données</strong>
-    &nbsp;— Cette page affichera automatiquement toutes les réservations importées depuis le site réservation.
-    Chaque réservation sera enrichie de son identifiant externe, de sa source et de son statut de synchronisation.
-    <span style="color:var(--tx-m);display:block;margin-top:4px;font-size:.76rem;">Champs prévus : <code>external_booking_id</code> · <code>external_source</code> · <code>sync_status</code> · <code>last_synced_at</code> · <code>source_event_id</code> · <code>source_client_id</code></span>
-  </div>
-
-  <div class="fbar">
-    <div style="position:relative;display:flex;align-items:center;">
-      <svg style="position:absolute;left:10px;width:13px;height:13px;stroke:var(--tx-m);fill:none;stroke-width:1.6;" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M15 15l3 3"/></svg>
-      <input class="fi" style="padding-left:30px;min-width:180px;" placeholder="Rechercher une réservation…" disabled>
-    </div>
-    <div class="fg"><label>Date</label><select class="fs" disabled><option>Toutes</option></select></div>
-    <div class="fg"><label>Statut</label><select class="fs" disabled><option>Tous</option></select></div>
-    <div class="fg"><label>Source</label><select class="fs" disabled><option>Toutes sources</option><option>Site réservation</option><option>NightOS</option></select></div>
-    <div class="fg"><label>Sync</label><select class="fs" disabled><option>Tous statuts</option><option>Synchro OK</option><option>En attente</option></select></div>
-  </div>
-
-  <div id="res-content">
-    <!-- Empty state -->
-    <div class="tw">
-      <table class="dtbl">
-        <thead><tr>
-          <th>Client</th><th>RP</th><th>Date & Heure</th><th>Pers.</th>
-          <th>Budget est.</th><th>Table</th><th>Source</th><th>Sync</th><th>Statut</th>
-        </tr></thead>
-        <tbody>
-          <tr><td colspan="9">
-            <div class="empty">
-              <div class="empty-ico"><svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg></div>
-              <div class="empty-t">Aucune réservation sur cette fenêtre</div>
-              <div class="empty-d">NightOS est déjà relié en lecture au site de réservation. Cette vue reste vide tant qu'aucune réservation réelle n'est retournée pour la période affichée.</div>
-              <span class="empty-tag"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Source live active · aucune donnée sur cette période</span>
-            </div>
-          </td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════ RP PERFORMANCE ═══════════════════════════════ -->
-<div id="pg-rp" class="pg">
-  <div class="ph">
-    <div>
-      <div class="ph-t">RP Performance</div>
-      <div class="ph-s">Les performances se construisent depuis la source live et restent vides quand la semaine sélectionnée n'a pas d'activité</div>
-    </div>
-    <div class="ph-a">
-      <select class="fs" disabled><option>Trier par CA estimé</option></select>
-    </div>
-  </div>
-
-  <!-- What this page will show -->
-  <div class="g3 sec" style="margin-top:0;margin-bottom:28px;">
-    <div class="card csm" style="border-color:var(--gold-bdr);opacity:.7;">
-      <div class="stl">Ce qui sera calculé automatiquement</div>
-      <div class="sr"><span class="sr-l">CA estimé généré</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">par RP</span></div>
-      <div class="sr"><span class="sr-l">Clients amenés</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">par RP</span></div>
-      <div class="sr"><span class="sr-l">Taux de présence</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">des réservations</span></div>
-      <div class="sr"><span class="sr-l">Panier moyen</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">par client amené</span></div>
-      <div class="sr"><span class="sr-l">Tendance sur 7 jours</span><span style="font-size:.78rem;color:var(--tx-m);font-style:italic;">évolution semaine</span></div>
-    </div>
-    <div class="card csm" style="opacity:.7;">
-      <div class="stl">Classements disponibles</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
-        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>Top Performer — CA et volume</div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>En hausse — progression récente</div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>À surveiller — baisse de régime</div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-m);"><span style="width:5px;height:5px;border-radius:50%;background:var(--bdr-str);flex-shrink:0;"></span>Inactif — aucune réservation récente</div>
-      </div>
-    </div>
-    <div class="card csm" style="opacity:.7;">
-      <div class="stl">Fiches individuelles</div>
-      <div style="font-size:.8rem;color:var(--tx-m);line-height:1.8;">
-        Chaque RP disposera d'une fiche détaillée avec :<br>
-        historique de réservations,<br>
-        clients fréquents,<br>
-        évolution mensuelle,<br>
-        informations de contact.
-      </div>
-    </div>
-  </div>
-
-  <!-- Empty state -->
-  <div class="empty" style="background:var(--bg-surf);border:1px solid var(--bdr-sub);border-radius:var(--rlg);">
-    <div class="empty-ico" style="width:64px;height:64px;border-radius:var(--rxl);">
-      <svg viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>
-    </div>
-    <div class="empty-t">Aucun RP à afficher</div>
-    <div class="empty-d">Les profils et performances des RP seront alimentés automatiquement à partir des réservations synchronisées depuis le site réservation.</div>
-    <div style="margin-top:4px;display:flex;flex-direction:column;align-items:center;gap:8px;">
-      <span class="empty-tag"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Source live active · aucun RP détecté sur cette période</span>
-      <span style="font-size:.74rem;color:var(--tx-m);">Les performances s'afficheront automatiquement dès qu'une semaine remonte des réservations réelles.</span>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════ CRM VIP ═══════════════════════════════ -->
-<div id="pg-crm" class="pg">
-  <div class="ph">
-    <div>
-      <div class="ph-t">CRM Clients VIP</div>
-      <div class="ph-s">Alimenté par les réservations synchronisées, sans inventer de profils clients</div>
-    </div>
-    <div class="ph-a">
-      <button class="btn btn-s btn-sm" onclick="toast('Disponible une fois les données synchronisées','info')">+ Ajouter</button>
-    </div>
-  </div>
-
-  <div class="ibox gold" style="margin-bottom:20px;">
-    <strong style="color:var(--gold);">◆ CRM Automatique</strong>
-    &nbsp;— Chaque client sera créé ou enrichi automatiquement à partir des réservations importées.
-    Son profil contiendra l'historique de visites, le RP référent, le budget moyen et les préférences.
-    Les relances seront suggérées selon la fréquence de visite.
-  </div>
-
-  <div class="crml">
-    <!-- Left list -->
-    <div class="clp">
-      <div class="clph">
-        <span class="stl">Clients <span style="color:var(--tx-2);">—</span></span>
-      </div>
-      <div class="cls">
-        <div class="empty-sm" style="padding:40px 20px;">
-          <div class="empty-sm-t">Aucun client VIP</div>
-          <span class="empty-tag" style="margin-top:0;"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>En attente de synchro</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: what will appear -->
-    <div>
-      <div class="card" style="margin-bottom:16px;">
-        <div class="ch"><span class="ct-l">Ce qu'une fiche client contiendra</span></div>
-        <div class="g2">
-          <div class="card csm" style="opacity:.65;"><div class="stl">Identité & Contact</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Nom, email, téléphone — enrichi via le site réservation</div></div>
-          <div class="card csm" style="opacity:.65;"><div class="stl">RP Référent</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Le RP qui a géré le plus de réservations pour ce client</div></div>
-          <div class="card csm" style="opacity:.65;"><div class="stl">Historique de visites</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Toutes les soirées avec table, montant et nombre de personnes</div></div>
-          <div class="card csm" style="opacity:.65;"><div class="stl">Statut VIP</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Diamond / Gold / Silver / Regular — calculé automatiquement</div></div>
-          <div class="card csm" style="opacity:.65;"><div class="stl">Budget moyen</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Calculé sur l'ensemble des visites importées</div></div>
-          <div class="card csm" style="opacity:.65;"><div class="stl">Prochaine relance</div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;">Suggérée selon la fréquence de visite du client</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════ ANALYTICS ═══════════════════════════════ -->
-<div id="pg-an" class="pg">
-  <div class="ph">
-    <div>
-      <div class="ph-t">Analytics Soirées</div>
-      <div class="ph-s">Métriques calculées automatiquement à partir des données synchronisées</div>
-    </div>
-  </div>
-
-  <div class="ibox info" style="margin-bottom:24px;">
-    <strong style="color:var(--info);">ℹ Analytics en attente</strong>
-    &nbsp;— Ces graphiques et métriques seront calculés automatiquement dès que les réservations seront synchronisées depuis le site réservation. Aucune donnée n'est inventée ici.
-  </div>
-
-  <!-- What will be measured -->
-  <div class="g4" style="margin-bottom:24px;" id="an-preview"></div>
-
-  <!-- Preview charts area (greyed out) -->
-  <div class="g53 sec">
-    <div class="card" style="opacity:.4;">
-      <div class="ch"><span class="ct-l">CA estimé par soirée</span></div>
-      <div class="empty-sm"><div class="empty-sm-t">Graphique disponible après synchronisation</div></div>
-    </div>
-    <div class="card" style="opacity:.4;">
-      <div class="ch"><span class="ct-l">Taux de remplissage</span></div>
-      <div class="empty-sm"><div class="empty-sm-t">Données requises</div></div>
-    </div>
-  </div>
-
-  <div class="g3 sec">
-    <div class="card" style="opacity:.4;">
-      <div class="ch"><span class="ct-l">Répartition CA par RP</span></div>
-      <div class="empty-sm"><div class="empty-sm-t">Calculé depuis les réservations</div></div>
-    </div>
-    <div class="card" style="opacity:.4;">
-      <div class="ch"><span class="ct-l">Segments clients</span></div>
-      <div class="empty-sm"><div class="empty-sm-t">Calculé depuis le CRM</div></div>
-    </div>
-    <div class="card" style="opacity:.4;">
-      <div class="ch"><span class="ct-l">Top Soirées</span></div>
-      <div class="empty-sm"><div class="empty-sm-t">Classement en attente</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════ SETTINGS ═══════════════════════════════ -->
-<div id="pg-set" class="pg">
-  <div class="ph">
-    <div><div class="ph-t">Paramètres</div><div class="ph-s">Configuration, intégrations & architecture de déploiement</div></div>
-  </div>
-  <div class="sl">
-    <div class="sn">
-      <div class="sni active" data-s="team" onclick="swSet('team',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>Équipe & Rôles</div>
-      <div class="sni" data-s="sync" onclick="swSet('sync',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Reservation Sync</div>
-      <div class="sni" data-s="int" onclick="swSet('int',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M3 10h14M10 3v14"/><circle cx="10" cy="10" r="3"/></svg>Intégrations</div>
-      <div class="sni" data-s="sec" onclick="swSet('sec',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l7 3v6c0 4-3.5 7-7 8C6.5 18 3 15 3 11V5l7-3z"/></svg>Sécurité</div>
-      <div class="sni" data-s="env" onclick="swSet('env',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg>Environnement</div>
-      <div class="sni" data-s="dep" onclick="swSet('dep',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l7 3v6c0 4-3.5 7-7 8"/><path d="M3 13l3 3 7-7"/></svg>Deployment</div>
-      <div class="sni" data-s="bridge" onclick="swSet('bridge',this)"><svg viewBox="0 0 20 20" stroke="currentColor"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/></svg>Creative Bridge</div>
-    </div>
-    <div>
-      <!-- Team -->
-      <div id="ss-team" class="ssec on"><div class="ss-tt">Équipe & Rôles</div><div class="ss-ds">Accès et permissions des membres de l'équipe.</div><div class="card" id="set-team"></div></div>
-      <!-- Reservation Sync — most important -->
-      <div id="ss-sync" class="ssec">
-        <div class="ss-tt">Reservation Sync</div>
-        <div class="ss-ds">Connexion entre le site réservation réel et NightOS.</div>
-        <div class="ibox info">ℹ <strong style="color:var(--info);">Lecture live active</strong> — La source de réservation est joignable. NightOS peut déjà lire les fenêtres live. La persistance Supabase reste dépendante des variables d'environnement serveur.</div>
-        <div class="card" style="margin-bottom:14px;">
-          <div class="ch"><span class="ct-l">Statut de la connexion</span><span class="badge b-rising">Lecture live active</span></div>
-          <div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">Site réservation</div><div style="font-size:.74rem;color:var(--tx-m);">Source de vérité opérationnelle — WRITER</div></div><span class="badge b-ok">Railway joignable</span></div>
-          <div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">NightOS</div><div style="font-size:.74rem;color:var(--tx-m);">Lecture, analyse et pilotage — READER</div></div><span class="badge b-rising">Ce système</span></div>
-          <div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">Base commune</div><div style="font-size:.74rem;color:var(--tx-m);">Supabase PostgreSQL partagée avec RLS</div></div><span class="badge b-pend">Warehouse pending</span></div>
-        </div>
-        <div class="card" style="margin-bottom:14px;">
-          <div class="ch"><span class="ct-l">Méthode de synchronisation choisie</span></div>
-          <div id="sync-methods"></div>
-        </div>
-        <div class="card" style="margin-bottom:14px;">
-          <div class="ch"><span class="ct-l">Champs de liaison prévus</span></div>
-          <div id="sync-fields"></div>
-        </div>
-        <div class="card">
-          <div class="ch"><span class="ct-l">Configuration requise</span></div>
-          <div style="font-size:.82rem;color:var(--tx-2);line-height:1.8;">Pour activer la persistance serveur complète, ajoutez dans votre <code>.env.local</code> :</div>
-          <div style="margin-top:10px;">
-            <div class="er"><span class="ek">COVA_RESERVATION_SOURCE_URL</span><span class="ev">https://cova-club-resa-production.up.railway.app/</span></div>
-            <div class="er"><span class="ek">COVA_RESERVATION_SOURCE_PIN</span><span class="ev">2626</span></div>
-            <div class="er"><span class="ek">RESERVATION_SYNC_SHARED_SECRET</span><span class="ev">votre-secret-sync</span></div>
-          </div>
-        </div>
-      </div>
-      <!-- Integrations -->
-      <div id="ss-int" class="ssec"><div class="ss-tt">Intégrations</div><div class="ss-ds">Connexions prévues avec les outils externes.</div><div id="set-int"></div></div>
-      <!-- Security -->
-      <div id="ss-sec" class="ssec">
-        <div class="ss-tt">Sécurité</div>
-        <div class="ss-ds">Sécurité réelle du projet et points encore à terminer pour la production complète.</div>
-        <div class="ibox info">ℹ️ <strong style="color:var(--info);">Base déjà sécurisée en partie</strong> — Routes protégées côté serveur, middleware de session, validations Zod, séparation des secrets et schéma Supabase avec RLS sont déjà préparés. Le reste ci-dessous correspond aux points encore à finir.</div>
-        <div class="card" style="margin-bottom:14px;"><div class="ch"><span class="ct-l">Checklist sécurité</span></div><div id="set-sec"></div></div>
-        <div class="card"><div class="ch"><span class="ct-l">Authentification</span></div><div id="set-auth"></div></div>
-      </div>
-      <!-- Env -->
-      <div id="ss-env" class="ssec">
-        <div class="ss-tt">Environnement & Variables</div>
-        <div class="ss-ds">Secrets toujours dans .env.local — jamais dans le code.</div>
-        <div class="ibox danger">🔒 <strong style="color:var(--err);">Règle absolue</strong> — Les valeurs réelles des variables sont injectées par l'hébergeur. Le fichier .env.local ne doit jamais être commité.</div>
-        <div class="card"><div class="ch"><span class="ct-l">Variables requises</span></div><div id="set-env"></div></div>
-      </div>
-      <!-- Deployment -->
-      <div id="ss-dep" class="ssec">
-        <div class="ss-tt">Deployment Readiness</div>
-        <div class="ss-ds">Checklist avant déploiement sur GitHub + Vercel.</div>
-        <div class="ibox info">ℹ️ GitHub est déjà actif pour ce projet. Vercel et Supabase production restent à finaliser avec les vrais environnements.</div>
-        <div class="card" style="margin-bottom:14px;"><div class="ch"><span class="ct-l">Fichiers de déploiement</span></div><div id="set-dep-f"></div></div>
-        <div class="card"><div class="ch"><span class="ct-l">Limitations connues</span></div><div id="set-lim"></div></div>
-      </div>
-      <!-- Future Creative Bridge -->
-      <div id="ss-bridge" class="ssec">
-        <div class="ss-tt">Creative Bridge</div>
-        <div class="ss-ds">Passerelle future vers le SaaS privé de création de flyers & vidéos.</div>
-        <div class="bridge-card" style="margin-bottom:16px;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-            <div style="width:44px;height:44px;border-radius:var(--rmd);background:var(--gold-dim);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">✦</div>
+      <div id="pg-db" class="pg on">
+        <div class="page-stack">
+          <div class="page-head">
             <div>
-              <div style="font-family:var(--fd);font-size:1.15rem;color:var(--gold);">Creative SaaS — Accès privé</div>
-              <div style="font-size:.76rem;color:var(--tx-m);margin-top:2px;">Génération de flyers & vidéos · Non développé pour l'instant</div>
+              <p class="eyebrow">Private operating system</p>
+              <h1 class="display-subtitle" style="margin-top:10px;">Commande du soir</h1>
+              <p class="page-copy">Le dashboard doit devenir l'ecran de lecture immediate du club pour la direction et les managers: etat du writer reservation, posture systeme, priorites du soir, performance RP, qualite des reservations et vigilance VIP.</p>
             </div>
-            <span class="badge b-off" style="margin-left:auto;">Futur</span>
           </div>
-          <div style="font-size:.82rem;color:var(--tx-2);line-height:1.8;">
-            La passerelle entre NightOS et le SaaS créatif permettra, à terme, de générer automatiquement un <strong style="color:var(--tx-1);">brief créatif</strong> pour chaque soirée — directement alimenté par les données de réservation et les performances RP.
+
+          <div class="private-banner">
+            <span class="pill info">Plateforme interne</span>
+            NIGHTOS est pense comme un outil ferme et role-aware. Aucun bloc marketing, aucune logique publique, aucune promesse de synchronisation active tant que la reservation n'est pas effectivement branchee et validee.
           </div>
-          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Brief soirée automatique</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Date, thème, DJ, remplissage prévu → contexte créatif prêt</span></div></div>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Ciblage VIP</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Segments clients pour personnaliser les visuels</span></div></div>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Branding club</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Charte graphique et assets club intégrés</span></div></div>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:rgba(200,162,80,.04);border-radius:var(--rsm);"><span style="color:var(--gold);flex-shrink:0;margin-top:1px;">→</span><div><span style="font-size:.82rem;font-weight:500;color:var(--tx-1);">Export formats</span><span style="font-size:.75rem;color:var(--tx-m);display:block;margin-top:2px;">Flyers, stories Instagram, vidéos teaser</span></div></div>
+
+          <div class="sync-block">
+            <div class="sync-side"></div>
+            <div class="sync-content">
+              <div>
+                <div class="sync-title">Reservation sync</div>
+                <div class="sync-state">Connexion reelle non active</div>
+                <div class="sync-copy">La structure de lecture, les champs de liaison et le centre de controle sont prets, mais le writer reservation n'est pas considere connecte en production dans cette version. NIGHTOS reste donc strictement honnete sur ses etats vides.</div>
+              </div>
+              <button class="button secondary" onclick="nav('set', null);setTimeout(function(){swSet('sync',document.querySelector('.settings-link[data-s=sync]'));},100)">Ouvrir le centre de controle</button>
+            </div>
           </div>
-        </div>
-        <div class="card">
-          <div class="ch"><span class="ct-l">Préparation technique</span></div>
-          <div style="font-size:.82rem;color:var(--tx-2);line-height:1.8;">
-            Champs déjà prévus dans le modèle de données pour cette intégration future :
-          </div>
-          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">
-            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">creative_brief_ready</code>
-            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">creative_brief_id</code>
-            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">creative_output_url</code>
-            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">brief_generated_at</code>
-            <code style="padding:3px 8px;background:var(--bg-elev);border:1px solid var(--bdr-def);border-radius:var(--rsm);font-size:.74rem;color:var(--gold);">brief_approved_by</code>
+
+          <div class="g5" id="dashboard-kpis"></div>
+
+          <div class="g53">
+            <div class="stack">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Priorites du soir</div>
+                    <p class="card-copy">Ce bloc doit devenir indispensable pour manager et direction avant service.</p>
+                  </div>
+                </div>
+                <div id="dashboard-priorities"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Qualite de reservation</div>
+                    <p class="card-copy">Avant meme la synchronisation, la plateforme fixe deja les standards de qualite que le writer reservation devra respecter.</p>
+                  </div>
+                </div>
+                <div id="dashboard-quality" class="status-matrix"></div>
+              </div>
+            </div>
+
+            <div class="stack">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Lecture direction / manager</div>
+                    <p class="card-copy">Les questions business que NIGHTOS doit repondre instantanement des que la source reservation sera branchee.</p>
+                  </div>
+                </div>
+                <div id="dashboard-direction" class="split-list"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Architecture writer / reader</div>
+                    <p class="card-copy">La logique produit reste claire: le site reservation ecrit, NIGHTOS lit et exploite.</p>
+                  </div>
+                </div>
+                <div id="dashboard-writer-reader"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
+      <div id="pg-res" class="pg">
+        <div class="page-stack">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow">Operational reservations</p>
+              <h1 class="display-subtitle" style="margin-top:10px;">Reservations</h1>
+              <p class="page-copy">Cette page doit etre le reflet lisible du writer reservation: source, identifiant externe, statut de sync, attribution RP, table, qualite de fiche et detail manager. Tant que la connexion reelle n'est pas validee, l'etat reste vide mais structurellement pret.</p>
+            </div>
+          </div>
+
+          <div class="private-banner">
+            <span class="pill warn">Source writer externe</span>
+            Les bookings continuent d'etre geres sur le site de reservation. NIGHTOS ne les remplace pas. Il les lit, les controle, les filtre et les exploite.
+          </div>
+
+          <div class="g32">
+            <div class="stack">
+              <div class="filter-bar">
+                <input class="filter" disabled placeholder="Recherche reservation, client, RP, table...">
+                <select class="filter" disabled><option>Toutes les dates</option></select>
+                <select class="filter" disabled><option>Toutes les sources</option></select>
+                <select class="filter" disabled><option>Tous les statuts</option></select>
+                <select class="filter" disabled><option>Tous les etats de sync</option></select>
+              </div>
+
+              <div class="table-wrap">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Client</th>
+                      <th>RP</th>
+                      <th>Date / heure</th>
+                      <th>Table</th>
+                      <th>Source</th>
+                      <th>External booking ID</th>
+                      <th>Sync</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="7">
+                        <div class="empty">
+                          <div class="empty-icon"><svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg></div>
+                          <div class="empty-title">Aucune reservation synchronisee</div>
+                          <div class="empty-copy">La grille est deja preparee pour recevoir le writer reservation sans inventer de bookings. Des qu'une liaison reelle sera activee, chaque ligne affichera sa source, son identifiant externe, son etat de synchronisation et son detail manager.</div>
+                          <span class="pill warn">Ecran pret, source non branchee</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="stack">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Champs visibles attendus</div>
+                    <p class="card-copy">Les champs critiques qui rendent cette page operationnelle des la connexion.</p>
+                  </div>
+                </div>
+                <div id="reservations-visible-fields"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Cycle de synchronisation</div>
+                    <p class="card-copy">Chaque booking devra pouvoir etre relu, enrichi et audite sans ambiguite.</p>
+                  </div>
+                </div>
+                <div id="reservations-lifecycle"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Qualite minimale du writer</div>
+                    <p class="card-copy">Le site reservation doit fournir une base exploitable, sinon NIGHTOS restera volontairement incomplet.</p>
+                  </div>
+                </div>
+                <div id="reservations-quality"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pg-rp" class="pg">
+        <div class="page-stack">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow">Promoter operating layer</p>
+              <h1 class="display-subtitle" style="margin-top:10px;">RP Performance</h1>
+              <p class="page-copy">Le module RP doit sortir des classements cosmetiques. Il doit identifier qui apporte de la valeur, qui ne ramene plus d'activite, qui convertit bien, et qui doit etre relance par le management.</p>
+            </div>
+          </div>
+
+          <div class="g4" id="rp-pillars"></div>
+
+          <div class="g32">
+            <div class="card">
+              <div class="empty">
+                <div class="empty-icon"><svg viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg></div>
+                <div class="empty-title">Aucune performance RP visible</div>
+                <div class="empty-copy">NIGHTOS n'affichera aucun classement RP tant que les reservations reelles ne remonteront pas avec une attribution source ou un label RP suffisamment propre. La plateforme est prete, mais elle ne trichera pas.</div>
+                <span class="pill warn">Attribution RP a definir cote writer</span>
+              </div>
+            </div>
+
+            <div class="stack">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Ce que le writer doit envoyer</div>
+                    <p class="card-copy">Sans attribution RP ou label source fiable, la performance reste vide par conception.</p>
+                  </div>
+                </div>
+                <div id="rp-inputs"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Ce que NIGHTOS calculera</div>
+                    <p class="card-copy">La lecture RP doit devenir business-critical, pas decoratif.</p>
+                  </div>
+                </div>
+                <div id="rp-outputs"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pg-crm" class="pg">
+        <div class="page-stack">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow">VIP relationship layer</p>
+              <h1 class="display-subtitle" style="margin-top:10px;">CRM VIP</h1>
+              <p class="page-copy">Le CRM VIP n'existe que s'il est relie a de la vraie activite reservation. Il doit servir la relation, la recurrence, la relance et la connaissance client sans inventer de fiches vides ou de segments artificiels.</p>
+            </div>
+          </div>
+
+          <div class="g32">
+            <div class="card">
+              <div class="empty">
+                <div class="empty-icon"><svg viewBox="0 0 20 20"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/></svg></div>
+                <div class="empty-title">Aucun client VIP synchronise</div>
+                <div class="empty-copy">La base CRM restera vide tant que le writer reservation ne transmettra pas une identite client exploitable: nom, contact, historique visitable et rattachement RP suffisant.</div>
+                <span class="pill warn">Identite client a structurer</span>
+              </div>
+            </div>
+
+            <div class="stack">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Structure d'une fiche client</div>
+                    <p class="card-copy">Chaque fiche devra naitre de l'activite reservation importee, pas d'une fiction marketing.</p>
+                  </div>
+                </div>
+                <div id="crm-profile-structure"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-title">Usages business CRM</div>
+                    <p class="card-copy">Ce que la direction et les managers doivent pouvoir faire des que la base client est reelle.</p>
+                  </div>
+                </div>
+                <div id="crm-business-uses"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pg-an" class="pg">
+        <div class="page-stack">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow">Decision-oriented analytics</p>
+              <h1 class="display-subtitle" style="margin-top:10px;">Analytics</h1>
+              <p class="page-copy">Les analytics restent volontairement plus sobres que le reste. Leur role n'est pas de faire joli, mais de servir la decision: pression du soir, revenu estime, performance RP, recurrence VIP, qualite de remplissage et hygiene du writer.</p>
+            </div>
+          </div>
+
+          <div class="g4" id="analytics-pillars"></div>
+
+          <div class="g53">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Graphiques a venir</div>
+                  <p class="card-copy">Les structures sont pretes, mais aucun chart ne s'alimente tant que la data n'est pas vraiment synchronisee.</p>
+                </div>
+              </div>
+              <div class="g2">
+                <div class="soft-block"><strong>CA estime par soiree</strong><p>Courbe issue uniquement des bookings lus et normalises.</p></div>
+                <div class="soft-block"><strong>Taux de remplissage</strong><p>Lecture table par table, soiree par soiree.</p></div>
+                <div class="soft-block"><strong>Contribution RP</strong><p>Comparaison volume, revenu, qualite et inactivite.</p></div>
+                <div class="soft-block"><strong>Reactivation VIP</strong><p>Vision recurrence, silence, opportunites de relance.</p></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="empty">
+                <div class="empty-icon"><svg viewBox="0 0 20 20"><path d="M2 14l4-4 4 2 4-6 4 2"/><path d="M2 17h16"/></svg></div>
+                <div class="empty-title">Aucun chart alimente</div>
+                <div class="empty-copy">Cette couche analytics est volontairement vide tant que les reservations ne sont pas relues et persistables proprement. Les courbes apparaitront quand la source sera vraiment exploitable.</div>
+                <span class="pill neutral">Decision layer en attente de data</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pg-set" class="pg">
+        <div class="page-stack">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow">Internal control center</p>
+              <h1 class="display-subtitle" style="margin-top:10px;">Settings</h1>
+              <p class="page-copy">Les settings ne sont plus une zone secondaire. Ils deviennent le centre de controle interne de NIGHTOS: roles, acces, sync reservation, contrat de donnees, securite, sessions, permissions, audit interne, environnement, readiness technique et journal d'activite.</p>
+            </div>
+          </div>
+
+          <div class="settings-layout">
+            <nav class="settings-nav">
+              <div class="settings-link active" data-s="access" onclick="swSet('access',this)"><svg viewBox="0 0 20 20"><path d="M10 2l7 3v6c0 4-3.5 7-7 8C6.5 18 3 15 3 11V5l7-3z"/></svg>Acces prive</div>
+              <div class="settings-link" data-s="roles" onclick="swSet('roles',this)"><svg viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/></svg>Roles & acces</div>
+              <div class="settings-link" data-s="sync" onclick="swSet('sync',this)"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Sync reservations</div>
+              <div class="settings-link" data-s="contract" onclick="swSet('contract',this)"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>Contrat de donnees</div>
+              <div class="settings-link" data-s="security" onclick="swSet('security',this)"><svg viewBox="0 0 20 20"><path d="M10 2l7 3v6c0 4-3.5 7-7 8C6.5 18 3 15 3 11V5l7-3z"/></svg>Securite</div>
+              <div class="settings-link" data-s="sessions" onclick="swSet('sessions',this)"><svg viewBox="0 0 20 20"><path d="M10 4v6l4 2"/><circle cx="10" cy="10" r="7"/></svg>Sessions</div>
+              <div class="settings-link" data-s="permissions" onclick="swSet('permissions',this)"><svg viewBox="0 0 20 20"><path d="M4 10h12M10 4v12"/></svg>Permissions</div>
+              <div class="settings-link" data-s="audit" onclick="swSet('audit',this)"><svg viewBox="0 0 20 20"><path d="M4 4h12v12H4z"/><path d="M7 8h6M7 11h6M7 14h4"/></svg>Audit interne</div>
+              <div class="settings-link" data-s="env" onclick="swSet('env',this)"><svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M6 2v4M14 2v4"/></svg>Environnement</div>
+              <div class="settings-link" data-s="readiness" onclick="swSet('readiness',this)"><svg viewBox="0 0 20 20"><path d="M3 13l3 3 11-11"/></svg>Readiness technique</div>
+              <div class="settings-link" data-s="journal" onclick="swSet('journal',this)"><svg viewBox="0 0 20 20"><path d="M5 3h8l2 2v12H5z"/><path d="M8 8h4M8 11h4M8 14h3"/></svg>Journal d'activite</div>
+            </nav>
+
+            <div>
+              <section class="settings-section on" id="ss-access">
+                <div class="settings-title">Acces prive</div>
+                <div class="settings-desc">Le site doit avoir l'air d'un outil interne ferme des l'entree. La gate de demonstration actuelle protege la surface visuelle et prepare la transition vers une authentification reelle sans rendre la plateforme publique entre-temps.</div>
+                <div class="info-box info"><strong>Etat actuel :</strong> une porte d'entree de demonstration role-aware est activee dans ce HTML. L'auth reelle doit ensuite reprendre cette logique via Supabase Auth ou un provider interne, sans ouvrir de vue publique.</div>
+                <div class="g2" id="settings-access"></div>
+              </section>
+
+              <section class="settings-section" id="ss-roles">
+                <div class="settings-title">Roles & acces</div>
+                <div class="settings-desc">La plateforme reste privee et lisible parce que les droits sont clairs. Admin voit tout, manager pilote le business et les operations, RP reste limite a son perimetre.</div>
+                <div class="card" id="settings-roles"></div>
+              </section>
+
+              <section class="settings-section" id="ss-sync">
+                <div class="settings-title">Sync reservations</div>
+                <div class="settings-desc">Le site reservation reste la source operationnelle. NIGHTOS ne le remplace pas. La connexion reelle n'est pas activee dans cette iteration, donc l'interface montre ce qui est pret, ce qui est simule et ce qui manque encore.</div>
+                <div class="info-box warn"><strong>Verite produit :</strong> aucune synchro de production n'est consideree active ici. Le produit prepare le writer/reader contract, les champs de liaison, les controles et les etats. Il ne fait pas semblant de consommer des bookings reels.</div>
+                <div class="stack">
+                  <div class="card" id="settings-sync-overview"></div>
+                  <div class="card" id="settings-sync-modes"></div>
+                  <div class="card" id="settings-sync-fields"></div>
+                </div>
+              </section>
+
+              <section class="settings-section" id="ss-contract">
+                <div class="settings-title">Contrat de donnees reservation / NIGHTOS</div>
+                <div class="settings-desc">Cette section rend la liaison cohérente entre les deux surfaces. Elle dit exactement ce que le writer reservation doit envoyer et ce que NIGHTOS doit calculer ensuite.</div>
+                <div class="g2">
+                  <div class="card">
+                    <div class="card-header">
+                      <div>
+                        <div class="card-title">Champs requis cote reservation</div>
+                        <p class="card-copy">Sans ces colonnes, NIGHTOS ne peut pas fonctionner correctement en lecture, CRM et performance.</p>
+                      </div>
+                    </div>
+                    <div class="table-wrap">
+                      <table class="table" id="contract-writer-table"></table>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header">
+                      <div>
+                        <div class="card-title">Calculs exploites par NIGHTOS</div>
+                        <p class="card-copy">Ce que NIGHTOS produit apres lecture: pas d'ecriture reservation, mais une couche business et manageriale.</p>
+                      </div>
+                    </div>
+                    <div id="contract-reader-calculations"></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="settings-section" id="ss-security">
+                <div class="settings-title">Securite</div>
+                <div class="settings-desc">Les settings doivent montrer une securite credible sans travestir l'etat reel. Les garde-fous deja presents sont distingues de ceux qui restent a brancher ou a durcir.</div>
+                <div class="card" id="settings-security"></div>
+              </section>
+
+              <section class="settings-section" id="ss-sessions">
+                <div class="settings-title">Sessions</div>
+                <div class="settings-desc">La plateforme privee doit controler la duree de session, la deconnexion, les profils demo et la reprise d'acces. Ici, le comportement visuel est deja pense comme un outil interne ferme.</div>
+                <div class="g2" id="settings-sessions"></div>
+              </section>
+
+              <section class="settings-section" id="ss-permissions">
+                <div class="settings-title">Permissions</div>
+                <div class="settings-desc">La matrice ci-dessous fixe la logique produit par role. C'est ce qui empeche le site de sembler public ou trop generique.</div>
+                <div class="card">
+                  <div class="table-wrap">
+                    <table class="perm-table" id="permissions-table"></table>
+                  </div>
+                </div>
+              </section>
+
+              <section class="settings-section" id="ss-audit">
+                <div class="settings-title">Audit interne</div>
+                <div class="settings-desc">NIGHTOS doit etre auditable: acces, changements de roles, pull de sync, erreurs de source, sessions et traces sensibles. Cette logique doit exister avant meme que la data business soit riche.</div>
+                <div class="g2" id="settings-audit"></div>
+              </section>
+
+              <section class="settings-section" id="ss-env">
+                <div class="settings-title">Environnement</div>
+                <div class="settings-desc">Les variables et secrets servent l'activation de la plateforme. Elles doivent rester hors du code source, etre clairement separees entre public et serveur, et documentees sans mensonge sur leur etat.</div>
+                <div class="card" id="settings-env"></div>
+              </section>
+
+              <section class="settings-section" id="ss-readiness">
+                <div class="settings-title">Readiness technique</div>
+                <div class="settings-desc">Cette vue synthétise ce qui est fort aujourd'hui, ce qui est encore incomplet, et ce qui doit etre traite en priorite pour que NIGHTOS passe d'une tres bonne base a un vrai produit que les autres clubs envient.</div>
+                <div class="g2" id="settings-readiness"></div>
+              </section>
+
+              <section class="settings-section" id="ss-journal">
+                <div class="settings-title">Journal d'activite</div>
+                <div class="settings-desc">Journal interne de construction produit et d'etats systeme. Ce n'est pas de la fausse activite business: ce sont des traces produit et plateforme utiles pour l'alignement manager / technique.</div>
+                <div class="card">
+                  <div class="log-list" id="settings-journal"></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-    </div><!-- /ct -->
-  </div><!-- /main -->
-</div><!-- /shell -->
 
 <script>
-/* ════════════════ DATA LAYER ════════════════ */
-const COVA={
-  syncState:{status:"connected",lastSync:new Date().toISOString(),importedToday:0,pendingCount:0,sourceConfigured:true},
-  currentUser:{id:"usr_preview",firstName:"Preview",lastName:"Admin",role:"admin",initials:"PA"},
-  reservations:[],rps:[],clients:[],alerts:[],
-  teamMembers:[
-    {nom:"Preview Admin",role:"admin",email:"preview@nightos.app",status:"active",last:new Date().toISOString()},
+const NIGHTOS = {
+  access: {
+    name: "Direction Preview",
+    email: "direction@nightos.local",
+    role: "manager",
+    mode: "private-demo",
+  },
+  sync: {
+    state: "not_connected",
+    label: "Connexion reelle non active",
+    sidebarLabel: "Connexion reservation non active",
+    topbarLabel: "Sync non active",
+  },
+  roles: {
+    admin: "Admin",
+    manager: "Manager",
+    rp: "RP",
+  },
+  pages: {
+    db: {
+      title: "Dashboard",
+      copy: "Vue manager / direction sur l'exploitation du club, sans data inventee."
+    },
+    res: {
+      title: "Reservations",
+      copy: "Page operationnelle de lecture du writer reservation, avec source, sync et detail."
+    },
+    rp: {
+      title: "RP Performance",
+      copy: "Lecture business de la valeur RP, de l'inactivite et du suivi."
+    },
+    crm: {
+      title: "CRM VIP",
+      copy: "Connaissance client, historique et relance, sans faux profils."
+    },
+    an: {
+      title: "Analytics",
+      copy: "Mesure orientee decision, jamais decor pour slide."
+    },
+    set: {
+      title: "Settings",
+      copy: "Centre de controle interne: acces, sync, securite, audit, permissions et readiness."
+    }
+  },
+  dashboardKpis: [
+    {
+      label: "Remplissage du soir",
+      value: "En attente de sync",
+      note: "Le taux se calculera depuis les tables, bookings et statuts reels.",
+      icon: '<path d="M3 14l4-4 4 2 4-6 2 1"/><path d="M3 17h14"/>'
+    },
+    {
+      label: "Revenu estime",
+      value: "Non calcule",
+      note: "Aucune estimation ne s'affiche tant que le writer n'est pas branche.",
+      icon: '<circle cx="10" cy="10" r="7"/><path d="M10 6v8M7 8h4a1 1 0 010 2H9a1 1 0 000 2h4"/>'
+    },
+    {
+      label: "RP actifs",
+      value: "Attribution absente",
+      note: "La performance RP depend de labels source propres cote reservation.",
+      icon: '<path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/>'
+    },
+    {
+      label: "Clients VIP",
+      value: "Base non hydratee",
+      note: "Les profils restent vides sans identite client exploitable.",
+      icon: '<path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8z"/>'
+    },
+    {
+      label: "Posture systeme",
+      value: "Staging prive",
+      note: "Auth, settings et contrat de donnees prepares. Sync writer a valider.",
+      icon: '<path d="M10 2l7 3v6c0 4-3.5 7-7 8C6.5 18 3 15 3 11V5l7-3z"/>'
+    }
   ],
-  activityLog:[],
-  helpers:{
-    esc:s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'),
-    fmt:n=>n!=null?new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n):'—',
-    fmtD:d=>d?new Intl.DateTimeFormat('fr-FR',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(d)):'—',
-    fmtT:d=>d?new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'—',
-    isConnected:()=>COVA.syncState.status==='connected',
+  dashboardPriorities: [
+    ["Writer reservation", "Confirmer le perimetre des bookings, tables, statuts et identites envoyees vers NIGHTOS.", "Priorite haute"],
+    ["Mapping RP", "Fixer une attribution RP propre cote reservation pour permettre classement, qualite et relance.", "Priorite haute"],
+    ["Qualite client", "Garantir les champs nom, email, telephone, historique et event_id avant d'ouvrir le CRM VIP.", "Priorite haute"],
+    ["Vue direction", "Stabiliser la lecture du soir: remplissage, revenu estime, alertes et priorites manager.", "Pilotage"],
+  ],
+  dashboardQuality: [
+    ["Identite client", "Aucun CRM VIP sans identite minimum.", "A brancher", "warn"],
+    ["Attribution RP", "Doit venir du writer ou d'un mapping source fiable.", "A normaliser", "warn"],
+    ["Table / slot", "Chaque booking doit etre rattache a une table ou un type de reservation.", "Pret en structure", "info"],
+    ["Statut booking", "Confirmer created / updated / cancelled / seated pour une lecture propre.", "Contrat a valider", "warn"],
+  ],
+  dashboardDirection: [
+    ["Remplissage reel", "Quels espaces seront pleins, fragiles ou vides ce soir ?"],
+    ["Valeur RP", "Qui apporte vraiment du revenu et du trafic qualifie ?"],
+    ["Pression VIP", "Quels clients doivent etre relances ou proteges ?"],
+    ["Qualite source", "Peut-on faire confiance au writer reservation cette semaine ?"],
+  ],
+  writerReader: [
+    ["Site de reservation", "Writer unique des bookings, tables, horaires, statuts et donnees brutes."],
+    ["NIGHTOS", "Reader, CRM, analytics, performance RP, alerts manager et support de decision."],
+    ["Regle absolue", "Aucune ecriture reservation dans NIGHTOS tant que l'architecture writer/reader doit rester stricte."],
+  ],
+  reservationFields: [
+    ["Source visible", "Reservation site / import / futur canal"],
+    ["External booking ID", "Identifiant writer unique et stable"],
+    ["Sync status", "not_synced / staged / imported / updated / failed"],
+    ["Last synced at", "Horodatage de la derniere lecture"],
+    ["RP attribution", "source_label, rp_label ou rp_profile_id si disponible"],
+    ["Table / slot", "table_id, table_label ou type reservation"],
+  ],
+  reservationLifecycle: [
+    ["Creation", "Le writer cree ou modifie. NIGHTOS lit et journalise."],
+    ["Mise a jour", "Le booking evolue via external_booking_id et updated_at."],
+    ["Annulation", "Le statut doit remonter explicitement, sans suppression silencieuse."],
+    ["Audit", "Chaque event source doit pouvoir etre relie a source_event_id ou updated_from_source."],
+  ],
+  reservationQuality: [
+    ["booking_id unique", "Obligatoire"],
+    ["event_id / date", "Obligatoire"],
+    ["guest_count", "Obligatoire"],
+    ["table_id ou type", "Obligatoire"],
+    ["full_name / phone / email", "Tres recommande pour CRM"],
+    ["status + updated_at", "Obligatoire pour une lecture fiable"],
+  ],
+  rpPillars: [
+    ["Valeur generee", "Quel RP apporte vraiment revenu, tables et clients utiles ?"],
+    ["Inactivite", "Qui n'apporte plus d'activite recente et doit etre relance ?"],
+    ["Qualite de trafic", "Qui remplit mieux et amene des reservations plus solides ?"],
+    ["Suivi manager", "Qui doit etre challenge, aide ou mieux distribue ?"],
+  ],
+  rpInputs: [
+    ["source_label / rp_label", "Pont minimal entre writer reservation et NIGHTOS."],
+    ["booking_count", "Base du volume attribue."],
+    ["spend_estimate", "Base du revenu attribue."],
+    ["event_id / date", "Base des fenetres de comparaison."],
+  ],
+  rpOutputs: [
+    ["Classement revenu", "Qui cree la valeur brute."],
+    ["Classement volume", "Qui draine le plus d'activite."],
+    ["Score de regularite", "Qui reste present semaine apres semaine."],
+    ["Liste a relancer", "Qui baisse et doit etre recadre ou reactive."],
+  ],
+  crmProfile: [
+    ["Identite & contact", "Nom, email, telephone, source_client_id"],
+    ["Historique de visites", "Dates, tables, depense estimee, statut booking"],
+    ["RP referent", "Qui porte le plus souvent la relation"],
+    ["Niveau VIP", "Tier derive de la frequence et de la valeur"],
+    ["Preferences", "Table favorite, type de venue, notes internes"],
+    ["Relance", "Date de derniere venue et prochaine opportunite"],
+  ],
+  crmUses: [
+    ["Relaunch manager", "Qui recontacter avant la prochaine grosse soiree ?"],
+    ["Protection VIP", "Quels habitués ne doivent pas sortir du radar ?"],
+    ["Vision RP/client", "Quel RP detient vraiment quelle relation ?"],
+    ["Segmentation reelle", "Diamond / Gold / Silver / Regular seulement si l'historique existe."],
+  ],
+  analyticsPillars: [
+    ["Tonight status", "Vue pression du soir, remplissage attendu et niveau d'attention."],
+    ["Revenue structure", "Lecture du revenu estime par table, soiree et RP."],
+    ["Writer hygiene", "Alertes sur statuts manquants, champs incomplets et dates incoherentes."],
+    ["VIP recurrence", "Qui revient, qui disparait, qui doit etre relance."],
+  ],
+  settings: {
+    access: [
+      ["Gate visuelle privee", "Activee", "Le HTML s'ouvre sur une vraie porte d'entree interne au lieu d'une facade publique.", "ok"],
+      ["Auth reelle", "Prete a brancher", "Le comportement attendu est defini pour etre repris par Supabase Auth ou un provider prive.", "info"],
+      ["Surface publique", "Supprimee", "Aucun bloc ne parle a des clients finaux, aucun wording marketing ne domine l'interface.", "ok"],
+      ["Mode preview", "Controle", "La demonstration reste utile sans casser la logique d'outil prive.", "info"],
+    ],
+    roles: [
+      ["Admin", "Acces complet a tous les modules, a la supervision technique, a la securite et aux settings."],
+      ["Manager", "Lecture business et operationnelle large, pilotage du soir, CRM, analytics et supervision sync."],
+      ["RP", "Seulement ses propres reservations, clients, performances et informations liees a son perimetre."],
+    ],
+    syncOverview: [
+      ["Writer", "Site de reservation", "Source operationnelle unique des bookings."],
+      ["Reader", "NIGHTOS", "Lecture, analyse, CRM, performance RP et pilotage."],
+      ["Etat", "Connexion reelle non active", "L'architecture est prete mais la liaison de production n'est pas revendiquee ici."],
+      ["Promesse", "Aucun faux booking", "Les ecrans restent vides tant que la source n'est pas branchee."],
+    ],
+    syncModes: [
+      ["Webhook", "A preparer", "Le writer pousse chaque booking cree, modifie ou annule."],
+      ["Polling", "A preparer", "NIGHTOS relit regulierement la source sur des fenetres connues."],
+      ["Warehouse partage", "Cible forte", "Les deux surfaces exploitent une base commune proprement gouvernee."],
+    ],
+    syncFields: [
+      "external_source",
+      "external_booking_id",
+      "sync_status",
+      "imported_at",
+      "last_synced_at",
+      "source_event_id",
+      "source_client_id",
+      "created_from",
+      "updated_from_source"
+    ],
+    writerContract: [
+      ["booking_id", "Obligatoire", "Cle writer stable / deduplication / audit"],
+      ["event_id", "Obligatoire", "Rattacher chaque booking a une soiree"],
+      ["booking_status", "Obligatoire", "Creation, update, cancel, seating"],
+      ["created_at / updated_at", "Obligatoire", "Ordre de lecture et audit"],
+      ["reservation_date / arrival_time", "Obligatoire", "Pilotage du soir"],
+      ["guest_count", "Obligatoire", "Lecture trafic et capacite"],
+      ["table_id / table_label", "Obligatoire", "Fill rate et table occupancy"],
+      ["source_label / rp_label", "Tres recommande", "Performance RP et visibilité scopee"],
+      ["client_full_name", "Tres recommande", "Base d'identite CRM"],
+      ["client_phone / client_email", "Tres recommande", "Relance et historique"],
+      ["spend_estimate", "Recommande", "CA estime et quality scoring"],
+      ["notes_internal", "Optionnel", "Contextualisation manager"],
+    ],
+    readerCalculations: [
+      ["Fill rate", "Calcul du taux de remplissage par soir et par table."],
+      ["Revenu estime", "Lecture du revenu espere par fenetre, table, RP et soiree."],
+      ["Qualite de reservation", "Detection bookings incomplets, mal attribues ou fragiles."],
+      ["Performance RP", "Volume, revenu, recurrence, baisse de regime, relance."],
+      ["CRM VIP", "Historique, valeur, recurrence, tier et opportunites de relance."],
+      ["Alertes operations", "Points critiques du soir, hygiene source et priorites direction."],
+    ],
+    security: [
+      ["Routes protegees cote serveur", "Pret", "Le site doit se comporter comme un outil ferme, jamais comme un simple front public.", "ok"],
+      ["Roles applicatifs", "Pret", "Admin, manager, RP: scope et hiérarchie definis.", "ok"],
+      ["Validation serveur des entrees", "Pret", "Les points critiques doivent etre valides cote serveur.", "ok"],
+      ["Secrets hors code source", "Pret", "Tout passe par l'environnement, jamais par le client.", "ok"],
+      ["2FA management", "A brancher", "A activer avec le provider d'auth retenu.", "warn"],
+      ["Rate limiting", "A durcir", "A ajouter sur auth, sync et surfaces sensibles.", "warn"],
+      ["Journal securite", "A finir", "Tentatives d'acces, erreurs et changements critiques a tracer.", "warn"],
+    ],
+    sessions: [
+      ["Session demo locale", "Utile pour la presentation immedate du produit prive.", "info"],
+      ["Session authentifiee reelle", "A brancher sur provider d'auth avant exploitation.", "warn"],
+      ["Bouton verrouiller", "Permet de refermer visuellement l'espace interne a tout moment.", "ok"],
+      ["Timeout manager", "A regler lors du branchement auth pour usage en production.", "warn"],
+    ],
+    permissions: {
+      head: ["Module", "Admin", "Manager", "RP"],
+      rows: [
+        ["Dashboard", "Complet", "Complet", "Scope propre"],
+        ["Reservations", "Complet", "Complet", "Scope propre"],
+        ["RP Performance", "Complet", "Complet", "Seulement son perimetre"],
+        ["CRM VIP", "Complet", "Complet", "Seulement ses clients lies"],
+        ["Analytics", "Complet", "Complet", "Seulement sa vision"],
+        ["Settings", "Complet", "Complet", "Aucun acces"],
+      ]
+    },
+    audit: [
+      ["access_logs", "Connexion, verrouillage, changement de role, route sensible."],
+      ["sync_runs", "Tentatives de lecture writer, echec, succes, latence, payload hash."],
+      ["reservation_events", "Creation, update, cancellation, source_event_id, actor."],
+      ["permission_events", "Changements de role, activation, suspension, scope RP."],
+      ["session_events", "Sign-in, sign-out, expiration, device change."],
+      ["retention_policy", "A definir par niveau de sensibilite et usage direction."],
+    ],
+    env: [
+      ["NEXT_PUBLIC_SUPABASE_URL", "Public", "URL publique du projet Supabase"],
+      ["NEXT_PUBLIC_SUPABASE_ANON_KEY", "Public", "Cle publique cote client"],
+      ["SUPABASE_SERVICE_ROLE_KEY", "Serveur", "Jamais exposee au client"],
+      ["NEXT_PUBLIC_SITE_URL", "Public", "URL du site prive"],
+      ["COVA_RESERVATION_SOURCE_URL", "Serveur", "Writer reservation cible"],
+      ["COVA_RESERVATION_SOURCE_PIN", "Serveur", "Acces writer si necessaire"],
+      ["RESERVATION_SYNC_SHARED_SECRET", "Serveur", "Protection des pull / webhook"],
+    ],
+    readiness: [
+      ["Produit / design", "Fort", "Le site ressemble a un OS interne premium, plus exclusif et plus utile."],
+      ["Settings", "Fort", "Deviennent un vrai centre de controle et plus un annexe de prototype."],
+      ["Connexion writer", "Manquante", "Doit etre validée reellement avant d'ouvrir des donnees business."],
+      ["CRM live", "Pending", "Depend de vraies identites et d'un historique importable."],
+      ["Auth production", "Pending", "Demo gate en place, auth reelle a connecter."],
+      ["Audit & observabilite", "A renforcer", "Important pour passer d'un bon produit a un produit irreprochable."],
+    ],
+    journal: [
+      ["warn", "Acces prive de demonstration active", "Iteration actuelle"],
+      ["info", "Structure settings refondue en centre de controle interne", "Iteration actuelle"],
+      ["info", "Contrat de donnees reservation / NIGHTOS documente", "Iteration actuelle"],
+      ["ok", "Traces hors scope retirees de l'interface visible", "Iteration actuelle"],
+      ["warn", "Connexion reservation laissee volontairement inactive tant qu'elle n'est pas validee", "Iteration actuelle"],
+    ]
   }
 };
-const{esc}=COVA.helpers;
 
-/* ════════════════ TOAST ════════════════ */
-function toast(msg,type='info',dur=3200){
-  const c=document.getElementById('toasts');
-  const t=document.createElement('div');t.className='toast';
-  const cols={ok:'var(--ok)',warn:'var(--warn)',err:'var(--err)',info:'var(--info)',gold:'var(--gold)'};
-  t.style.borderLeftColor=cols[type]||cols.info;t.textContent=msg;c.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 300ms';setTimeout(()=>t.remove(),300);},dur);
+function esc(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
-/* ════════════════ NAV ════════════════ */
-const PM={
-  db:{t:'Dashboard',s:"Vue d'ensemble · NightOS operating layer"},
-  res:{t:'Réservations',s:'Synchronisation automatique depuis le site réservation'},
-  rp:{t:'RP Performance',s:'Classement & analyse des RP'},
-  crm:{t:'CRM Clients VIP',s:'Gestion & suivi des clients premium'},
-  an:{t:'Analytics',s:'Métriques & performances business'},
-  set:{t:'Paramètres',s:'Configuration, intégrations & déploiement'},
-};
-function nav(p,el){
-  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
-  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
-  document.getElementById('pg-'+p).classList.add('on');
-  const n=el||document.querySelector(`.ni[data-p="${p}"]`);if(n)n.classList.add('active');
-  const m=PM[p]||{t:p,s:''};
-  document.getElementById('tb-tt').textContent=m.t;
-  document.getElementById('tb-sb').textContent=m.s;
-  document.getElementById('ct').style.animation='none';
-  requestAnimationFrame(()=>{document.getElementById('ct').style.animation='fadeUp 260ms ease both';});
-  const renders={db:renderDB,res:()=>{},rp:()=>{},crm:()=>{},an:renderAN,set:renderSet};
-  if(renders[p])renders[p]();
-}
-function swSet(sec,el){
-  document.querySelectorAll('.sni').forEach(i=>i.classList.remove('active'));
-  document.querySelectorAll('.ssec').forEach(s=>s.classList.remove('on'));
-  if(el)el.classList.add('active');
-  const found=document.querySelector(`.sni[data-s="${sec}"]`);if(found)found.classList.add('active');
-  document.getElementById('ss-'+sec).classList.add('on');
+function toneClass(tone) {
+  return tone === "ok" ? "ok" : tone === "warn" ? "warn" : tone === "danger" ? "danger" : tone === "info" ? "info" : "neutral";
 }
 
-/* ════════════════ PANEL ════════════════ */
-function closePanel(){document.querySelectorAll('.sp').forEach(p=>p.classList.remove('on'));document.getElementById('ov').classList.remove('on');}
-
-/* ════════════════ DASHBOARD ════════════════ */
-function renderDB(){
-  const k=COVA.helpers;
-  // KPIs — empty state
-  document.getElementById('kpi-row').innerHTML=[
-    {l:'CA estimé ce soir',     ico:'<circle cx="10" cy="10" r="7"/><path d="M10 6v1.5m0 5V14m-2.5-5.5h3.5a1 1 0 010 2h-2a1 1 0 000 2H12"/>'},
-    {l:'Tables réservées',      ico:'<rect x="2" y="6" width="16" height="10" rx="2"/><path d="M6 6V4a2 2 0 014 0M10 6V4a2 2 0 014 0"/>'},
-    {l:'Clients attendus',      ico:'<path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zM3 17a7 7 0 0114 0"/>'},
-    {l:'RP actifs ce soir',     ico:'<path d="M12 13a3 3 0 100-6 3 3 0 000 6z"/><path d="M18 17a6 6 0 00-12 0"/><path d="M4 12a2 2 0 100-4 2 2 0 000 4"/>'},
-    {l:'Panier moyen',          ico:'<path d="M2 5h3l2 8h8l2-6H7"/><circle cx="9" cy="17" r="1.5" fill="currentColor"/><circle cx="15" cy="17" r="1.5" fill="currentColor"/>'},
-  ].map((c,i)=>`<div class="kpi empty au" style="animation-delay:${i*55}ms"><div class="kpi-h"><span class="kpi-lbl">${c.l}</span><div class="kpi-ico"><svg viewBox="0 0 20 20" stroke="currentColor" fill="none" stroke-width="1.5">${c.ico}</svg></div></div><div class="kpi-v placeholder">—</div><div class="kpi-sub">Aucune donnée synchronisée</div></div>`).join('');
-
-  // Filling health — empty
-  document.getElementById('db-fill').innerHTML=`<div class="empty-sm" style="padding:36px 20px;"><div style="width:44px;height:44px;border-radius:var(--rmd);background:var(--bg-elev);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--tx-m)" stroke-width="1.4"><path d="M2 16l4-8 4 4 3-6 5 10"/></svg></div><div class="empty-sm-t">État du remplissage</div><span class="empty-tag" style="margin-top:4px;"><svg viewBox="0 0 20 20"><path d="M17 8A7 7 0 106 16.93"/><path d="M17 4v4h-4"/></svg>Apparaîtra dès les premières réservations</span></div>`;
-
-  // Alerts — empty
-  document.getElementById('al-cnt').textContent='—';
-  document.getElementById('db-alerts').innerHTML=`<div class="empty-sm"><div class="empty-sm-t">Aucune alerte</div><div style="font-size:.74rem;color:var(--tx-m);margin-top:4px;">Les alertes opérationnelles seront générées automatiquement :<br>tables non pourvues, RP inactifs, clients VIP à relancer.</div></div>`;
-
-  // Top RP — empty
-  document.getElementById('db-rp').innerHTML=`<div class="empty-sm"><div class="empty-sm-t">Aucun RP à afficher</div><div style="font-size:.74rem;color:var(--tx-m);margin-top:4px;">Le classement apparaîtra automatiquement<br>dès la synchronisation des réservations.</div></div>`;
-
-  // Relances — empty
-  document.getElementById('db-rel').innerHTML=`<div class="empty-sm"><div class="empty-sm-t">Aucun client VIP</div><div style="font-size:.74rem;color:var(--tx-m);margin-top:4px;">Les opportunités de relance seront identifiées<br>automatiquement selon la fréquence de visite.</div></div>`;
+function roleLabel(role) {
+  return NIGHTOS.roles[role] || role;
 }
 
-/* ════════════════ ANALYTICS ════════════════ */
-function renderAN(){
-  document.getElementById('an-preview').innerHTML=[
-    {l:'CA par soirée',d:'Évolution du chiffre d\'affaires estimé sur la période'},
-    {l:'Taux de remplissage',d:'% de tables occupées par soirée'},
-    {l:'Performance RP',d:'Répartition du CA généré par RP'},
-    {l:'Segments clients',d:'Diamond, Gold, Silver, Regular — distribution'},
-  ].map(k=>`<div class="kpi empty"><div class="kpi-h"><span class="kpi-lbl">${esc(k.l)}</span></div><div style="font-size:.78rem;color:var(--tx-m);line-height:1.6;font-style:italic;">${esc(k.d)}</div></div>`).join('');
+function nav(page, el) {
+  document.querySelectorAll(".pg").forEach((node) => node.classList.remove("on"));
+  document.querySelectorAll(".ni").forEach((node) => node.classList.remove("active"));
+  document.getElementById("pg-" + page).classList.add("on");
+  if (el) {
+    el.classList.add("active");
+  } else {
+    const item = document.querySelector('.ni[data-p="' + page + '"]');
+    if (item) item.classList.add("active");
+  }
+  document.getElementById("topbar-title").textContent = NIGHTOS.pages[page].title;
+  document.getElementById("topbar-copy").textContent = NIGHTOS.pages[page].copy;
 }
 
-/* ════════════════ SETTINGS ════════════════ */
-function renderSet(){
-  // Team
-  document.getElementById('set-team').innerHTML=`<div class="ch"><span class="ct-l">Membres</span><button class="btn btn-p btn-sm" onclick="toast('Invitation — back-end requis en production','info')">+ Inviter</button></div>`+
-  COVA.teamMembers.map(m=>`<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);"><div style="width:28px;height:28px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--gold-bdr);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.9rem;color:var(--gold);flex-shrink:0;">${m.nom.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div style="flex:1;min-width:0;"><div style="font-size:.83rem;font-weight:500;color:var(--tx-1);">${esc(m.nom)}</div><div style="font-size:.7rem;color:var(--tx-m);">${esc(m.email)}</div></div><span class="badge b-adm">${m.role}</span><span class="badge b-ok"><span class="bdot" style="background:var(--ok);"></span>Actif</span></div>`).join('');
-
-  // Sync methods
-  document.getElementById('sync-methods').innerHTML=[
-    {t:'Option A — Webhook (recommandé)',d:'Le site réservation envoie un POST à /api/sync/reservation à chaque modification.',s:'todo'},
-    {t:'Option B — Polling périodique',d:'NightOS interroge l\'API du site réservation toutes les N minutes.',s:'todo'},
-    {t:'Option C — Base Supabase partagée (cible)',d:'Les deux systèmes partagent les mêmes tables PostgreSQL avec RLS.',s:'future'},
-  ].map(x=>`<div class="secr"><div><div style="font-size:.84rem;font-weight:500;color:var(--tx-1);">${esc(x.t)}</div><div style="font-size:.74rem;color:var(--tx-m);">${esc(x.d)}</div></div><span class="badge ${x.s==='future'?'b-vip':'b-pend'}">${x.s==='future'?'Futur':'À implémenter'}</span></div>`).join('');
-
-  // Sync fields
-  document.getElementById('sync-fields').innerHTML=[
-    'external_source','external_booking_id','sync_status','last_synced_at',
-    'imported_at','created_from','updated_from_source','source_event_id','source_client_id',
-  ].map(f=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);"><code style="font-size:.76rem;color:var(--gold);">${f}</code><span class="badge b-off" style="font-size:.6rem;">Modélisé</span></div>`).join('');
-
-  // Integrations
-  document.getElementById('set-int').innerHTML=[
-    {i:'🗓️',n:'Site Réservation',d:'Source primaire des réservations — WRITER',s:'planned'},
-    {i:'🗄️',n:'Supabase',d:'Base PostgreSQL partagée avec RLS activé',s:'planned'},
-    {i:'▲',n:'Vercel',d:'Hébergement Next.js + déploiement automatique',s:'planned'},
-    {i:'🐙',n:'GitHub',d:'Repo versionné, CI/CD via GitHub Actions',s:'planned'},
-    {i:'📧',n:'Resend',d:'Emails automatiques pour les relances clients',s:'future'},
-    {i:'✦',n:'Creative SaaS (privé)',d:'Génération flyers & vidéos — SaaS privé futur',s:'future'},
-  ].map(x=>`<div style="background:var(--bg-elev);border:1px solid var(--bdr-sub);border-radius:var(--rlg);padding:16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:var(--rmd);background:var(--bg-hov);border:1px solid var(--bdr-def);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">${x.i}</div><div style="flex:1;"><div style="font-size:.86rem;font-weight:600;color:var(--tx-1);margin-bottom:3px;">${esc(x.n)}</div><div style="font-size:.74rem;color:var(--tx-m);">${esc(x.d)}</div></div><span class="badge ${x.s==='future'?'b-off':'b-pend'}">${x.s==='future'?'Futur':'Prévu'}</span></div>`).join('');
-
-  // Security
-  document.getElementById('set-sec').innerHTML=[
-    {l:'HTTPS en production',s:'todo',n:'Automatique sur Vercel'},
-    {l:'JWT + sessions sécurisées',s:'ok',n:'Supabase Auth + middleware de session'},
-    {l:'RLS sur toutes les tables',s:'ok',n:'Migrations SQL préparées dans le repo'},
-    {l:'Rate limiting API',s:'todo',n:'Middleware Next.js + Vercel Edge'},
-    {l:'2FA Admin & Manager',s:'todo',n:'Supabase Auth — à activer'},
-    {l:'Secrets hors du code source',s:'ok',n:'Variables d\'environnement côté serveur seulement'},
-    {l:'Cookies Secure + HttpOnly',s:'todo',n:'Dépend du déploiement final et de la config auth production'},
-  ].map(s=>`<div class="secr"><div><div style="font-size:.83rem;font-weight:500;color:var(--tx-1);">${esc(s.l)}</div><div style="font-size:.72rem;color:var(--tx-m);">${esc(s.n)}</div></div><span class="sci ${s.s}">${s.s==='ok'?'Respecté':'À faire'}</span></div>`).join('');
-
-  document.getElementById('set-auth').innerHTML=[
-    {t:'2FA Admin & Manager',d:'Recommandé pour la production finale',on:false},
-    {t:'Validation session côté serveur',d:'Déjà utilisée sur les routes protégées',on:true},
-    {t:'Blocage après 5 tentatives',d:'Protection brute-force à compléter côté auth provider',on:false},
-  ].map(a=>`<div class="tgl-w"><div><div class="tgl-l">${esc(a.t)} <span style="font-size:.67rem;color:var(--tx-m);">(simulé)</span></div><div class="tgl-s">${esc(a.d)}</div></div><label class="tgl"><input type="checkbox" ${a.on?'checked':''} onchange="toast('Paramètre — back-end requis en production','warn')"><span class="tgls"></span></label></div>`).join('');
-
-  // Env
-  document.getElementById('set-env').innerHTML=[
-    {k:'NEXT_PUBLIC_SUPABASE_URL',v:'https://your-project.supabase.co',p:true},
-    {k:'NEXT_PUBLIC_SUPABASE_ANON_KEY',v:'eyJ... (anon key)',p:true},
-    {k:'SUPABASE_SERVICE_ROLE_KEY',v:'●●●●●●●●●●●●●●●●',p:false},
-    {k:'NEXT_PUBLIC_SITE_URL',v:'https://nightos.vercel.app',p:true},
-    {k:'COVA_RESERVATION_SOURCE_URL',v:'https://cova-club-resa-production.up.railway.app/',p:false},
-    {k:'COVA_RESERVATION_SOURCE_PIN',v:'●●●●',p:false},
-    {k:'RESERVATION_SYNC_SHARED_SECRET',v:'●●●●●●●●●●●●●●●●',p:false},
-    {k:'RESEND_API_KEY',v:'●●●●●●●●●●●●●●●●',p:false},
-  ].map(v=>`<div class="er"><span class="ek">${esc(v.k)}</span><span class="ev">${esc(v.v)}</span><span class="badge ${v.p?'b-ok':'b-no'}" style="flex-shrink:0;">${v.p?'Public':'Serveur uniquement'}</span></div>`).join('');
-
-  // Deploy files
-  document.getElementById('set-dep-f').innerHTML=[
-    {f:'.gitignore',n:'.env.local, node_modules et artefacts exclus'},
-    {f:'.env.example',n:'Variables requises sans valeurs réelles'},
-    {f:'README.md',n:'Instructions de déploiement et de connexion'},
-    {f:'middleware.ts',n:'Protection de session pour les routes /app'},
-    {f:'next.config.ts',n:'Headers de sécurité'},
-    {f:'supabase/migrations/*.sql',n:'Schéma, RLS et mappings RP source labels'},
-  ].map(f=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);"><div><code style="font-size:.81rem;color:var(--gold);">${esc(f.f)}</code><span style="font-size:.74rem;color:var(--tx-m);margin-left:10px;">${esc(f.n)}</span></div><span class="badge b-ok">Présent</span></div>`).join('');
-
-  // Known limitations
-  document.getElementById('set-lim').innerHTML=[
-    'Le html reste une vitrine locale, distincte de l’application Next.js réelle',
-    'La source live est lisible, mais la persistance historique complète dépend encore du projet Supabase final',
-    'Le CRM reste volontairement incomplet tant que la source ne livre pas de vraie identité client',
-    'Le build Next n’a pas pu être validé dans ce shell à cause du runtime local SWC de l’environnement Codex',
-    'Le responsive du html de démonstration peut encore être raffiné ensuite',
-  ].map(x=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.79rem;color:var(--tx-2);"><span style="color:var(--warn);flex-shrink:0;">⚠</span>${esc(x)}</div>`).join('');
+function swSet(section, el) {
+  document.querySelectorAll(".settings-link").forEach((node) => node.classList.remove("active"));
+  document.querySelectorAll(".settings-section").forEach((node) => node.classList.remove("on"));
+  if (el) {
+    el.classList.add("active");
+  } else {
+    const item = document.querySelector('.settings-link[data-s="' + section + '"]');
+    if (item) item.classList.add("active");
+  }
+  const target = document.getElementById("ss-" + section);
+  if (target) target.classList.add("on");
 }
 
-/* ════════════════ INIT ════════════════ */
-document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('tb-dt').textContent=new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
-  renderDB();
-  renderAN();
-  renderSet();
+function lockWorkspace() {
+  localStorage.removeItem("nightos-private-gate");
+  document.body.classList.add("locked");
+  document.getElementById("access-gate").classList.remove("hidden");
+  document.getElementById("shell").setAttribute("aria-hidden", "true");
+}
+
+function openWorkspace(access) {
+  NIGHTOS.access = access;
+  localStorage.setItem("nightos-private-gate", JSON.stringify(access));
+  document.body.classList.remove("locked");
+  document.getElementById("access-gate").classList.add("hidden");
+  document.getElementById("shell").setAttribute("aria-hidden", "false");
+  document.getElementById("viewer-name").textContent = access.name;
+  document.getElementById("viewer-role").textContent = roleLabel(access.role).toUpperCase();
+  document.getElementById("viewer-mode").textContent = access.mode === "rp-scope" ? "RP SCOPE" : access.mode === "manager-review" ? "REVIEW" : "DEMO";
+  document.getElementById("current-role-badge").textContent = roleLabel(access.role);
+}
+
+function renderDashboard() {
+  document.getElementById("dashboard-kpis").innerHTML = NIGHTOS.dashboardKpis.map((item) => (
+    '<div class="card kpi">' +
+      '<div class="kpi-header">' +
+        '<div class="kpi-label">' + esc(item.label) + '</div>' +
+        '<div class="kpi-icon"><svg viewBox="0 0 20 20">' + item.icon + '</svg></div>' +
+      '</div>' +
+      '<div class="kpi-value placeholder">' + esc(item.value) + '</div>' +
+      '<div class="kpi-note">' + esc(item.note) + '</div>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("dashboard-priorities").innerHTML = NIGHTOS.dashboardPriorities.map((item) => (
+    '<div class="split-item">' +
+      '<div class="split-key">' + esc(item[0]) + '</div>' +
+      '<div class="split-value">' + esc(item[1]) + '<div class="micro" style="margin-top:8px;">' + esc(item[2]) + '</div></div>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("dashboard-quality").innerHTML = NIGHTOS.dashboardQuality.map((item) => (
+    '<div class="status-cell">' +
+      '<div>' +
+        '<div class="row-label">' + esc(item[0]) + '</div>' +
+        '<div class="status-cell-copy">' + esc(item[1]) + '</div>' +
+      '</div>' +
+      '<span class="pill ' + toneClass(item[3]) + '">' + esc(item[2]) + '</span>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("dashboard-direction").innerHTML = NIGHTOS.dashboardDirection.map((item) => (
+    '<div class="split-item">' +
+      '<div class="split-key">' + esc(item[0]) + '</div>' +
+      '<div class="split-value">' + esc(item[1]) + '</div>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("dashboard-writer-reader").innerHTML = NIGHTOS.writerReader.map((item, index) => (
+    '<div class="row">' +
+      '<div>' +
+        '<div class="row-label">' + esc(item[0]) + '</div>' +
+        '<div class="row-copy">' + esc(item[1]) + '</div>' +
+      '</div>' +
+      '<span class="pill ' + (index === 0 ? "gold" : index === 1 ? "info" : "warn") + '">' +
+        (index === 0 ? "Writer" : index === 1 ? "Reader" : "Regle") +
+      '</span>' +
+    '</div>'
+  )).join("");
+}
+
+function renderReservations() {
+  document.getElementById("reservations-visible-fields").innerHTML = NIGHTOS.reservationFields.map((item) => (
+    '<div class="row">' +
+      '<div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("reservations-lifecycle").innerHTML = NIGHTOS.reservationLifecycle.map((item) => (
+    '<div class="row">' +
+      '<div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("reservations-quality").innerHTML = NIGHTOS.reservationQuality.map((item, index) => (
+    '<div class="row">' +
+      '<div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div>' +
+      '<span class="pill ' + (index < 4 ? "warn" : "info") + '">' + esc(item[1]) + '</span>' +
+    '</div>'
+  )).join("");
+}
+
+function renderRP() {
+  document.getElementById("rp-pillars").innerHTML = NIGHTOS.rpPillars.map((item) => (
+    '<div class="card">' +
+      '<div class="card-title">' + esc(item[0]) + '</div>' +
+      '<p class="card-copy" style="margin-top:12px;">' + esc(item[1]) + '</p>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("rp-inputs").innerHTML = NIGHTOS.rpInputs.map((item) => (
+    '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div></div>'
+  )).join("");
+
+  document.getElementById("rp-outputs").innerHTML = NIGHTOS.rpOutputs.map((item) => (
+    '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div></div>'
+  )).join("");
+}
+
+function renderCRM() {
+  document.getElementById("crm-profile-structure").innerHTML = NIGHTOS.crmProfile.map((item) => (
+    '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div></div>'
+  )).join("");
+
+  document.getElementById("crm-business-uses").innerHTML = NIGHTOS.crmUses.map((item) => (
+    '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div></div>'
+  )).join("");
+}
+
+function renderAnalytics() {
+  document.getElementById("analytics-pillars").innerHTML = NIGHTOS.analyticsPillars.map((item) => (
+    '<div class="card">' +
+      '<div class="card-title">' + esc(item[0]) + '</div>' +
+      '<p class="card-copy" style="margin-top:12px;">' + esc(item[1]) + '</p>' +
+    '</div>'
+  )).join("");
+}
+
+function renderSettings() {
+  document.getElementById("settings-access").innerHTML = NIGHTOS.settings.access.map((item) => (
+    '<div class="card">' +
+      '<div class="card-header"><div><div class="card-title">' + esc(item[0]) + '</div><p class="card-copy" style="margin-top:10px;">' + esc(item[2]) + '</p></div><span class="pill ' + toneClass(item[3]) + '">' + esc(item[1]) + '</span></div>' +
+    '</div>'
+  )).join("");
+
+  document.getElementById("settings-roles").innerHTML =
+    '<div class="card-header"><div><div class="card-title">Modele de roles</div><p class="card-copy" style="margin-top:10px;">La lisibilite et la desirabilite de NIGHTOS viennent aussi du fait que chacun voit exactement ce qu\'il doit voir, rien de plus.</p></div></div>' +
+    NIGHTOS.settings.roles.map((item) => (
+      '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div></div>'
+    )).join("");
+
+  document.getElementById("settings-sync-overview").innerHTML =
+    '<div class="card-header"><div><div class="card-title">Posture writer / reader</div><p class="card-copy" style="margin-top:10px;">La plateforme se structure autour d\'un writer reservation externe et d\'un reader analytics/CRM interne.</p></div></div>' +
+    NIGHTOS.settings.syncOverview.map((item) => (
+      '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[2]) + '</div></div><div class="row-value">' + esc(item[1]) + '</div></div>'
+    )).join("");
+
+  document.getElementById("settings-sync-modes").innerHTML =
+    '<div class="card-header"><div><div class="card-title">Modes de liaison possibles</div><p class="card-copy" style="margin-top:10px;">Le produit est deja prepare pour plusieurs chemins d\'integration sans mentir sur leur activation actuelle.</p></div></div>' +
+    NIGHTOS.settings.syncModes.map((item, index) => (
+      '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[2]) + '</div></div><span class="pill ' + (index === 2 ? "gold" : "warn") + '">' + esc(item[1]) + '</span></div>'
+    )).join("");
+
+  document.getElementById("settings-sync-fields").innerHTML =
+    '<div class="card-header"><div><div class="card-title">Champs de liaison prepares</div><p class="card-copy" style="margin-top:10px;">Ces champs structurent deja la future connexion reale sans s\'afficher comme une sync active.</p></div></div>' +
+    NIGHTOS.settings.syncFields.map((field) => (
+      '<div class="row"><div class="row-label"><code>' + esc(field) + '</code></div><span class="pill info">Structure prete</span></div>'
+    )).join("");
+
+  document.getElementById("contract-writer-table").innerHTML =
+    '<thead><tr><th>Champ</th><th>Niveau</th><th>Pourquoi il est critique</th></tr></thead><tbody>' +
+    NIGHTOS.settings.writerContract.map((item) => (
+      '<tr><td>' + esc(item[0]) + '</td><td>' + esc(item[1]) + '</td><td>' + esc(item[2]) + '</td></tr>'
+    )).join("") +
+    '</tbody>';
+
+  document.getElementById("contract-reader-calculations").innerHTML = NIGHTOS.settings.readerCalculations.map((item) => (
+    '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[1]) + '</div></div></div>'
+  )).join("");
+
+  document.getElementById("settings-security").innerHTML =
+    '<div class="card-header"><div><div class="card-title">Garde-fous du produit</div><p class="card-copy" style="margin-top:10px;">Ce qui est deja fort et ce qui doit encore etre durci pour un usage production haut de gamme.</p></div></div>' +
+    NIGHTOS.settings.security.map((item) => (
+      '<div class="row"><div><div class="row-label">' + esc(item[0]) + '</div><div class="row-copy">' + esc(item[2]) + '</div></div><span class="pill ' + toneClass(item[3]) + '">' + esc(item[1]) + '</span></div>'
+    )).join("");
+
+  document.getElementById("settings-sessions").innerHTML = NIGHTOS.settings.sessions.map((item) => (
+    '<div class="card"><div class="card-header"><div><div class="card-title">' + esc(item[0]) + '</div><p class="card-copy" style="margin-top:10px;">' + esc(item[1]) + '</p></div><span class="pill ' + toneClass(item[2]) + '">' + (item[2] === "ok" ? "Pret" : item[2] === "warn" ? "A cadrer" : "Structure") + '</span></div></div>'
+  )).join("");
+
+  document.getElementById("permissions-table").innerHTML =
+    '<thead><tr>' + NIGHTOS.settings.permissions.head.map((item) => '<th>' + esc(item) + '</th>').join("") + '</tr></thead><tbody>' +
+    NIGHTOS.settings.permissions.rows.map((row) => (
+      '<tr>' +
+        '<td>' + esc(row[0]) + '</td>' +
+        '<td class="' + (row[1] === "Complet" ? "perm-yes" : row[1].includes("Scope") ? "perm-partial" : "perm-no") + '">' + esc(row[1]) + '</td>' +
+        '<td class="' + (row[2] === "Complet" ? "perm-yes" : row[2].includes("Scope") ? "perm-partial" : "perm-no") + '">' + esc(row[2]) + '</td>' +
+        '<td class="' + (row[3] === "Aucun acces" ? "perm-no" : row[3].includes("Scope") || row[3].includes("Seulement") ? "perm-partial" : "perm-yes") + '">' + esc(row[3]) + '</td>' +
+      '</tr>'
+    )).join("") +
+    '</tbody>';
+
+  document.getElementById("settings-audit").innerHTML = NIGHTOS.settings.audit.map((item) => (
+    '<div class="card"><div class="card-title">' + esc(item[0]) + '</div><p class="card-copy" style="margin-top:12px;">' + esc(item[1]) + '</p></div>'
+  )).join("");
+
+  document.getElementById("settings-env").innerHTML =
+    '<div class="card-header"><div><div class="card-title">Variables et separation public / serveur</div><p class="card-copy" style="margin-top:10px;">Aucun secret ne doit vivre dans le client ni dans git. Cette separation doit rester lisible pour toute l\'equipe.</p></div></div>' +
+    NIGHTOS.settings.env.map((item) => (
+      '<div class="row"><div><div class="row-label"><code>' + esc(item[0]) + '</code></div><div class="row-copy">' + esc(item[2]) + '</div></div><span class="pill ' + (item[1] === "Serveur" ? "danger" : "info") + '">' + esc(item[1]) + '</span></div>'
+    )).join("");
+
+  document.getElementById("settings-readiness").innerHTML = NIGHTOS.settings.readiness.map((item) => (
+    '<div class="card"><div class="card-header"><div><div class="card-title">' + esc(item[0]) + '</div><p class="card-copy" style="margin-top:10px;">' + esc(item[2]) + '</p></div><span class="pill ' + (item[1] === "Fort" ? "ok" : item[1] === "Pending" || item[1] === "Manquante" || item[1] === "A renforcer" ? "warn" : "info") + '">' + esc(item[1]) + '</span></div></div>'
+  )).join("");
+
+  document.getElementById("settings-journal").innerHTML = NIGHTOS.settings.journal.map((item) => (
+    '<div class="log-item">' +
+      '<div class="log-dot" style="background:' + (item[0] === "ok" ? "var(--ok)" : item[0] === "warn" ? "var(--warn)" : "var(--info)") + ';"></div>' +
+      '<div class="log-copy"><strong>' + esc(item[1]) + '</strong></div>' +
+      '<div class="log-ts">' + esc(item[2]) + '</div>' +
+    '</div>'
+  )).join("");
+}
+
+function initGate() {
+  const stored = localStorage.getItem("nightos-private-gate");
+  if (stored) {
+    try {
+      const access = JSON.parse(stored);
+      openWorkspace(access);
+      return;
+    } catch (error) {
+      localStorage.removeItem("nightos-private-gate");
+    }
+  }
+
+  document.getElementById("gate-name").value = NIGHTOS.access.name;
+  document.getElementById("gate-email").value = NIGHTOS.access.email;
+  document.getElementById("gate-role").value = NIGHTOS.access.role;
+  document.getElementById("gate-purpose").value = NIGHTOS.access.mode;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("current-date").textContent = new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  }).format(new Date());
+
+  document.getElementById("gate-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    openWorkspace({
+      name: document.getElementById("gate-name").value.trim() || "Direction Preview",
+      email: document.getElementById("gate-email").value.trim() || "direction@nightos.local",
+      role: document.getElementById("gate-role").value,
+      mode: document.getElementById("gate-purpose").value
+    });
+  });
+
+  document.getElementById("gate-rules").addEventListener("click", function() {
+    const copy = "Regle produit: writer reservation externe, NIGHTOS reader/analytics/CRM, aucune data inventee, aucune facade publique et aucune promesse hors scope visible.";
+    window.alert(copy);
+  });
+
+  renderDashboard();
+  renderReservations();
+  renderRP();
+  renderCRM();
+  renderAnalytics();
+  renderSettings();
+  initGate();
 });
 </script>
 </body>

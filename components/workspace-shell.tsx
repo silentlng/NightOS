@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { signOutAction } from "@/app/actions/auth";
@@ -23,13 +24,21 @@ export function WorkspaceShell({
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
           <div className="space-y-6">
             <div className="space-y-3">
+              <Image
+                alt="COVA"
+                className="h-auto w-[118px]"
+                height={68}
+                priority
+                src="/cova-logo-white.png"
+                width={220}
+              />
               <p className="eyebrow">{siteConfig.codename} Layer</p>
               <div className="space-y-3">
                 <p className="text-[0.72rem] uppercase tracking-[0.3em] text-muted-foreground">
                   {siteConfig.name}
                 </p>
                 <h1 className="font-display text-5xl leading-[0.88] tracking-[0.04em]">
-                  Internal club command.
+                  Private club command.
                 </h1>
                 <p className="text-sm leading-6 text-muted-foreground">
                   {siteConfig.sourceOfTruth} {siteConfig.analyticsLayer}
@@ -99,7 +108,7 @@ export function WorkspaceShell({
                     A premium internal OS built around the reservation source.
                   </p>
                   <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-                    Reservation site writes. Cova OS reads, synchronizes, analyzes, and supports decisions without inventing business activity.
+                    Reservation site writes. NightOS reads, analyzes, scopes, and supports decisions without inventing business activity.
                   </p>
                 </div>
               </div>

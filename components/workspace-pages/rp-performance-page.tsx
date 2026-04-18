@@ -41,7 +41,7 @@ export async function RpPerformancePage({
             {data.promoterStatsInScope.length || "—"}
           </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Distinct source labels with reservation activity in the current live window.
+            Distinct source labels with reservation activity in the current source window.
           </p>
         </div>
         <div className="surface p-6">
@@ -83,7 +83,7 @@ export async function RpPerformancePage({
                     <p className="text-sm font-medium">
                       {index + 1}. {stat.sourceLabel}
                     </p>
-                    <StatusPill label="Live source" tone="success" />
+                    <StatusPill label="Source snapshot" tone="success" />
                   </div>
                   <p className="text-sm text-muted-foreground">
                     {stat.reservations} reservation labels in the current window
@@ -103,8 +103,8 @@ export async function RpPerformancePage({
             title="No RP performance data yet"
             description={
               access.role === "rp"
-                ? "This RP account does not currently map to any live reservation-source label, so NightOS keeps the RP performance view empty."
-                : "The source is connected, but it returned no reservation labels for the selected Thursday-to-Saturday window. Use the week controls above to inspect another live window."
+                ? "This RP account does not currently map to any reservation-source label, so NightOS keeps the RP performance view empty."
+                : "The source is available, but it returned no reservation labels for the selected Thursday-to-Saturday window. Use the week controls above to inspect another source window."
             }
           />
         )}
@@ -143,7 +143,7 @@ export async function RpPerformancePage({
         ) : (
           <EmptyState
             title="No follow-up signals yet"
-            description="NightOS keeps this honest until the selected week exposes live RP activity from the source. Use the week controls above to inspect another live window."
+            description="NightOS keeps this honest until the selected week exposes RP activity from the source. Use the week controls above to inspect another source window."
           />
         )}
       </SectionCard>

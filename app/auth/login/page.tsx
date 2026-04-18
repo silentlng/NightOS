@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 import { Button } from "@/components/ui/button";
@@ -22,18 +23,33 @@ export default async function LoginPage({
           <div className="flex h-full flex-col justify-between gap-10">
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="eyebrow">{siteConfig.codename}</p>
+                <div className="flex items-center gap-4">
+                  <Image
+                    alt="COVA"
+                    className="h-auto w-[112px]"
+                    height={64}
+                    priority
+                    src="/cova-logo-white.png"
+                    width={210}
+                  />
+                  <div className="space-y-1">
+                    <p className="eyebrow">{siteConfig.codename}</p>
+                    <p className="text-[0.72rem] uppercase tracking-[0.34em] text-muted-foreground">
+                      Private internal platform
+                    </p>
+                  </div>
+                </div>
                 <div className="space-y-5">
                   <p className="text-[0.72rem] uppercase tracking-[0.34em] text-muted-foreground">
                     {siteConfig.name}
                   </p>
                   <h1 className="display-heading max-w-4xl">
-                    Secure internal access for club operations, CRM, and live reservation intelligence.
+                    Secure internal access for operations, CRM, and reservation control.
                   </h1>
                   <p className="section-copy max-w-3xl">
                     The reservation site remains the operational source of truth.
-                    NightOS reads, synchronizes, and structures the data for
-                    managers, staff, promoters, and direction.
+                    NightOS structures the management layer around it for managers,
+                    staff, promoters, and direction.
                   </p>
                 </div>
               </div>
@@ -71,7 +87,7 @@ export default async function LoginPage({
               <h2 className="display-subheading">Sign in</h2>
               <p className="text-sm leading-6 text-muted-foreground">
                 Use Supabase Auth for production access. Preview mode stays available
-                for demo walkthroughs while infrastructure is still being finalized.
+                for internal walkthroughs while infrastructure is still being finalized.
               </p>
             </div>
 

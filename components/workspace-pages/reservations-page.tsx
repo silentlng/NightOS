@@ -121,7 +121,7 @@ export async function ReservationsPage({
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
         <SectionCard
           eyebrow="Reservation Feed"
-          title="Live source records"
+          title="Reservation source records"
           description="These rows are derived from the current source snapshot. They are not invented placeholders."
         >
           {filteredReservations.length > 0 ? (
@@ -170,7 +170,7 @@ export async function ReservationsPage({
           ) : (
             <EmptyState
               title="No reservations match the current filters"
-              description="Either the live reservation source returned no occupied tables for this week, or the current filter scope removes every result. Use the week controls above to inspect another live window."
+              description="Either the reservation source returned no occupied tables for this week, or the current filter scope removes every result. Use the week controls above to inspect another source window."
             />
           )}
         </SectionCard>
@@ -204,7 +204,7 @@ export async function ReservationsPage({
               </div>
               <div className="surface-muted p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Last live read
+                  Last source read
                 </p>
                 <p className="mt-2 text-sm">
                   {formatDateTime(data.snapshot.fetchedAt)}
@@ -215,7 +215,7 @@ export async function ReservationsPage({
                   Operational note
                 </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  The current source does not expose a verified client identity for this booking. NightOS stores the live source label separately until richer data is available.
+                  The current source does not expose a verified client identity for this booking. NightOS stores the reservation-source label separately until richer data is available.
                 </p>
               </div>
               <div className="surface-muted p-4">
@@ -230,7 +230,7 @@ export async function ReservationsPage({
           ) : (
             <EmptyState
               title="No reservation selected"
-              description="Select a live reservation row to inspect source and sync metadata."
+              description="Select a reservation row to inspect source and sync metadata."
             />
           )}
         </SectionCard>

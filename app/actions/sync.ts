@@ -78,7 +78,7 @@ export async function runSourceControlAction(
       status: "success",
       mode: "persist",
       message:
-        "Live source sync completed and records were pushed into Supabase.",
+        "Reservation source sync completed and records were pushed into Supabase.",
       connected: true,
       weekLabel: undefined,
       reservations: result.totalReservations,
@@ -92,7 +92,7 @@ export async function runSourceControlAction(
       message:
         error instanceof Error
           ? error.message
-          : "NightOS could not persist the live source into Supabase.",
+          : "NightOS could not persist the reservation source snapshot into Supabase.",
     };
   }
 }

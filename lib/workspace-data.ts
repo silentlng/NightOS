@@ -20,7 +20,7 @@ function buildSyncOverview(snapshot: Awaited<ReturnType<typeof getReservationSou
       summary:
         "Add the source URL and access PIN in local or deployed environment variables to activate live read-only sync.",
       detail:
-        "NightOS is structurally ready, but the live reservation source credentials are still missing.",
+        "NightOS is structurally ready, but the reservation source credentials are still missing.",
       sourceLabel: snapshot.sourceName,
     };
   }
@@ -41,13 +41,13 @@ function buildSyncOverview(snapshot: Awaited<ReturnType<typeof getReservationSou
   return {
     state: isSupabaseConfigured() ? "active" : "attention",
     label: isSupabaseConfigured()
-      ? "Live source connected"
-      : "Live source connected, warehouse pending",
+      ? "Reservation source reachable"
+      : "Reservation source reachable, warehouse pending",
     summary:
-      "NightOS can read the reservation source now and is ready for the dedicated Supabase sync pipeline.",
+      "NightOS can inspect the reservation source and is ready for the dedicated Supabase sync pipeline once the production contract is approved.",
     detail: isSupabaseConfigured()
-      ? "Once the pull route is deployed with service-role credentials, live source records can be persisted in Supabase for CRM and analytics."
-      : "The live source is reachable, but Supabase credentials still need to be configured before records can be persisted for CRM and historical analytics.",
+      ? "Once the pull route is deployed with service-role credentials, reservation-source records can be persisted in Supabase for CRM and analytics."
+      : "The reservation source is reachable, but Supabase credentials still need to be configured before records can be persisted for CRM and historical analytics.",
     lastSyncedAt: snapshot.fetchedAt,
     sourceLabel: snapshot.sourceName,
   };
@@ -64,7 +64,7 @@ function buildOperationalAlerts(
     alerts.push({
       title: "Source connection missing",
       description:
-        "NightOS is ready for live reservation reading, but the reservation source environment variables are not configured yet.",
+        "NightOS is ready for reservation-source reading, but the source environment variables are not configured yet.",
       tone: "warning",
     });
   } else if (!snapshot.connected) {
@@ -77,9 +77,9 @@ function buildOperationalAlerts(
     });
   } else {
     alerts.push({
-      title: "Reservation source live",
+      title: "Reservation source reachable",
       description:
-        "NightOS is reading the operational reservation site in real time and can derive live table occupancy structure without fabricating data.",
+        "NightOS can inspect the operational reservation site and derive table occupancy structure without fabricating data.",
       tone: "success",
     });
   }

@@ -44,8 +44,8 @@ export async function SettingsPage({
     <div className="space-y-6">
       <PageIntro
         eyebrow="Settings"
-        title="Roles, sync, integrations, deployment readiness, and future architecture."
-        description="This page separates what is already implemented from what is connected later, while keeping the future creative bridge explicitly out of scope for now."
+        title="Roles, sync, security, sessions, audit, and technical readiness."
+        description="This control center separates what is implemented, what is staged, and what still needs a real production connection without exposing speculative product layers."
       />
 
       <WeekNavigator
@@ -64,7 +64,7 @@ export async function SettingsPage({
             <div className="surface-muted grid gap-2 p-4 md:grid-cols-[140px_1fr]">
               <p className="text-sm font-medium">Admin</p>
               <p className="text-sm text-muted-foreground">
-                Full access to operations, CRM, analytics, sync settings, and future bridge administration.
+                Full access to operations, CRM, analytics, security posture, and sync administration.
               </p>
             </div>
             <div className="surface-muted grid gap-2 p-4 md:grid-cols-[140px_1fr]">
@@ -85,10 +85,10 @@ export async function SettingsPage({
         <SectionCard
           eyebrow="Reservation Sync"
           title="Operational source status"
-          description="The reservation site remains the writer. NightOS reads it in live mode and is ready for warehouse persistence."
+          description="The reservation site remains the writer. NightOS is structured to read it safely and to persist it once the production contract is fully approved."
           footer={
             <p className="text-xs text-muted-foreground">
-              Last live read: {formatDateTime(data.snapshot.fetchedAt)}
+              Last source read: {formatDateTime(data.snapshot.fetchedAt)}
             </p>
           }
         >
@@ -185,9 +185,9 @@ export async function SettingsPage({
 
       <div className="grid gap-4 xl:grid-cols-2">
         <SectionCard
-          eyebrow="Deployment Readiness"
-          title="GitHub + Vercel"
-          description="The repository is structured for Vercel deployment once environment variables are set."
+          eyebrow="Technical Readiness"
+          title="Deployment, repository, and production handoff"
+          description="The repository is structured for a production-oriented deploy flow once environment variables and the reservation contract are fully approved."
         >
           <div className="space-y-3">
             <div className="surface-muted p-4 text-sm leading-6 text-muted-foreground">
@@ -202,16 +202,16 @@ export async function SettingsPage({
         </SectionCard>
 
         <SectionCard
-          eyebrow="Future Creative Bridge"
-          title="Prepared, not built"
-          description="NightOS reserves a bridge for a future private creative SaaS without implementing that product now."
+          eyebrow="Sessions & Audit"
+          title="Internal control posture"
+          description="A private platform also needs disciplined session handling, permission scoping, and traceability."
         >
           <div className="space-y-3">
             <div className="surface-muted p-4 text-sm leading-6 text-muted-foreground">
-              The architecture and docs reserve space for future creative briefs, flyer/video requests, and campaign handoff metadata, but no creative generation surface is shipped in this version.
+              Session timeout rules, device trust policy, sign-in audit logs, permission changes, and sync-run logs should all be treated as first-class operating controls.
             </div>
             <div className="surface-muted p-4 text-sm leading-6 text-muted-foreground">
-              That future bridge should consume curated operating signals from NightOS only after reservation sync, CRM, and audit trails are stable.
+              In this version, the access model and protected routes are already shaped like a private tool. The remaining work is to complete provider-level enforcement and deepen audit visibility.
             </div>
           </div>
         </SectionCard>

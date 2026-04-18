@@ -78,7 +78,7 @@ export async function CrmPage({
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-foreground">{item.sourceLabel}</p>
                   <p className="text-sm text-muted-foreground">
-                    {item.reservations} live bookings • first seen {item.firstSeenDateId} • last seen {item.lastSeenDateId}
+                    {item.reservations} source bookings • first seen {item.firstSeenDateId} • last seen {item.lastSeenDateId}
                   </p>
                 </div>
                 <div className="space-y-1 text-sm md:text-right">
@@ -93,7 +93,7 @@ export async function CrmPage({
         ) : (
           <EmptyState
             title="No enrichment queue for this week"
-            description="When the source exposes live booking labels, NightOS will list them here as a real enrichment queue instead of fabricating client profiles. Use the week controls above to inspect another live window."
+            description="When the source exposes booking labels, NightOS will list them here as a real enrichment queue instead of fabricating client profiles. Use the week controls above to inspect another source window."
           />
         )}
       </SectionCard>
@@ -105,7 +105,7 @@ export async function CrmPage({
       >
         <EmptyState
           title="No synchronized clients yet"
-          description={`The live reservation source is currently ${data.snapshot.connected ? "connected" : "not connected"}, but it does not expose verified client records. Once Supabase sync receives client identities, this page will populate client status, preferences, RP relationship, relaunch opportunities, and VIP tier logic.`}
+          description={`The reservation source is currently ${data.snapshot.connected ? "reachable" : "not reachable"}, but it does not expose verified client records. Once Supabase sync receives client identities, this page will populate client status, preferences, RP relationship, relaunch opportunities, and VIP tier logic.`}
         />
       </SectionCard>
     </div>

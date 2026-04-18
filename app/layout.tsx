@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.metadataBase),
   applicationName: siteConfig.name,
+  icons: {
+    icon: "/favicon-cova.png",
+    apple: "/favicon-cova.png",
+  },
   robots: {
     index: false,
     follow: false,
@@ -34,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-background text-foreground">
+    <html lang="fr" className="bg-background text-foreground">
       <body className={`${sans.variable} ${display.variable} min-h-screen bg-background font-sans text-foreground antialiased`}>
         {children}
       </body>

@@ -3,7 +3,7 @@ import type { AppRole, WorkspaceSection } from "@/types/app";
 export const siteConfig = {
   name: "Cova Club OS",
   description:
-    "Premium internal operations dashboard for club managers, staff, promoters, and direction.",
+    "Private premium operations platform for club managers, staff, promoters, and direction.",
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000",
   sourceOfTruth: "The reservation site remains the operational writer and source of truth.",
   analyticsLayer: "Cova OS reads, synchronizes, and exploits reservation data for operations.",
@@ -51,7 +51,7 @@ export const workspaceNavigation = [
     section: "settings",
     href: "/settings",
     label: "Settings",
-    description: "Access, sync, security, deployment, and future architecture.",
+    description: "Access, sync, security, audit, sessions, and technical readiness.",
     roles: ["admin", "manager"],
   },
 ] as const satisfies readonly {

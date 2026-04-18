@@ -26,7 +26,7 @@ export function TableOccupancyBoard({
             {selectedNight.weekdayLabel} {selectedNight.dateLabel}
           </p>
           <p className="text-sm text-muted-foreground">
-            Table plan board based on the live reservation source.
+            Table plan board based on the reservation source.
           </p>
         </div>
         <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
@@ -69,7 +69,7 @@ export function TableOccupancyBoard({
                     Source label
                   </p>
                   <p className="text-sm text-foreground">
-                    {reservation?.sourceLabel || "No live booking label"}
+                    {reservation?.sourceLabel || "No source booking label"}
                   </p>
                 </div>
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site";
@@ -11,19 +12,34 @@ export default function Home() {
           <div className="flex flex-col gap-10 xl:flex-row xl:justify-between">
             <div className="max-w-5xl space-y-8">
               <div className="space-y-4">
-                <p className="eyebrow">{siteConfig.codename}</p>
+                <div className="flex items-center gap-4">
+                  <Image
+                    alt="COVA"
+                    className="h-auto w-[118px]"
+                    height={68}
+                    priority
+                    src="/cova-logo-white.png"
+                    width={220}
+                  />
+                  <div className="space-y-1">
+                    <p className="eyebrow">{siteConfig.codename}</p>
+                    <p className="text-[0.72rem] uppercase tracking-[0.34em] text-muted-foreground">
+                      Private internal platform
+                    </p>
+                  </div>
+                </div>
                 <div className="space-y-5">
                   <p className="text-[0.72rem] uppercase tracking-[0.34em] text-muted-foreground">
                     {siteConfig.name}
                   </p>
                   <h1 className="display-heading max-w-5xl">
-                    Luxury club operations, expressed as a real internal product.
+                    Internal club operations, structured like a real private SaaS.
                   </h1>
                   <p className="section-copy max-w-3xl">
                     {siteConfig.sourceOfTruth} {siteConfig.analyticsLayer} This
-                    experience is designed to feel premium, controlled, and calm,
-                    while staying honest when real CRM or historical data is not yet
-                    connected.
+                    experience is designed to feel premium, controlled, and
+                    indispensable to management while staying honest when real CRM
+                    or historical reservation data is not yet connected.
                   </p>
                 </div>
               </div>
@@ -41,16 +57,16 @@ export default function Home() {
             <div className="w-full max-w-[420px] space-y-3">
               {[
                 {
+                  label: "Private platform",
+                  copy: "No customer-facing logic lives here. Every screen is designed for direction, managers, staff, and scoped RP access.",
+                },
+                {
                   label: "Source of truth",
-                  copy: "The operational reservation site keeps write ownership. NightOS reads and structures it.",
+                  copy: "The operational reservation site keeps write ownership. NightOS reads, controls, and exploits the reservation layer.",
                 },
                 {
                   label: "Truthfulness",
-                  copy: "No fake reservations, no fake revenue, and no invented RP rankings when the source is empty.",
-                },
-                {
-                  label: "Security",
-                  copy: "Protected routes, server-side session checks, scoped access, and Supabase-ready persistence.",
+                  copy: "No fake reservations, no fake revenue, and no invented RP rankings when the source is empty or not approved.",
                 },
               ].map((item) => (
                 <div className="surface-muted p-5" key={item.label}>
@@ -87,7 +103,7 @@ export default function Home() {
                   "RP performance that stays empty when no source activity exists.",
                   "VIP CRM prepared for client-level sync, not fabricated placeholders.",
                   "Analytics reduced to business decisions, not decorative charts.",
-                  "Settings split between implemented, pending connection, and future bridge.",
+                  "Settings built as a real internal control center for access, security, audit, and sync readiness.",
                 ].map((item) => (
                   <div className="surface-muted p-4 text-sm leading-6 text-muted-foreground" key={item}>
                     {item}
@@ -105,7 +121,8 @@ export default function Home() {
                 <h2 className="display-subheading">Production when ready, preview when needed.</h2>
                 <p className="text-sm leading-6 text-muted-foreground">
                   Production routes stay protected. Preview routes remain useful for
-                  demos while Supabase and sync persistence are still being finalized.
+                  internal walkthroughs while authentication, audit, and sync
+                  persistence are still being finalized.
                 </p>
               </div>
 
@@ -127,7 +144,7 @@ export default function Home() {
                 </p>
                 <ul className="space-y-2 text-sm leading-6 text-muted-foreground">
                   <li>No fake reservations or revenue are generated.</li>
-                  <li>Live source data appears only when the reservation source responds.</li>
+                  <li>Reservation data appears only after the source is explicitly available in the current environment.</li>
                   <li>VIP CRM stays empty until client identities are truly synchronized.</li>
                 </ul>
               </div>

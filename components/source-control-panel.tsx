@@ -24,7 +24,7 @@ export function SourceControlPanel({
       <form action={action} className="grid gap-3 md:grid-cols-2">
         <input name="weekOffset" type="hidden" value={String(weekOffset)} />
         <Button disabled={pending} name="actionMode" type="submit" value="inspect">
-          {pending ? "Checking source..." : "Run live source check"}
+          {pending ? "Checking source..." : "Run source readiness check"}
         </Button>
         <Button
           disabled={pending}

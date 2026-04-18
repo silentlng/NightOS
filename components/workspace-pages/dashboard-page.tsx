@@ -40,8 +40,8 @@ export async function DashboardPage({
     <div className="space-y-6">
       <PageIntro
         eyebrow="Dashboard"
-        title="Business status for tonight, sync health, and the live reservation operating picture."
-        description="This dashboard stays honest: it reads live reservation occupancy from the operational source when available, and keeps premium empty states where richer CRM or warehouse data does not exist yet."
+        title="Business status for tonight, sync health, and the reservation operating picture."
+        description="This dashboard stays honest: it reads reservation occupancy from the operational source when available, and keeps premium empty states where richer CRM or warehouse data does not exist yet."
         aside={
           <div className="surface-muted space-y-4 p-5">
             <StatusPill
@@ -68,7 +68,7 @@ export async function DashboardPage({
         <MetricCard
           label="Tonight Bookings"
           value={String(data.metrics.tonightTableBookings || "—")}
-          description="Booked standard tables from the live reservation source for the selected upcoming night."
+          description="Booked standard tables from the reservation source for the selected upcoming night."
           detail={
             data.tonight
               ? `${data.tonight.weekdayLabel} ${data.tonight.dateLabel}`
@@ -140,7 +140,7 @@ export async function DashboardPage({
           ) : (
             <EmptyState
               title="No occupied tables returned for the upcoming night"
-              description="The reservation source is connected, but it did not return any occupied standard or supplemental slots for the selected Thursday-to-Saturday window. Use the week controls above to inspect another live window."
+              description="The reservation source is available, but it did not return any occupied standard or supplemental slots for the selected Thursday-to-Saturday window. Use the week controls above to inspect another source window."
             />
           )}
         </SectionCard>
@@ -162,7 +162,7 @@ export async function DashboardPage({
                       {stat.sourceLabel}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {stat.reservations} live source bookings
+                      {stat.reservations} source bookings
                     </p>
                   </div>
                   <p className="text-sm font-medium text-foreground">
@@ -174,7 +174,7 @@ export async function DashboardPage({
           ) : (
             <EmptyState
               title="No live promoter signals yet"
-              description="The current week is structurally loaded, but no source labels were returned for the active window. Use the week controls above to inspect another live window."
+              description="The current week is structurally loaded, but no source labels were returned for the active window. Use the week controls above to inspect another source window."
             />
           )}
         </SectionCard>
@@ -182,7 +182,7 @@ export async function DashboardPage({
 
       <SectionCard
         eyebrow="Table Plan"
-        title="Live occupancy board"
+        title="Reservation occupancy board"
         description="A table-by-table view of the selected upcoming night, using the reservation source directly."
       >
         {data.tonight ? (
@@ -244,7 +244,7 @@ export async function DashboardPage({
           description="The operational reservation site remains the writer and source of truth."
           footer={
             <p className="text-xs text-muted-foreground">
-              Last live read: {formatDateTime(data.syncOverview.lastSyncedAt)}
+              Last source read: {formatDateTime(data.syncOverview.lastSyncedAt)}
             </p>
           }
         >

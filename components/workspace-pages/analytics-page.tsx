@@ -79,7 +79,7 @@ export async function AnalyticsPage({
         ) : (
           <EmptyState
             title="No live analytics yet for the selected week"
-            description="The source responded without any occupied slots for the selected Thursday-to-Saturday window, so NightOS keeps the analytics board intentionally sparse. Use the week controls above to inspect another live window."
+            description="The source responded without any occupied slots for the selected Thursday-to-Saturday window, so NightOS keeps the analytics board intentionally sparse. Use the week controls above to inspect another source window."
           />
         )}
       </SectionCard>
@@ -87,7 +87,7 @@ export async function AnalyticsPage({
       <SectionCard
         eyebrow="Table Utilization"
         title="Inventory pressure by table"
-        description="Shows which tables are used most often across the current live week window."
+        description="Shows which tables are used most often across the current source week window."
       >
         {data.tableOccupancy.length > 0 ? (
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -108,7 +108,7 @@ export async function AnalyticsPage({
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
                     {table.occupiedNightLabels.length > 0
                       ? table.occupiedNightLabels.join(" • ")
-                      : "Open across the current live window"}
+                      : "Open across the current source window"}
                   </p>
                 </div>
               ))}
@@ -116,7 +116,7 @@ export async function AnalyticsPage({
         ) : (
           <EmptyState
             title="No table analytics yet"
-            description="Table-level analytics appear after the live source layout is detected."
+            description="Table-level analytics appear after the reservation source layout is detected."
           />
         )}
       </SectionCard>
