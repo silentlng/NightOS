@@ -1,27 +1,28 @@
 # NightOS
 
-NightOS is the production-oriented foundation for **Cova Club OS**, an internal premium operating dashboard for a high-end nightclub.
+NightOS is the production-oriented foundation for **Cova Club OS**, a private operating platform for a premium nightclub.
 
-It is **not**:
+It is not:
 
 - a public reservation site
 - a marketing website
-- a replacement for the current operational booking tool
+- a replacement for the current booking writer
 
-It **is**:
+It is:
 
-- the analytics layer
-- the CRM layer
+- the internal management dashboard
+- the reservation reading layer
 - the RP performance layer
-- the operating dashboard
-- the future bridge point for a private creative SaaS
+- the VIP CRM operating layer
+- the decision-support and audit surface
 
 ## Product rules
 
 - The reservation site remains the operational source of truth.
-- NightOS reads and exploits reservation data.
-- No fake reservations, fake clients, fake revenues, or fake rankings are generated.
-- Empty states stay visible until real synchronized data exists.
+- NightOS reads, structures, and exploits reservation data.
+- NightOS does not invent reservations, clients, revenue, or RP rankings.
+- If the writer contract is incomplete, the UI stays honest and premium instead of fabricating business activity.
+- Source inspection does not equal production approval.
 
 ## Current stack
 
@@ -29,38 +30,49 @@ It **is**:
 - TypeScript
 - Tailwind CSS
 - Supabase-ready auth and data architecture
-- Supabase SQL migration with RLS policies
+- Supabase SQL migrations with RLS policies
 - Vercel-ready deployment structure
 
 ## Implemented now
 
 - Premium internal dashboard shell
 - Protected `/app/*` routes with server-side auth checks
-- Middleware-based Supabase session refresh on protected app routes
-- Preview-safe `/preview/*` routes for demo access
+- Proxy-based Supabase session refresh on protected app routes
+- Preview-safe `/preview/*` routes for controlled demos
 - Dashboard
 - Reservations
 - RP Performance
-- VIP CRM identity-enrichment queue
-- Analytics with live week navigation and table utilization
-- Settings with live source control actions
-- Live read-only connection path to the operational reservation source
-- Sync route ready for Supabase persistence
-- RP source-label alias mapping for cleaner scoped visibility
+- VIP CRM empty-state and enrichment structure
+- Analytics
+- Settings as a real internal control center
+- Reservation source inspection path
+- Sync route prepared for Supabase persistence
+- Role-aware RP label scoping
+- Approval gate for production reservation sync
 
-## Reservation source connection
+## Reservation source posture
 
-NightOS is wired to read the current source site in live mode through Socket.IO once these env vars are present:
+NightOS can inspect the reservation source when these environment variables are present:
 
 - `COVA_RESERVATION_SOURCE_URL`
 - `COVA_RESERVATION_SOURCE_PIN`
 
-Core product modules now support week-by-week inspection with `?week=<offset>`, which makes the app usable even when the current week is empty but a recent or future live window contains real reservations.
+NightOS treats that as a **technical inspection path**, not an approved production feed.
+
+Production posture stays staged until:
+
+- the reservation contract is validated
+- ownership is clear
+- `NIGHTOS_RESERVATION_SOURCE_APPROVED=true`
+
+Core modules support week-by-week inspection with `?week=<offset>`, which lets operators inspect another operational window without inventing activity when the current week is empty.
 
 Source docs:
 
 - [docs/nightos-reservation-sync.md](/Users/lng/Documents/Playground/docs/nightos-reservation-sync.md)
+- [docs/nightos-reservation-contract.md](/Users/lng/Documents/Playground/docs/nightos-reservation-contract.md)
 - [docs/nightos-deployment.md](/Users/lng/Documents/Playground/docs/nightos-deployment.md)
+- [docs/nightos-exceptional-roadmap.md](/Users/lng/Documents/Playground/docs/nightos-exceptional-roadmap.md)
 - [docs/nightos-handbook.md](/Users/lng/Documents/Playground/docs/nightos-handbook.md)
 
 ## Run locally
@@ -108,16 +120,19 @@ The schema includes:
 1. Push to GitHub.
 2. Import the repo into Vercel.
 3. Add the environment variables from `.env.example`.
-4. Run the Supabase migration.
-5. Trigger the sync route after credentials are ready.
+4. Run the Supabase migrations.
+5. Create users and role rows in `profiles` and `rp_profiles`.
+6. Validate the reservation contract.
+7. Set `NIGHTOS_RESERVATION_SOURCE_APPROVED=true` only when the source is approved for production use.
+8. Trigger the sync route after credentials and approval are ready.
 
 ## Honest limitations
 
-- The current reservation source exposes occupancy labels and spend values, not full verified client identities.
-- VIP CRM therefore stays intentionally empty for now.
-- Deletion reconciliation in the sync pipeline is not complete yet.
-- RP scoping is now cleaner via source-label aliases, but still depends on the reservation site exposing consistent labels.
-- The current live source can be inspected and persisted from the settings UI, but full historical automation still depends on Supabase + scheduled execution.
+- The current reservation source inspection path exposes occupancy labels and spend values, not full verified client identities.
+- VIP CRM therefore stays intentionally strict until richer identity data exists.
+- Booking lifecycle status, durable updated timestamps, and cancellation reconciliation still need a stronger writer contract.
+- Historical automation still depends on Supabase plus scheduled execution.
+- Production auth rollout still needs a real Supabase project, invited users, and role provisioning.
 
 ## Legacy files
 

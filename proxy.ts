@@ -12,7 +12,7 @@ function getSupabaseEdgeEnv() {
   return { url, anonKey };
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const env = getSupabaseEdgeEnv();
 
   if (!env) {

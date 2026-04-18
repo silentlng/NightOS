@@ -37,6 +37,11 @@ export function SourceControlPanel({
         </Button>
       </form>
 
+      <p className="text-xs leading-6 text-muted-foreground">
+        Inspection is safe for technical validation. Persistence requires Supabase credentials,
+        the sync shared secret, and explicit production approval for the reservation source.
+      </p>
+
       {state.status !== "idle" ? (
         <div
           className={`rounded-[1.6rem] border px-4 py-4 text-sm leading-6 ${

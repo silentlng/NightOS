@@ -1,6 +1,10 @@
 import "server-only";
 
-import { getEnvironmentReadiness, isSupabaseConfigured } from "@/lib/env";
+import {
+  getEnvironmentReadiness,
+  isReservationSourceApproved,
+  isSupabaseConfigured,
+} from "@/lib/env";
 import { getReservationSourceSnapshot } from "@/lib/integrations/reservation-source";
 import type { AppAccess, BusinessReadiness, OperationalAlert, SyncOverview } from "@/types/app";
 
@@ -38,13 +42,26 @@ function buildSyncOverview(snapshot: Awaited<ReturnType<typeof getReservationSou
     };
   }
 
+  if (!isReservationSourceApproved()) {
+    return {
+      state: "attention",
+      label: "Source reachable, production sync not approved",
+      summary:
+        "NightOS can inspect the reservation source technically, but it is not yet approved as an active operational feed.",
+      detail:
+        "Use the source check to validate structure and availability, but keep the product posture in staging until the reservation contract and production sync approval are explicitly validated.",
+      lastSyncedAt: snapshot.fetchedAt,
+      sourceLabel: snapshot.sourceName,
+    };
+  }
+
   return {
     state: isSupabaseConfigured() ? "active" : "attention",
     label: isSupabaseConfigured()
-      ? "Reservation source reachable"
-      : "Reservation source reachable, warehouse pending",
+      ? "Reservation source approved"
+      : "Reservation source approved, warehouse pending",
     summary:
-      "NightOS can inspect the reservation source and is ready for the dedicated Supabase sync pipeline once the production contract is approved.",
+      "NightOS can inspect the reservation source and is ready for the dedicated Supabase sync pipeline.",
     detail: isSupabaseConfigured()
       ? "Once the pull route is deployed with service-role credentials, reservation-source records can be persisted in Supabase for CRM and analytics."
       : "The reservation source is reachable, but Supabase credentials still need to be configured before records can be persisted for CRM and historical analytics.",
@@ -77,10 +94,14 @@ function buildOperationalAlerts(
     });
   } else {
     alerts.push({
-      title: "Reservation source reachable",
+      title: isReservationSourceApproved()
+        ? "Reservation source approved"
+        : "Reservation source reachable but not approved",
       description:
-        "NightOS can inspect the operational reservation site and derive table occupancy structure without fabricating data.",
-      tone: "success",
+        isReservationSourceApproved()
+          ? "NightOS can inspect the operational reservation site and derive table occupancy structure without fabricating data."
+          : "NightOS can technically inspect the reservation source, but the product posture remains in staging until production approval is explicit.",
+      tone: isReservationSourceApproved() ? "success" : "warning",
     });
   }
 
@@ -98,6 +119,15 @@ function buildOperationalAlerts(
       title: "Historical warehouse pending",
       description:
         "CRM history, long-range analytics, and persistent role-aware reporting remain pending until Supabase is configured.",
+      tone: "warning",
+    });
+  }
+
+  if (snapshot.connected && !isReservationSourceApproved()) {
+    alerts.push({
+      title: "Production sync not approved yet",
+      description:
+        "Do not treat source inspection as a real operational connection until the reservation contract, ownership, and production approval are confirmed.",
       tone: "warning",
     });
   }
@@ -128,6 +158,10 @@ function buildBusinessReadiness(
 ): BusinessReadiness {
   if (snapshot.configured && !snapshot.connected) {
     return "critical";
+  }
+
+  if (snapshot.connected && !isReservationSourceApproved()) {
+    return "needs_attention";
   }
 
   if (snapshot.connected && isSupabaseConfigured()) {

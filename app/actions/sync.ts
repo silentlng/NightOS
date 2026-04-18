@@ -1,7 +1,11 @@
 "use server";
 
 import { getReservationSourceSnapshot } from "@/lib/integrations/reservation-source";
-import { hasServiceRoleKey, isSupabaseConfigured } from "@/lib/env";
+import {
+  hasServiceRoleKey,
+  isReservationSourceApproved,
+  isSupabaseConfigured,
+} from "@/lib/env";
 import { syncReservationSourceIntoSupabase } from "@/lib/sync/reservation-source";
 import { clampWeekOffset } from "@/lib/workspace-navigation";
 
@@ -53,7 +57,7 @@ export async function runSourceControlAction(
       status: "success",
       mode: "inspect",
       message:
-        "Live inspection succeeded. NightOS reached the operational source and refreshed the current snapshot.",
+        "Source inspection succeeded. NightOS reached the operational source and refreshed the current snapshot.",
       connected: true,
       weekLabel: snapshot.weekLabel,
       reservations: snapshot.reservations.length,
@@ -68,6 +72,15 @@ export async function runSourceControlAction(
       mode: "persist",
       message:
         "Supabase persistence is not ready in this environment yet. Add the public URL, anon key, and service role key first.",
+    };
+  }
+
+  if (!isReservationSourceApproved()) {
+    return {
+      status: "error",
+      mode: "persist",
+      message:
+        "Reservation-source persistence is blocked until production sync is explicitly approved for NightOS.",
     };
   }
 

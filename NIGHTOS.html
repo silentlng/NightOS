@@ -1858,8 +1858,9 @@ const NIGHTOS = {
     readiness: [
       ["Produit / design", "Fort", "Le site ressemble a un OS interne premium, plus exclusif et plus utile."],
       ["Settings", "Fort", "Deviennent un vrai centre de controle et plus un annexe de prototype."],
-      ["Connexion writer", "Manquante", "Doit etre validée reellement avant d'ouvrir des donnees business."],
-      ["CRM live", "Pending", "Depend de vraies identites et d'un historique importable."],
+      ["Writer reservation", "Inspection possible", "Le writer peut etre inspecte techniquement, mais la validation production reste obligatoire."],
+      ["Approbation source", "Pending", "La persistence doit rester bloquee tant que le contrat writer / reader n'est pas approuve."],
+      ["CRM exploitable", "Pending", "Depend de vraies identites, de statuts fiables et d'un historique importable."],
       ["Auth production", "Pending", "Demo gate en place, auth reelle a connecter."],
       ["Audit & observabilite", "A renforcer", "Important pour passer d'un bon produit a un produit irreprochable."],
     ],
@@ -2067,7 +2068,7 @@ function renderSettings() {
     )).join("");
 
   document.getElementById("settings-sync-fields").innerHTML =
-    '<div class="card-header"><div><div class="card-title">Champs de liaison prepares</div><p class="card-copy" style="margin-top:10px;">Ces champs structurent deja la future connexion reale sans s\'afficher comme une sync active.</p></div></div>' +
+    '<div class="card-header"><div><div class="card-title">Champs de liaison prepares</div><p class="card-copy" style="margin-top:10px;">Ces champs structurent deja la future connexion reelle sans s\'afficher comme une sync active.</p></div></div>' +
     NIGHTOS.settings.syncFields.map((field) => (
       '<div class="row"><div class="row-label"><code>' + esc(field) + '</code></div><span class="pill info">Structure prete</span></div>'
     )).join("");

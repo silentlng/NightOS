@@ -4,65 +4,84 @@
 
 The reservation site remains the operational writer.
 
-NightOS reads from it and transforms the result into:
+NightOS reads from it and turns that input into:
 
 - operational reservation visibility
-- warehouse-ready reservations
+- sync-aware reservations
 - RP performance structure
 - CRM readiness signals
+- direction and manager decision support
 
-## Current live integration
+## Current technical state
 
-NightOS now connects to:
+NightOS has a working **inspection path** for the reservation source when these variables are present:
 
-- `https://cova-club-resa-production.up.railway.app/`
+- `COVA_RESERVATION_SOURCE_URL`
+- `COVA_RESERVATION_SOURCE_PIN`
 
-The source currently works with:
+That inspection path is useful for:
 
-- PIN-gated access
-- Socket.IO live reads
-- occupancy labels
-- price values
+- validating structure
+- reading a week window
+- checking table inventory
+- verifying whether the writer is reachable
 
-## Current payload reality
+It must **not** be treated as an approved production sync until:
 
-What the source currently exposes in a useful way:
+- the data contract is validated
+- the business owner approves the writer-to-reader relationship
+- `NIGHTOS_RESERVATION_SOURCE_APPROVED=true`
+
+## What the source currently exposes in a useful way
 
 - date-scoped occupied slots
 - table identifiers
 - supplemental slot identifiers
-- a free-text label
-- a price string
+- a free-text source label
+- price or spend strings
 
-What it does **not** expose cleanly yet:
+## What the source does not yet expose cleanly enough
 
 - verified client identity
-- structured customer contact data
+- structured phone and email fields
 - preferences
 - explicit RP foreign keys
+- stable lifecycle states such as created, updated, cancelled, seated
 
-## What NightOS does with it
+## What NightOS already does with the source
 
-- reads live week snapshots through Socket.IO
-- maps slots to `external_booking_id`
-- stores source fields for sync-aware visibility
-- keeps CRM empty instead of inventing clients
-- can scope RP views through dedicated `rp_profiles.source_labels` aliases instead of relying only on viewer names
-- lets operators move week by week through the live source window in the product UI
-- exposes a manual live source check and a Supabase persistence trigger in Settings
+- reads selected week windows
+- maps slots into sync-aware reservation structures
+- stores source-oriented fields such as `external_booking_id`, `external_source`, `source_event_id`, and `last_synced_at`
+- scopes RP visibility from source labels and alias mappings
+- keeps CRM intentionally empty when identity data is not trustworthy
+- blocks persistence until Supabase is ready and production approval is explicit
 
-## Production sync path
+## Recommended production sync flow
 
-Recommended production flow:
-
-1. Reservation site writes its live occupancy.
-2. NightOS scheduled job calls `/api/sync/reservation-source/pull`.
+1. The reservation site writes bookings, table state, status changes, and client identity.
+2. NightOS calls `POST /api/sync/reservation-source/pull`.
 3. NightOS upserts events, reservations, and table inventory into Supabase.
-4. CRM and analytics read from Supabase.
+4. CRM, analytics, alerts, and management reporting read from Supabase.
+
+Required protected header:
+
+- `x-sync-secret`
+
+## Approval rule
+
+Use the source readiness check freely for technical validation.
+
+Do not approve persistence or operational reliance until:
+
+- the reservation writer exposes the required contract fields
+- cancellation and update behavior are understood
+- role scoping is validated
+- ownership and approval are explicit
 
 ## Honest limitations
 
-- RP performance is currently derived from the same label the reservation site groups by.
-- RP label scoping is more robust with aliases, but it still depends on consistent source-side naming.
-- CRM cannot be trusted until a richer client payload exists.
-- Historical trend quality depends on recurring sync execution after Supabase setup.
+- RP performance still depends on the quality of writer-side labels.
+- VIP CRM should remain empty until real client identity fields are available.
+- Historical trend quality depends on scheduled sync execution after Supabase setup.
+- Deletion reconciliation and full lifecycle traceability are still a next-phase hardening task.

@@ -35,6 +35,48 @@ export async function DashboardPage({
     typeof data.metrics.fillRate === "number"
       ? `${Math.round(data.metrics.fillRate * 100)}%`
       : "—";
+  const topPromoter = data.promoterStatsInScope[0];
+  const directionBrief = [
+    !data.snapshot.configured
+      ? {
+          title: "Connect the reservation writer",
+          description:
+            "NightOS is structurally ready, but the source URL and access PIN still need to be configured before the operating picture can populate.",
+        }
+      : null,
+    data.snapshot.connected && data.syncOverview.state === "attention"
+      ? {
+          title: "Keep production posture in staging",
+          description:
+            "The source is technically reachable, but production sync should stay blocked until the writer contract and approval are explicitly validated.",
+        }
+      : null,
+    data.tonight && data.tonight.slots.length > 0
+      ? {
+          title: "Protect tonight's capacity",
+          description: `${data.tonight.standardReservations} standard tables and ${data.tonight.supplementalReservations} supplemental slots are currently visible for ${data.tonight.weekdayLabel.toLowerCase()}.`,
+        }
+      : {
+          title: "Review another operating window",
+          description:
+            "The selected week does not currently expose occupied tables. Use the week navigator to inspect another source window instead of accepting an empty view as business truth.",
+        },
+    topPromoter
+      ? {
+          title: `Top source driver: ${topPromoter.sourceLabel}`,
+          description: `${topPromoter.reservations} reservations and ${formatCurrency(topPromoter.estimatedRevenue)} currently come from this visible label in the selected week.`,
+        }
+      : {
+          title: "Promoter attribution still fragile",
+          description:
+            "No source-label activity is currently visible in this window. RP performance remains dependent on writer-side naming quality.",
+        },
+    {
+      title: "Keep CRM intentionally strict",
+      description:
+        "NightOS will not create fake VIP records. Relationship history should open only after the writer sends real identity fields.",
+    },
+  ].filter(Boolean) as Array<{ title: string; description: string }>;
 
   return (
     <div className="space-y-6">
@@ -98,6 +140,37 @@ export async function DashboardPage({
           description="Source-label activity grouped exactly as the operational site exposes it."
           detail="NightOS keeps CRM separate until client identities are truly available."
         />
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <SectionCard
+          eyebrow="Direction Brief"
+          title="What leadership should focus on now"
+          description="A premium operating system should translate structure into action, even before the warehouse is fully live."
+        >
+          <div className="space-y-3">
+            {directionBrief.map((item) => (
+              <div className="surface-muted space-y-2 p-4" key={item.title}>
+                <p className="text-sm font-medium">{item.title}</p>
+                <p className="text-sm leading-6 text-muted-foreground">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          eyebrow="Data Boundaries"
+          title="What NightOS refuses to invent"
+          description="These limits protect the product from looking impressive for the wrong reasons."
+        >
+          <div className="space-y-3">
+            {data.snapshot.limitations.map((item) => (
+              <div className="surface-muted p-4 text-sm leading-6 text-muted-foreground" key={item}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </SectionCard>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
@@ -183,7 +256,7 @@ export async function DashboardPage({
       <SectionCard
         eyebrow="Table Plan"
         title="Reservation occupancy board"
-        description="A table-by-table view of the selected upcoming night, using the reservation source directly."
+        description="A table-by-table view of the selected upcoming night, using the reservation source as the operational writer."
       >
         {data.tonight ? (
           <TableOccupancyBoard
@@ -244,7 +317,7 @@ export async function DashboardPage({
           description="The operational reservation site remains the writer and source of truth."
           footer={
             <p className="text-xs text-muted-foreground">
-              Last source read: {formatDateTime(data.syncOverview.lastSyncedAt)}
+              Last technical read: {formatDateTime(data.syncOverview.lastSyncedAt)}
             </p>
           }
         >
