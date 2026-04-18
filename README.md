@@ -77,7 +77,7 @@ Source docs:
 
 ## Run locally
 
-Use the project-local Node runtime in this repository or your own installed Node 20+ / 22+.
+Use the project-local Node runtime in this repository or your own installed Node runtime that matches `.nvmrc`.
 
 ```bash
 cd /Users/lng/Documents/Playground
@@ -88,6 +88,11 @@ npm run dev
 Open:
 
 - `http://localhost:3000`
+
+Validated locally with:
+
+- Node `24.15.0`
+- npm `11.12.1`
 
 ## Quality checks
 
@@ -133,6 +138,7 @@ The schema includes:
 - Booking lifecycle status, durable updated timestamps, and cancellation reconciliation still need a stronger writer contract.
 - Historical automation still depends on Supabase plus scheduled execution.
 - Production auth rollout still needs a real Supabase project, invited users, and role provisioning.
+- When Supabase Auth or role provisioning is missing, protected routes intentionally redirect to `/auth/setup-required` instead of pretending access is ready.
 
 ## Legacy files
 
