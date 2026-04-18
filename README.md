@@ -100,7 +100,25 @@ Validated locally with:
 cd /Users/lng/Documents/Playground
 npm run check
 npm run build
+npm run smoke
 ```
+
+`npm run smoke` starts the built app locally and verifies the critical NightOS routes, auth gating, and sync protection behavior.
+
+## Health endpoint
+
+NightOS exposes:
+
+- `GET /api/health`
+
+This route returns a no-store JSON summary of:
+
+- preview-only vs auth-ready access posture
+- reservation source configuration vs approval
+- warehouse and sync readiness
+- the current environment readiness booleans
+
+It does not expose secrets.
 
 ## Supabase
 
@@ -130,6 +148,13 @@ The schema includes:
 6. Validate the reservation contract.
 7. Set `NIGHTOS_RESERVATION_SOURCE_APPROVED=true` only when the source is approved for production use.
 8. Trigger the sync route after credentials and approval are ready.
+
+GitHub Actions CI is included and runs:
+
+- `npm ci`
+- `npm run check`
+- `npm run build`
+- `npm run smoke`
 
 ## Honest limitations
 

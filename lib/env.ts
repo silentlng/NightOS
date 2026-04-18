@@ -2,6 +2,13 @@ export function getReservationSourceName() {
   return process.env.COVA_RESERVATION_SOURCE_NAME?.trim() || "Reservation Site";
 }
 
+export function isReservationSourceConfigured() {
+  return Boolean(
+    process.env.COVA_RESERVATION_SOURCE_URL?.trim() &&
+      process.env.COVA_RESERVATION_SOURCE_PIN?.trim(),
+  );
+}
+
 export function isReservationSourceApproved() {
   return process.env.NIGHTOS_RESERVATION_SOURCE_APPROVED?.trim() === "true";
 }
@@ -63,6 +70,7 @@ export function getEnvironmentReadiness() {
     supabaseServiceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()),
     siteUrl: Boolean(process.env.NEXT_PUBLIC_SITE_URL?.trim()),
     syncSharedSecret: Boolean(process.env.RESERVATION_SYNC_SHARED_SECRET?.trim()),
+    reservationSourceConfigured: isReservationSourceConfigured(),
     reservationSourceApproved: isReservationSourceApproved(),
   };
 }

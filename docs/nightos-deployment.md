@@ -61,6 +61,13 @@ curl -X POST http://localhost:3000/api/sync/reservation-source/pull \
 4. Keep the source approval flag off during technical validation.
 5. Turn the approval flag on only after contract validation and a successful end-to-end persistence test.
 
+## Runtime validation
+
+NightOS now includes:
+
+- `GET /api/health` for a no-store readiness snapshot
+- `npm run smoke` to boot the built app and verify critical routes locally or in CI
+
 ## Known limitations
 
 - The current reservation source inspection path exposes occupancy labels and price fields, not verified client identities.
